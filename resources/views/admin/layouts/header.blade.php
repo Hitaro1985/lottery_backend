@@ -14,14 +14,14 @@
                 <b class="logo-icon p-l-10">
                     <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                     <!-- Dark Logo icon -->
-                    <img src="{{ asset('assets/images/logo-icon.png') }}" alt="homepage" class="light-logo" />
+                    <img src="{{ asset('assets/img/logo-icon.png') }}" alt="homepage" class="light-logo" width="30px" />
                    
                 </b>
                 <!--End Logo icon -->
                  <!-- Logo text -->
                 <span class="logo-text">
                      <!-- dark Logo text -->
-                     <img src="{{ asset('assets/images/logo-text.png') }}" alt="homepage" class="light-logo" />
+                     <img src="{{ asset('assets/img/logo-text.png') }}" alt="homepage" class="light-logo" width="152px" height="28px" />
                     
                 </span>
                 <!-- Logo icon -->

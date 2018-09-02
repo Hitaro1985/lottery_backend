@@ -43,9 +43,9 @@ class ReportController extends Controller
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
         $query = array();
-        if ($request->has('searchid') && $request->input('searchid') != '') {
-            $id = $request->input('searchid');
-            $query['id'] = $id;
+        if ($request->has('searchagent') && $request->input('searchagent') != '') {
+            $name = $request->input('searchagent');
+            $query['name'] = $name;
         }
         if ($request->has('searchround') && $request->input('searchround') != '') {
             $round = $request->input('searchround');
@@ -81,10 +81,6 @@ class ReportController extends Controller
         $user_role = Role::where('id', $user->role_id)->first();
         $query = array();
         $query['name'] = $user->name;
-        if ($request->has('searchid') && $request->input('searchid') != '') {
-            $id = $request->input('searchid');
-            $query['id'] = $id;
-        }
         if ($request->has('searchround') && $request->input('searchround') != '') {
             $round = $request->input('searchround');
             $query['round'] = $round;

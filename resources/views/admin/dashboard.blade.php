@@ -4,9 +4,10 @@
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <style>
     .card-title {
-        width: 400px;
-        height: 50px;
+        width: 100%;
+        /*height: 100px;*/
         /*margin: 20px 525px;*/
+        display: inline-block;
         margin-top: 20px;
         margin-left: auto;
         margin-right: auto;
@@ -17,9 +18,10 @@
         color: white;
         padding: 15px;
         font-size: 15px;
-        float: left;
-        cursor: pointer;
         border-radius: 10px;
+    }
+    .center-div {
+        text-align: center;
     }
     #bet-main {
         width: 100%;
@@ -134,7 +136,13 @@
             <div class="card">
                 <div class="card-body">
                     <div class="card-title">
+                        <div class="center-div">
                         <label class="bet-time">28 - 08 - 2018 ----- ROUND 1 ----- 09 : 10 : 20</label>
+                        </div>
+                        <div class="center-div">
+                        <label class="bet-time">Remaining Time : 10</label>
+                        <label class="bet-time">Total Received : 1600</label>
+                        </div>
                     </div>
                     <div id="bet-main">
                     @for ($i = 0; $i <= 36; $i++)

@@ -48,7 +48,9 @@
                         <div style="margin:20px;">
                             <form id="searchDetail" action="" method="get">
                             Search -
-                            ID : <input type="text" id="searchid" name="searchid" style="width:50px; text-align:center;" placeholder="ID" value="{{ app('request')->input('searchid') }}">
+                            @if($user_role == "Admin")
+                            Agent : <input type="text" id="searchagent" name="searchagent" style="width:200px; text-align:center;" placeholder="Agent Name" value="{{ app('request')->input('searchagent') }}">
+                            @endif
                             Date : <input type="text" id="searchdate" name="datefilter" value="{{ app('request')->input('datefilter') }}" style="width:200px; text-align:center;" placeholder="Date Range" />
                             Round : <input type="text" id="searchround" name="searchround" style="width:200px; text-align:center;" placeholder="Round Name" value="{{ app('request')->input('searchround') }}">
                             <input type="button" value="Search" class="button" onclick="onSearchDetail();">
