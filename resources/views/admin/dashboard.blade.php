@@ -44,11 +44,21 @@
         margin-right: 10px;
         margin-bottom: 10px;
     }
+
     .bet-button {
         width: 150px;
         margin-right: 10px;
         padding-right: 0px;
         padding-left: 0px;
+    }
+
+    .bet-title {
+        margin-top: 20px;
+        height: 50px;
+    }
+
+    .header-bet {
+        height: 90px;
     }
 
     .color-green, .color-green:hover, .color-green:focus {
@@ -170,25 +180,119 @@
                                 @endif
                         </div>
                     @endfor
-                    </div>
-
-                    <div id="bet-result">
-                        <div id="inner">
-                            {{--<button type="button" class="btn btn-info btn-lg bet-button">1ST 12</button>--}}
-                            {{--<button type="button" class="btn btn-info btn-lg bet-button">2ND 12</button>--}}
-                            {{--<button type="button" class="btn btn-info btn-lg bet-button">3RD 12</button>--}}
-                            <button type="button" class="btn btn-info btn-lg bet-button">RED COLOUR</button>
-                            <button type="button" class="btn btn-info btn-lg bet-button">BLACK COLOUR</button>
-                            <button type="button" class="btn btn-info btn-lg bet-button">ODD</button>
-                            <button type="button" class="btn btn-info btn-lg bet-button">EVEN</button>
+                        <div class="bet-one">
+                            <div class="header-bet">
+                                <button type="button" class="btn btn-info btn-lg bet-button bet-title">1ST 12</button>
+                            </div>
+                            <div class="bet-detail-info">
+                                <p>
+                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
+                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                </p>
+                            </div>
+                            @if($slotstates['1st'] == 1)
+                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                            @else
+                            <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                            @endif
+                        </div>
+                        <div class="bet-one">
+                            <div class="header-bet">
+                                <button type="button" class="btn btn-info btn-lg bet-button bet-title">2ND 12</button>
+                            </div>
+                            <div class="bet-detail-info">
+                                <p>
+                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
+                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                </p>
+                            </div>
+                            @if($slotstates['2nd'] == 1)
+                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                            @else
+                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                            @endif
+                        </div>
+                        <div class="bet-one">
+                            <div class="header-bet">
+                                <button type="button" class="btn btn-info btn-lg bet-button bet-title">3RD 12</button>
+                            </div>
+                            <div class="bet-detail-info">
+                                <p>
+                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
+                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                </p>
+                            </div>
+                            @if($slotstates['3rd'] == 1)
+                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                            @else
+                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                            @endif
+                        </div>
+                        <div class="bet-one">
+                            <div class="header-bet">
+                            <button type="button" class="btn btn-info btn-lg bet-button bet-title">RED COLOUR</button>
+                            </div>
+                            <div class="bet-detail-info">
+                                <p>
+                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
+                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                </p>
+                            </div>
+                            @if($slotstates['red'] == 1)
+                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                            @else
+                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                            @endif
+                        </div>
+                        <div class="bet-one">
+                            <div class="header-bet">
+                                <button type="button" class="btn btn-info btn-lg bet-button bet-title">BLACK COLOUR</button>
+                            </div>
+                            <div class="bet-detail-info">
+                                <p>
+                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
+                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                </p>
+                            </div>
+                            @if($slotstates['black'] == 1)
+                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                            @else
+                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                            @endif
+                        </div>
+                        <div class="bet-one">
+                            <div class="header-bet">
+                                <button type="button" class="btn btn-info btn-lg bet-button bet-title">ODD</button>
+                            </div>
+                            <div class="bet-detail-info">
+                                <p>
+                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
+                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                </p>
+                            </div>
+                            @if($slotstates['odd'] == 1)
+                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                            @else
+                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                            @endif
+                        </div>
+                        <div class="bet-one">
+                            <div class="header-bet">
+                                <button type="button" class="btn btn-info btn-lg bet-button bet-title">EVEN</button>
+                            </div>
+                            <div class="bet-detail-info">
+                                <p>
+                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
+                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                </p>
+                            </div>
+                            @if($slotstates['even'] == 1)
+                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                            @else
+                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                            @endif
                         </div>
                     </div>
-                    {{--<div style="margin-top: 10px;">--}}
-                        {{--<div class="inner-div">--}}
-                            {{--<input type="text" placeholder="Input Correct Number" id="correct-number" name="correct-number" style="margin-right: 10px; height: 100%;"/>--}}
-                            {{--<button type="button" class="btn btn-success btn-lg bet-button" id="btn-endbet">END BET</button>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
                 </div>
             </div>
         </div>
