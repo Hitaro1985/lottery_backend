@@ -19,7 +19,7 @@
                     <table id="zero_config" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                {{--<th>Enable</th>--}}0
+                                {{--<th>Enable</th>--}}
                                 <th>id</th>
                                 <th>Name</th>
                                 <th>Prize</th>
