@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Admin;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -39,6 +39,7 @@ class ApiAuthUserCtrl extends Controller
             return response()->json(['message' => 'could_not_create_token', 'data' => null, 'response_code' => 0], 500);
         }
         
-        return response()->json(['message' => 'successfully login and user is verified'], 200);
+        return response()->json(['message' => 'successfully login and user is verified',
+                    'user' => Admin::where(['email' => $request->email])->first(), 'token'=>$token], 200);
     }
 }
