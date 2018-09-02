@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
+use App\slotstate;
+use App\transaction;
 use Illuminate\Http\Request;
 use Auth;
 use Hash;
 use App\Role;
 use App\Admin;
 use App\User;
+use Illuminate\Support\Facades\DB;
+
 class AdminAgentController extends Controller
 {
     /**
@@ -76,6 +80,30 @@ class AdminAgentController extends Controller
         return response()->json($response);
     }
 
+    public function sendmoney(Request $request)
+    {
+        try {
+            $trans = new transaction;
+            $admin = Auth::user();
+            if ($admin->amount < $request->amount) {
+                return response()->json(['status' => 'failed', 'errMsg' => 'Not Enough Money']);
+            }
+            $admin->amount = $admin->amount - $request->amount;
+            $admin->save();
+            $trans->fromname = $admin->name;
+            $user = Admin::where('id', $request->id)->first();
+            $user->amount = $user->amount + $request->amount;
+            $user->save();
+            $trans->toname = $user->name;
+            $trans->amount = $request->amount;
+            $trans->status = "paid";
+            $trans->save();
+            return response()->json(['status' => 'success']);
+        } catch (Exception $e){
+            return response()->json(['status'=> 'failed', 'errMsg'=>$e->getMessage()], 200);
+        }
+    }
+
     public function accept(Request $request)
     {
         $user = User::where('id', $request->id)->first();
@@ -105,10 +133,11 @@ class AdminAgentController extends Controller
 
     public function update_info(Request $request)
     {
-        $user = User::where('id', $request->id)->first();
+        $user = Admin::where('id', $request->id)->first();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->amount = $request->credit;
         $user->save();
         return response()->json(["status" => 'success']);
     }
@@ -121,9 +150,48 @@ class AdminAgentController extends Controller
     }
     public function delete(Request $request)
     {
-        $user = User::where('id', $request->id)->first();
+        $user = Admin::where('id', $request->id)->first();
         $user->delete();
         return response()->json(["status" => 'success']);
+    }
+
+    public function startnumberbet(Request $request)
+    {
+        DB::table('slotstates')
+            ->where('id', 1)
+            ->update(array('s'.$request->number => true));
+        return response()->json(["status" => 'success']);
+    }
+
+    public function stopnumberbet(Request $request)
+    {
+        //slotstate::get()->first()->update(['s0' => false]);
+        DB::table('slotstates')
+            ->where('id', 1)
+            ->update(array('s'.$request->number => false));
+//        $slotstate = slotstate::get()->first();
+//        $slotstate->s0 = false;
+//        $slotstate->save();
+        return response()->json(["status" => 'success']);
+    }
+
+    public function trans_admin()
+    {
+        $user = Auth::user();
+        $user_role = Role::where('id', $user->role_id)->first();
+        $trans = transaction::all();
+        return view('admin.transhistory', ['user_role' => $user_role['role'], 'trans' => $trans]);
+    }
+
+    public function trans()
+    {
+        $user = Auth::user();
+        $user_role = Role::where('id', $user->role_id)->first();
+        $trans = transaction::where(function ($query) use ($user) {
+            $query->where('fromname', '=', $user->name)
+                ->orWhere('toname', '=', $user->name);
+        })->get();
+        return view('admin.transhistory', ['user_role' => $user_role['role'], 'trans' => $trans]);
     }
     /**
      * Store a newly created resource in storage.

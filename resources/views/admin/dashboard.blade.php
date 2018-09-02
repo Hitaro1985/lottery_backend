@@ -1,6 +1,7 @@
 @extends('admin.layouts.layout')
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}" />
 <style>
     .card-title {
         width: 400px;
@@ -35,7 +36,7 @@
     .bet-one {
         float: left;
         width: 145px;
-        height: 130px;
+        height: 175px;
         text-align: center;
         margin-left: 10px;
         margin-right: 10px;
@@ -106,7 +107,7 @@
 <div class="page-breadcrumb">
     <div class="row">
         <div class="col-12 d-flex no-block align-items-center">
-            <h4 class="page-title">Bet Management</h4>
+            <h4 class="page-title">Bet Status</h4>
             <div class="ml-auto text-right">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -150,11 +151,15 @@
                             @endif
                             <div class="bet-detail-info">
                                 <p>
-                                    Total Receive : {{ $bets['r'.$i] }}</br>
-                                    Total Payout : {{ $bets['p'.$i] }}
+                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
+                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
                                 </p>
                             </div>
-                            {{--<button type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>--}}
+                                @if($slotstates['s'.$i] == 1)
+                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                                @else
+                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                                @endif
                         </div>
                     @endfor
                     </div>
@@ -170,12 +175,12 @@
                             <button type="button" class="btn btn-info btn-lg bet-button">EVEN</button>
                         </div>
                     </div>
-                    <div style="margin-top: 10px;">
-                        <div class="inner-div">
-                            <input type="text" placeholder="Input Correct Number" id="correct-number" name="correct-number" style="margin-right: 10px; height: 100%;"/>
-                            <button type="button" class="btn btn-success btn-lg bet-button" id="btn-endbet">END BET</button>
-                        </div>
-                    </div>
+                    {{--<div style="margin-top: 10px;">--}}
+                        {{--<div class="inner-div">--}}
+                            {{--<input type="text" placeholder="Input Correct Number" id="correct-number" name="correct-number" style="margin-right: 10px; height: 100%;"/>--}}
+                            {{--<button type="button" class="btn btn-success btn-lg bet-button" id="btn-endbet">END BET</button>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
                 </div>
             </div>
         </div>
@@ -211,6 +216,7 @@
 <!--Custom JavaScript -->
 <script src="{{ asset('dist/js/custom.min.js') }}"></script>
 <script>
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     $('#btn-endbet').click(function() {
         $correct = parseInt($('#correct-number').val());
         if(isNaN($correct)) {
@@ -223,5 +229,43 @@
             alert("Correct Number is " + $correct);
         }
     });
+    @for($i=0;$i<=36;$i++)
+        $('#scbtn{{ $i }}').click(function() {
+            $.ajax({
+                /* the route pointing to the post function */
+                url: '/admin/betmanagement/stopnumberbet',
+                type: 'POST',
+                /* send the csrf-token and the input to the controller */
+                data: { _token: CSRF_TOKEN,
+                    number:{{$i}}
+                },
+                dataType: 'JSON',
+                /* remind that 'data' is the response of the AjaxController */
+                success: function (data) {
+                    if (data.status == "success") {
+                        location.href = "/admin";
+                    }
+                }
+            });
+        });
+        $('#tcbtn{{ $i }}').click(function() {
+            $.ajax({
+                /* the route pointing to the post function */
+                url: '/admin/betmanagement/startnumberbet',
+                type: 'POST',
+                /* send the csrf-token and the input to the controller */
+                data: { _token: CSRF_TOKEN,
+                    number:{{$i}}
+                },
+                dataType: 'JSON',
+                /* remind that 'data' is the response of the AjaxController */
+                success: function (data) {
+                    if (data.status == "success") {
+                        location.href = "/admin";
+                    }
+                }
+            });
+        });
+    @endfor
 </script>
 @endsection

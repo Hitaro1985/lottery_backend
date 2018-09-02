@@ -14,24 +14,26 @@
         <div class="col-12">
             <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Agent Management</h5>
+                <h5 class="card-title">Bet Management</h5>
                 <div class="table-responsive">
                     <table id="zero_config" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                {{--<th>Enable</th>--}}
+                                {{--<th>Enable</th>--}}0
+                                <th>id</th>
                                 <th>Name</th>
-                                <th>Email Address</th>
-                                <th>Phone Number</th>
-                                <th>Credit</th>
-                                <th>Create Date</th>
-                                <th>Update Date</th>
+                                <th>Prize</th>
+                                <th>TotalBet</th>
+                                <th>TotalPayout</th>
+                                <th>Profit</th>
+                                <th>Paid Status</th>
+                                <th>Create Time</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @for ($i = 0; $i < count($all_users); $i++)
-                                <tr id="item{{$all_users[$i]->id}}">
+                            @for ($i = 0; $i < count($rounds); $i++)
+                                <tr id="item{{$rounds[$i]->id}}">
                                     {{--<th>--}}
                                         {{--<label class="customcheckbox">--}}
                                             {{--@if ( $all_users[$i]->accept == 0)--}}
@@ -43,22 +45,24 @@
                                             {{--@endif--}}
                                         {{--</label>--}}
                                     {{--</th>--}}
-                                    <td id="name{{$all_users[$i]->id}}">{{ $all_users[$i]->name }}</td>
-                                    <td id="email{{$all_users[$i]->id}}">{{ $all_users[$i]->email }}</td>
-                                    <td id="phoneno{{ $all_users[$i]->id }}">{{ $all_users[$i]->phoneno }}</td>
-                                    <td id="credit{{ $all_users[$i]->id }}">{{ $all_users[$i]->amount }}</td>
-                                    <td>{{ $all_users[$i]->created_at }}</td>
-                                    <td id="updatetime{{$all_users[$i]->id}}">{{ $all_users[$i]->updated_at }}</td>
+                                    <td id="id{{ $rounds[$i]->id }}">{{ $rounds[$i]->id }}</td>
+                                    <td id="name{{$rounds[$i]->id}}">{{ $rounds[$i]->name }}</td>
+                                    <td id="prize{{$rounds[$i]->id}}">{{ $rounds[$i]->rightNumber }}</td>
+                                    <td id="totalbet{{ $rounds[$i]->id }}">{{ $rounds[$i]->totalbet }}</td>
+                                    <td id="totalpayout{{ $rounds[$i]->id }}">{{ $rounds[$i]->totalpayout }}</td>
+                                    <td id="profit{{ $rounds[$i]->id }}">{{ $rounds[$i]->profit }}</td>
+                                    @if($rounds[$i]->paidstatus)
+                                        <td id="paidstatus{{ $rounds[$i]->id }}">Paid</td>
+                                    @else
+                                        <td id="paidstatus{{ $rounds[$i]->id }}">Not Paid</td>
+                                    @endif
+                                    <td>{{ $rounds[$i]->created_at }}</td>
                                     <td>
-                                        <a class="btn btn-outline-info " onclick="onEdit({{$all_users[$i]->id}})" data-toggle="modal" data-target="#editUser">
-                                            <i class="fas fa-edit "></i>
-                                        </a>
-                                        <a class="btn btn-outline-info " onclick="onSendmoney({{$all_users[$i]->id}})" data-toggle="modal" data-target="#sendMoney">
-                                            <i class="fas fa-dollar-sign "></i>
-                                        </a>
-                                        <a class="btn btn-outline-danger" onclick="onDelete({{$all_users[$i]->id}})">
-                                            <i class="fas fa-trash-alt "></i>
-                                        </a>
+                                        @if(!$rounds[$i]->rightNumber)
+                                        <button class="btn btn-outline-info" onclick="onSetResult({{ $rounds[$i]->id }})" data-toggle="modal" data-target="#setResult">SET RESULT</button>
+                                        @endif
+                                        <button class="btn btn-outline-info" onclick="onPayPrize({{ $rounds[$i]->id }})" data-toggle="modal" data-target="#payPrize">PAY PRIZE</button>
+                                        {{--</a>--}}
                                     </td>
                                 </tr>
                             @endfor
@@ -66,33 +70,33 @@
                     </table>
                 </div>
                 <!-- SendMoneyModal -->
-                <div id="sendMoney" class="modal fade" role="dialog">
+                <div id="setResult" class="modal fade" role="dialog">
                     <div class="modal-dialog modal-primary">
 
                         <!-- Modal content-->
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title">Send Money</h4>
+                                <h4 class="modal-title">Set Result</h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
                                 <input id="editid" type="hidden" class="form-control">
                                 <div class="form-group row">
-                                    <label for="editamount" class="col-sm-3 text-right control-label col-form-label">Amount : </label>
+                                    <label for="editamount" class="col-sm-3 text-right control-label col-form-label">Result : </label>
                                     <div class="col-sm-9">
-                                        <input id="editamount" type="text" class="form-control" placeholder="Credit Card Amount">
+                                        <input id="editResult" type="text" class="form-control" placeholder="Set Round Result 0-36">
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" onclick="onUpdateSend()" class="btn btn-success">Send</button>
+                                <button type="button" onclick="onUpdateResult()" class="btn btn-success">Set</button>
                             </div>
                         </div>
 
                     </div>
                 </div>
                 <!-- Modal -->
-                <div id="editUser" class="modal fade" role="dialog">
+                <div id="payPrize" class="modal fade" role="dialog">
                   <div class="modal-dialog modal-primary">
 
                     <!-- Modal content-->
@@ -104,26 +108,18 @@
                       <div class="modal-body">
                         <input id="editid" type="hidden" class="form-control">
                         <div class="form-group row">
-                            <label for="editname" class="col-sm-3 text-right control-label col-form-label">Name : </label>
-                            <div class="col-sm-9">
-                                <input id="editname" type="text" class="form-control" placeholder="Name">
-                            </div>
+                            <label for="editname" class="col-sm-3 text-right control-label col-form-label">TotalPayout :</label>
+                            <label id="labeltotalpayout" for="editname" class="col-sm-3 text-left control-label col-form-label"></label>
+                            <input type="hidden" id="edittotalpayout">
                         </div>
                         <div class="form-group row">
-                            <label for="editemail" class="col-sm-3 text-right control-label col-form-label">Email : </label>
-                            <div class="col-sm-9">
-                                <input id="editemail" type="email" class="form-control" placeholder="Password">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="editpassword" class="col-sm-3 text-right control-label col-form-label">Password : </label>
-                            <div class="col-sm-9">
-                                <input id="editpassword" type="password" class="form-control" placeholder="Password">
-                            </div>
+                            <label for="editemail" class="col-sm-3 text-right control-label col-form-label">Profit :</label>
+                            <label id="labelprofit" for="editname" class="col-sm-3 text-left control-label col-form-label"></label>
+                            <input type="hidden" id="editprofit">
                         </div>
                       </div>
                       <div class="modal-footer">
-                            <button type="button" onclick="onUpdataInfo()" class="btn btn-success">Edit</button>
+                            <button type="button" onclick="onUpdatePay()" class="btn btn-success">Pay</button>
                       </div>
                     </div>
 
@@ -173,101 +169,70 @@
      ****************************************/
     $('#zero_config').DataTable();
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-    function onAccept(agentID) {
-        $.ajax({
-            /* the route pointing to the post function */
-            url: '/admin/agentmanage/accept',
-            type: 'POST',
-            /* send the csrf-token and the input to the controller */
-            data: {_token: CSRF_TOKEN, id:agentID},
-            dataType: 'JSON',
-            /* remind that 'data' is the response of the AjaxController */
-            success: function (data) {
-                utime = data.updated_at;
-                $("#updatetime" + agentID).text(utime.date.split(".")[0]);
-            }
-        });
-    }
-    function onEdit(agentID) {
-        prename = $("#name" + agentID).text();
-        preemail = $("#email" + agentID).text();
-        precredit = $('#credit' + agentID).text();
-        
+
+    function onSetResult(agentID) {
         $("#editid").val(agentID);
-        $("#editname").val(prename);
-        $("#editemail").val(preemail);
-        $('#editcredit').val(precredit);
     }
-    function onDelete(agentID) {
+
+    function onPayPrize(agentID) {
+        $('#editid').val(agentID);
+        pretotalpayout = $('#totalpayout' + agentID).text();
+        preprofit = $('#profit' + agentID).text();
+        $('#editprofit').val(preprofit);
+        $('#labelprofit').text(preprofit);
+        $('#edittotalpayout').val(pretotalpayout);
+        $('#labeltotalpayout').text(pretotalpayout);
+    }
+
+    function onUpdateResult() {
+        correct = parseInt($('#editResult').val());
+        if(isNaN(correct)) {
+            alert("Input is not a number");
+        } else if(correct < 0) {
+            alert("please input 0-36");
+        } else if(correct > 36) {
+            alert("please input 0-36");
+        } else {
+            preid = $("#editid").val();
+            $.ajax({
+                url: '/admin/betmanage/setresult',
+                type: 'POST',
+                data: {
+                    _token: CSRF_TOKEN,
+                    id:preid,
+                    amount:correct
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    if (data.status == "failed") {
+                        alert(data.status + " : " + data.errMsg);
+                    } else {
+                        alert(data.status);
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+
+    function onUpdatePay() {
+        preid = $("#editid").val();
         $.ajax({
             /* the route pointing to the post function */
-            url: '/admin/agentmanage/delete',
+            url: '/admin/betmanage/pay',
             type: 'POST',
             /* send the csrf-token and the input to the controller */
             data: { _token: CSRF_TOKEN,
-                    id:agentID
+                    id:preid
                 },
-            dataType: 'JSON',
-            /* remind that 'data' is the response of the AjaxController */
-            success: function (data) {
-                alert(data.status);
-                if (data.status == "success") {
-                    location.href = "/admin/agentmanage";
-                }
-            }
-        });
-    }
-
-    function onSendmoney(agentID) {
-        $("#editid").val(agentID);
-    }
-
-    function onUpdateSend() {
-        preid = $("#editid").val();
-        preamount = $('#editamount').val();
-        $.ajax({
-            url: '/admin/agentmange/sendmoney',
-            type: 'POST',
-            data: {
-                _token: CSRF_TOKEN,
-                id:preid,
-                amount:preamount
-            },
             dataType: 'JSON',
             success: function (data) {
                 if (data.status == "failed") {
                     alert(data.status + " : " + data.errMsg);
                 } else {
                     alert(data.status);
-                    location.href = "/admin/agentmanage";
+                    location.reload();
                 }
-            }
-        })
-    }
-
-    function onUpdataInfo() {
-        preid = $("#editid").val();
-        prename = $("#editname").val();
-        preemail = $("#editemail").val();
-        prepassword = $("#editpassword").val();
-        precredit = $('#editcredit').val();
-        $.ajax({
-            /* the route pointing to the post function */
-            url: '/admin/agentmanage/update-info',
-            type: 'POST',
-            /* send the csrf-token and the input to the controller */
-            data: { _token: CSRF_TOKEN,
-                    id:preid,
-                    name:prename,
-                    email:preemail,
-                    password:prepassword,
-                    credit:precredit
-                },
-            dataType: 'JSON',
-            /* remind that 'data' is the response of the AjaxController */
-            success: function (data) {
-                alert(data.status);
-                location.href = "/admin/agentmanage";
             }
         });
     }

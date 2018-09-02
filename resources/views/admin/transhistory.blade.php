@@ -14,36 +14,28 @@
         <div class="col-12">
             <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Report</h5>
+                <h5 class="card-title">Transaction History</h5>
                 <div class="table-responsive">
                     <table id="zero_config" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>id</th>
-                                <th>Name</th>
-                                <th>Prize</th>
-                                <th>TotalBet</th>
-                                <th>TotalPayout</th>
-                                <th>Profit</th>
-                                <th>Paid Status</th>
-                                <th>Create Time</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
-                        @for ($i = 0; $i < count($rounds); $i++)
-                            <tr id="item{{$rounds[$i]->id}}">
-                                <td id="id{{ $rounds[$i]->id }}">{{ $rounds[$i]->id }}</td>
-                                <td id="name{{$rounds[$i]->id}}">{{ $rounds[$i]->name }}</td>
-                                <td id="prize{{$rounds[$i]->id}}">{{ $rounds[$i]->rightNumber }}</td>
-                                <td id="totalbet{{ $rounds[$i]->id }}">{{ $rounds[$i]->totalbet }}</td>
-                                <td id="totalpayout{{ $rounds[$i]->id }}">{{ $rounds[$i]->totalpayout }}</td>
-                                <td id="profit{{ $rounds[$i]->id }}">{{ $rounds[$i]->profit }}</td>
-                                @if($rounds[$i]->paidstatus)
-                                    <td id="paidstatus{{ $rounds[$i]->id }}">Paid</td>
-                                @else
-                                    <td id="paidstatus{{ $rounds[$i]->id }}">Not Paid</td>
-                                @endif
-                                <td>{{ $rounds[$i]->created_at }}</td>
+                        @for ($i = 0; $i < count($trans); $i++)
+                            <tr id="item{{$trans[$i]->id}}">
+                                <td id="id{{ $trans[$i]->id }}">{{ $trans[$i]->id }}</td>
+                                <td id="name{{$trans[$i]->id}}">{{ $trans[$i]->fromname }}</td>
+                                <td id="prize{{$trans[$i]->id}}">{{ $trans[$i]->toname }}</td>
+                                <td id="totalbet{{ $trans[$i]->id }}">{{ $trans[$i]->amount}}</td>
+                                <td id="totalpayout{{ $trans[$i]->id }}">{{ $trans[$i]->status }}</td>
+                                <td id="profit{{ $trans[$i]->id }}">{{ $trans[$i]->created_at }}</td>
                             </tr>
                         @endfor
                         </tbody>

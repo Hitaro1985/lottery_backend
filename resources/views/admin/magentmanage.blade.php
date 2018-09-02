@@ -22,6 +22,7 @@
                                 <th>Enable</th>
                                 <th>Name</th>
                                 <th>Email Address</th>
+                                <th>Phone Number</th>
                                 <th>Role</th>
                                 <th>Credit</th>
                                 <th>Create Date</th>
@@ -45,6 +46,7 @@
                                     </th>
                                     <td id="name{{$all_users[$i]->id}}">{{ $all_users[$i]->name }}</td>
                                     <td id="email{{$all_users[$i]->id}}">{{ $all_users[$i]->email }}</td>
+                                    <td id="phoneno{{ $all_users[$i]->id }}">{{ $all_users[$i]->phoneno }}</td>
                                     <td id="role{{$all_users[$i]->id}}">{{ $all_users[$i]->role }}</td>
                                     <td id="amount{{$all_users[$i]->id}}">{{ $all_users[$i]->amount }}</td>
                                     <td>{{ $all_users[$i]->created_at }}</td>
@@ -52,6 +54,9 @@
                                     <td>
                                         <a class="btn btn-outline-info " onclick="onEdit({{$all_users[$i]->id}})" data-toggle="modal" data-target="#editUser">
                                             <i class="fas fa-edit "></i>
+                                        </a>
+                                        <a class="btn btn-outline-info " onclick="onSendmoney({{$all_users[$i]->id}})" data-toggle="modal" data-target="#sendMoney">
+                                            <i class="fas fa-dollar-sign "></i>
                                         </a>
                                         <a class="btn btn-outline-danger" onclick="onDelete({{$all_users[$i]->id}})">
                                             <i class="fas fa-trash-alt "></i>
@@ -61,6 +66,32 @@
                             @endfor
                         </tbody>
                     </table>
+                </div>
+                <!-- SendMoneyModal -->
+                <div id="sendMoney" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-primary">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Send Money</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <input id="editid" type="hidden" class="form-control">
+                                <div class="form-group row">
+                                    <label for="editamount" class="col-sm-3 text-right control-label col-form-label">Amount : </label>
+                                    <div class="col-sm-9">
+                                        <input id="editamount" type="text" class="form-control" placeholder="Credit Card Amount">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" onclick="onUpdateSend()" class="btn btn-success">Send</button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
                 <!-- Modal -->
                 <div id="editUser" class="modal fade" role="dialog">
@@ -90,12 +121,6 @@
                             <label for="editpassword" class="col-sm-3 text-right control-label col-form-label">Password : </label>
                             <div class="col-sm-9">
                                 <input id="editpassword" type="password" class="form-control" placeholder="Password">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="editamount" class="col-sm-3 text-right control-label col-form-label">Amount : </label>
-                            <div class="col-sm-9">
-                                <input id="editamount" type="text" class="form-control" placeholder="Credit Card Amount">
                             </div>
                         </div>
                       </div>
@@ -174,12 +199,10 @@
     function onEdit(agentID) {
         prename = $("#name" + agentID).text();
         preemail = $("#email" + agentID).text();
-        preamount = $("#amount" + agentID).text();
         
         $("#editid").val(agentID);
         $("#editname").val(prename);
         $("#editemail").val(preemail);
-        $("#editamount").val(preamount);
     }
     function onDelete(agentID) {
         $.ajax({
@@ -195,17 +218,44 @@
             success: function (data) {
                 alert(data.status);
                 if (data.status == "success") {
-                    location.href = "/admin/magentmanage";
+                    location.reload();
                 }
             }
         });
     }
+
+    function onSendmoney(agentID) {
+        $("#editid").val(agentID);
+    }
+
+    function onUpdateSend() {
+        preid = $("#editid").val();
+        preamount = $('#editamount').val();
+        $.ajax({
+            url: '/admin/magentmange/sendmoney',
+            type: 'POST',
+            data: {
+                _token: CSRF_TOKEN,
+                id:preid,
+                amount:preamount
+            },
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.status == "failed") {
+                    alert(data.status + " : " + data.errMsg);
+                } else {
+                    alert(data.status);
+                    location.reload();
+                }
+            }
+        })
+    }
+
     function onUpdataInfo() {
         preid = $("#editid").val();
         prename = $("#editname").val();
         preemail = $("#editemail").val();
         prepassword = $("#editpassword").val();
-        preamount = $("#editamount").val();
         $.ajax({
             /* the route pointing to the post function */
             url: '/admin/magentmanage/update-info',
@@ -215,13 +265,13 @@
                     id:preid,
                     name:prename,
                     email:preemail,
-                    password:prepassword,
-                    amount:preamount
+                    password:prepassword
                 },
             dataType: 'JSON',
             /* remind that 'data' is the response of the AjaxController */
             success: function (data) {
                 alert(data.status);
+                location.reload();
             }
         });
     }

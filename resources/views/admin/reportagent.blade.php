@@ -20,30 +20,28 @@
                         <thead>
                             <tr>
                                 <th>id</th>
-                                <th>Name</th>
-                                <th>Prize</th>
+                                <th>Username</th>
+                                <th>BetInfo</th>
                                 <th>TotalBet</th>
-                                <th>TotalPayout</th>
-                                <th>Profit</th>
-                                <th>Paid Status</th>
-                                <th>Create Time</th>
+                                <th>Round</th>
+                                <th>W/L</th>
+                                <th>Time</th>
                             </tr>
                         </thead>
                         <tbody>
-                        @for ($i = 0; $i < count($rounds); $i++)
-                            <tr id="item{{$rounds[$i]->id}}">
-                                <td id="id{{ $rounds[$i]->id }}">{{ $rounds[$i]->id }}</td>
-                                <td id="name{{$rounds[$i]->id}}">{{ $rounds[$i]->name }}</td>
-                                <td id="prize{{$rounds[$i]->id}}">{{ $rounds[$i]->rightNumber }}</td>
-                                <td id="totalbet{{ $rounds[$i]->id }}">{{ $rounds[$i]->totalbet }}</td>
-                                <td id="totalpayout{{ $rounds[$i]->id }}">{{ $rounds[$i]->totalpayout }}</td>
-                                <td id="profit{{ $rounds[$i]->id }}">{{ $rounds[$i]->profit }}</td>
-                                @if($rounds[$i]->paidstatus)
-                                    <td id="paidstatus{{ $rounds[$i]->id }}">Paid</td>
-                                @else
-                                    <td id="paidstatus{{ $rounds[$i]->id }}">Not Paid</td>
-                                @endif
-                                <td>{{ $rounds[$i]->created_at }}</td>
+                        @for ($i = 0; $i < count($bets); $i++)
+                            <tr id="item{{$bets[$i]->id}}">
+                                <td id="id{{ $bets[$i]->id }}">{{ $bets[$i]->id }}</td>
+                                <td id="name{{$bets[$i]->id}}">{{ $bets[$i]->name }}</td>
+                                <td id="betinfo{{$bets[$i]->id}}">
+                                    @for ($j = 0; $j < count($betinfos[$i]); $j++)
+                                        {{ $betinfos[$i][$j][0] }} : {{ $betinfos[$i][$j][1] }}MYR </br>
+                                    @endfor
+                                </td>
+                                <td id="totalbet{{ $bets[$i]->id }}">{{ $bets[$i]->total }}MYR</td>
+                                <td id="round{{ $bets[$i]->id }}">{{ $bets[$i]->round }}</td>
+                                <td id="wls{{ $bets[$i]->id }}">{{ $bets[$i]->wls }}</td>
+                                <td>{{ $bets[$i]->created_at }}</td>
                             </tr>
                         @endfor
                         </tbody>

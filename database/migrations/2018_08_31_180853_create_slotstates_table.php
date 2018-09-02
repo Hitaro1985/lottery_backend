@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRoundsTable extends Migration
+class CreateSlotstatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateRoundsTable extends Migration
      */
     public function up()
     {
-        Schema::create('rounds', function (Blueprint $table) {
+        Schema::create('slotstates', function (Blueprint $table) {
             $table->increments('id');
             for ($i = 0; $i < 37; $i ++) {
-                $table->integer('r'.$i)->default(0);
-                $table->integer('p'.$i)->default(0);
+                $table->boolean('s'.$i)->default(true);
             }
             $table->timestamps();
         });
@@ -30,6 +29,6 @@ class CreateRoundsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rounds');
+        Schema::dropIfExists('slotstates');
     }
 }

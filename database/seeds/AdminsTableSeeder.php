@@ -10,6 +10,8 @@ class AdminsTableSeeder extends Seeder
     const PASSWORD = 'password';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
+    const PHONENO = 'phoneno';
+    const AMOUNT = 'amount';
     /**
      * Run the database seeds.
      *
@@ -28,7 +30,9 @@ class AdminsTableSeeder extends Seeder
                 static::ROLE_ID => 1,
                 static::PASSWORD => Hash::make('asdfasdf'),
                 static::CREATED_AT => '2018-01-01 10:00:00',
-                static::UPDATED_AT => '2018-01-01 10:00:00'
+                static::UPDATED_AT => '2018-01-01 10:00:00',
+                static::PHONENO => '+6012344567',
+                static::AMOUNT => 1000
             ],
             [
                 static::EMAIL =>'masteragent@gmail.com',
@@ -36,7 +40,9 @@ class AdminsTableSeeder extends Seeder
                 static::ROLE_ID => 2,
                 static::PASSWORD => Hash::make('asdfasdf'),
                 static::CREATED_AT => '2018-01-01 10:00:00',
-                static::UPDATED_AT => '2018-01-01 10:00:00'
+                static::UPDATED_AT => '2018-01-01 10:00:00',
+                static::PHONENO => '+6012344567',
+                static::AMOUNT => 0
             ],
             [
                 static::EMAIL =>'agent@gmail.com',
@@ -44,7 +50,9 @@ class AdminsTableSeeder extends Seeder
                 static::ROLE_ID => 3,
                 static::PASSWORD => Hash::make('asdfasdf'),
                 static::CREATED_AT => '2018-01-01 10:00:00',
-                static::UPDATED_AT => '2018-01-01 10:00:00'
+                static::UPDATED_AT => '2018-01-01 10:00:00',
+                static::PHONENO => '+6012344567',
+                static::AMOUNT => 0
             ]
         ]);
 

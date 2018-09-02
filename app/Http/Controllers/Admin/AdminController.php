@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-use App\Round;
+use App\slotstate;
 use Illuminate\Http\Request;
 use Auth;
 use App\Role;
@@ -28,7 +28,7 @@ class AdminController extends Controller
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
         //$bets = array();
-        $bets = Round::all()->first();
+        $slotstates = slotstate::get()->first();
         //return $bet;
 //        for( $i = 0; $i <= 36; $i ++) {
 //            if( $i % 3 == 0){
@@ -49,6 +49,6 @@ class AdminController extends Controller
         if ($user_role['role'] == 'Agent') {
             return redirect('/admin/report');
         }
-        return view('admin.dashboard', ['bets' => $bets, 'user_role' => $user_role['role']]);
+        return view('admin.dashboard', ['user_role' => $user_role['role'], 'slotstates'=>$slotstates]);
     }
 }

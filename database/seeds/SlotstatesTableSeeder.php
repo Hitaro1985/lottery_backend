@@ -2,12 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
-class UsersTableSeeder extends Seeder
+class SlotstatesTableSeeder extends Seeder
 {
-    const NAME = 'name';
-    const EMAIL = 'email';
-    const ACCEPT = 'accept';
-    const PASSWORD = 'password';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     /**
@@ -19,14 +15,10 @@ class UsersTableSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
 
-        DB::table('users')->truncate();
+        DB::table('slotstates')->truncate();
 
-        DB::table('users')->insert([
+        DB::table('slotstates')->insert([
             [
-                static::EMAIL =>'user1@gmail.com',
-                static::NAME => 'User1',
-                static::ACCEPT => 0,
-                static::PASSWORD => Hash::make('qwerty123'),
                 static::CREATED_AT => '2018-01-01 10:00:00',
                 static::UPDATED_AT => '2018-01-01 10:00:00'
             ]
