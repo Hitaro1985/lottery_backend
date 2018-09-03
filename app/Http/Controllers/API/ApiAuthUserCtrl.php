@@ -39,7 +39,7 @@ class ApiAuthUserCtrl extends Controller
             return response()->json(['message' => 'could_not_create_token', 'data' => null, 'response_code' => 0], 500);
         }
         
-        return response()->json(['message' => 'successfully login and user is verified',
+        return response()->json(['message' => 'successfully login and user is verified', 'response_code' => 1,
                     'user' => Admin::where(['email' => $request->email])->first(), 'token'=>$token], 200);
     }
 }

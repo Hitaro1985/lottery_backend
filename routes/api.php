@@ -18,3 +18,6 @@ use Illuminate\Http\Request;
 // });
 
 Route::post('user/login', 'API\ApiAuthUserCtrl@authenticate');
+Route::post('round/getCurrentInfo', 'API\ApiAgentController@getCurrentInfo');
+Route::post('round/getLastRoundInfo', 'API\ApiAgentController@getLastRoundInfo');
+Route::post('round/getHomeInfo', 'API\ApiAgentController@getHomepageInfo');

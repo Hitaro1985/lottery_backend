@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\round;
+use App\roundlist;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -12,6 +14,47 @@ use DateTime;
 
 class ApiAgentController extends Controller
 {
+
+    public function getHomepageInfo(Request $request)
+    {
+        try{
+            $cround = round::get()->first();
+            $lround = roundlist::get()->last();
+            $passedround = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(10)->get();
+            return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround, 'passedround'=> $passedround], 'response_code' =>1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
+        }
+    }
+
+    public function getCurrentInfo(Request $request)
+    {
+        try{
+            $cround = round::get()->first();
+            if ($cround) {
+                return response()->json(['message' => 'Current Round Info', 'data' => $cround, 'response_code' => 1], 200);
+            } else {
+                return response()->json(['message' => 'No Round', 'data' => null, 'response_code' => 0], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Form Error', 'data' => null, 'response_code' => 0], 200);
+        }
+    }
+
+    public function getLastRoundInfo(Request $request)
+    {
+        try{
+            $lround = roundlist::get()->last();
+            if ($lround) {
+                return response()->json(['message' => 'Current Round Info', 'data' => $lround, 'response_code' => 1], 200);
+            } else {
+                return response()->json(['message' => 'No Round', 'data' => null, 'response_code' => 0], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Form Error', 'data' => null, 'response_code' => 0], 200);
+        }
+    }
+
     //
     public function assignAgent(Request $request)
     {
