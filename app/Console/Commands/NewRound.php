@@ -51,7 +51,14 @@ class NewRound extends Command
             $oldname = $round->roundname;
             $roundnumber = intval(str_replace("Round", "", $oldname));
             $nextroundnumber = $roundnumber + 1;
-            $nextname = "Round" . (string)$nextroundnumber;
+            $lastround = roundlist::get()->last();
+            $lastcreat = $lastround->created_at;
+            $nowcreat = $round->created_at;
+            if ($lastcreat->format('Y-m-d') != $nowcreat->format('Y-m-d')) {
+                $nextname = "Round1";
+            } else {
+                $nextname = "Round" . (string)$nextroundnumber;
+            }
             $roundlist = new roundlist();
             $roundlist->name = $oldname;
             $roundlist->totalbet = $round->totalbet;

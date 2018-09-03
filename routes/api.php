@@ -21,3 +21,8 @@ Route::post('user/login', 'API\ApiAuthUserCtrl@authenticate');
 Route::post('round/getCurrentInfo', 'API\ApiAgentController@getCurrentInfo');
 Route::post('round/getLastRoundInfo', 'API\ApiAgentController@getLastRoundInfo');
 Route::post('round/getHomeInfo', 'API\ApiAgentController@getHomepageInfo');
+Route::post('round/getResultInfo', 'API\ApiAgentController@getResultInfo');
+
+Route::group(['middleware' => ['jwt.auth']], function () {
+    Route::post('round/getMyBetInfo', 'API\ApiAgentController@getMyBetInfo');
+});

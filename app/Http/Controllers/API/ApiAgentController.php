@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\betlist;
 use App\round;
 use App\roundlist;
 use Illuminate\Http\Request;
@@ -27,6 +28,49 @@ class ApiAgentController extends Controller
         }
     }
 
+    public function getbetinfo($betinfo)
+    {
+        $bets = explode("%", $betinfo);
+        $betNumbers = array();
+        for ($i = 0; $i < count($bets); $i ++)
+        {
+            $res = explode('&', $bets[$i]);
+            array_push($betNumbers, $res);
+        }
+        return $betNumbers;
+    }
+
+    public function getMyBetInfo(Request $request)
+    {
+        try{
+            $user = JWTAuth::parseToken()->authenticate();
+            $betlists = betlist::where('name',$user->name)->orderBy('id','desc')->take(10)->get();
+            foreach ($betlists as $k => $betlist) {
+                $betstate = $betlist->betNumber;
+                $data = $this->getbetinfo($betstate);
+                $reslist = array();
+                for ($i = 0; $i < count($data); $i ++) {
+                    $res = "Number #" . $data[$i][0] . "=" . "MYR " . $data[$i][1];
+                    $reslist[$i] = $res;
+                }
+                $betlists[$k]['betstate'] = $reslist;
+            }
+            return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'response_code' => 1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
+        }
+    }
+
+    public function getResultInfo(Request $request)
+    {
+        try{
+            $passedround = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(50)->get();
+            return response()->json(['message' => "Result Info", 'data' => ['passedround'=> $passedround], 'response_code' =>1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
+        }
+    }
+
     public function getCurrentInfo(Request $request)
     {
         try{
@@ -37,7 +81,7 @@ class ApiAgentController extends Controller
                 return response()->json(['message' => 'No Round', 'data' => null, 'response_code' => 0], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Request Form Error', 'data' => null, 'response_code' => 0], 200);
+            return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
     }
 
@@ -46,12 +90,12 @@ class ApiAgentController extends Controller
         try{
             $lround = roundlist::get()->last();
             if ($lround) {
-                return response()->json(['message' => 'Current Round Info', 'data' => $lround, 'response_code' => 1], 200);
+                return response()->json(['message' => 'Last Round Info', 'data' => $lround, 'response_code' => 1], 200);
             } else {
                 return response()->json(['message' => 'No Round', 'data' => null, 'response_code' => 0], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Request Form Error', 'data' => null, 'response_code' => 0], 200);
+            return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
     }
 

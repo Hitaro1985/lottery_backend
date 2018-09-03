@@ -30,9 +30,6 @@ class AdminBetController extends Controller
 
     public function pay(Request $request) {
         try {
-            $bet = roundlist::where('id', $request->id)->first();
-            $bet->rightNumber = $request->amount;
-            $bet->save();
             return response()->json(['status' => 'success']);
         } catch (Exception $e) {
             return response()->json(['status' => 'failed', 'errMsg' => $e->getMessage()]);
