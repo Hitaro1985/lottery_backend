@@ -255,66 +255,70 @@ class AdminAgentController extends Controller
 
     public function betstatus()
     {
-        $nowbet = round::get()->first();
-        $round = $nowbet->created_at;
-        $rname = $round->format('d-m-Y') . " ---- " . $nowbet->roundname . " ---- " . $round->format('H:i:s');
-        $date1 = new DateTime("now");
-        $round->add(new DateInterval('PT30M'));
-        $diff = date_diff($date1, $round);
-        if ( $diff->i == 1) {
-            $remaintime = $diff->i . "minute " . $diff->s . "seconds";
-        } else if ( $diff->i == 0) {
-            $remaintime = $diff->s . "seconds";
-        } else {
-            $remaintime = $diff->i . "minutes " . $diff->s . "seconds";
+        try{
+            $nowbet = round::get()->first();
+            $round = $nowbet->created_at;
+            $rname = $round->format('d-m-Y') . " ---- " . $nowbet->roundname . " ---- " . $round->format('H:i:s');
+            $date1 = new DateTime("now");
+            $round->add(new DateInterval('PT30M'));
+            $diff = date_diff($date1, $round);
+            if ( $diff->i == 1) {
+                $remaintime = $diff->i . "minute " . $diff->s . "seconds";
+            } else if ( $diff->i == 0) {
+                $remaintime = $diff->s . "seconds";
+            } else {
+                $remaintime = $diff->i . "minutes " . $diff->s . "seconds";
+            }
+            $slots = slotstate::get()->first();
+            $slotstates = array();
+            $totalreceives = array();
+            $totalpayouts = array();
+            for ($i = 0; $i < 37; $i ++) {
+                $pieces = explode("|", $slots['s'.$i]);
+                $slotstates['s'.$i] = $pieces[0];
+                $totalreceives['s'.$i] = $pieces[1];
+                $totalpayouts['s'.$i] =  36 * $pieces[1];
+            }
+            $pieces = explode("|", $slots['1st']);
+            $slotstates['1st'] = $pieces[0];
+            $totalreceives['1st'] = $pieces[1];
+            $totalpayouts['1st'] = 3 * $pieces[1];
+            $pieces = explode("|", $slots['2nd']);
+            $slotstates['2nd'] = $pieces[0];
+            $totalreceives['2nd'] = $pieces[1];
+            $totalpayouts['2nd'] = 3 * $pieces[1];
+            $pieces = explode("|", $slots['3rd']);
+            $slotstates['3rd'] = $pieces[0];
+            $totalreceives['3rd'] = $pieces[1];
+            $totalpayouts['3rd'] = 3 * $pieces[1];
+            $pieces = explode("|", $slots['red']);
+            $slotstates['red'] = $pieces[0];
+            $totalreceives['red'] = $pieces[1];
+            $totalpayouts['red'] = 2 * $pieces[1];
+            $pieces = explode("|", $slots['black']);
+            $slotstates['black'] = $pieces[0];
+            $totalreceives['black'] = $pieces[1];
+            $totalpayouts['black'] = 2 * $pieces[1];
+            $pieces = explode("|", $slots['odd']);
+            $slotstates['odd'] = $pieces[0];
+            $totalreceives['odd'] = $pieces[1];
+            $totalpayouts['odd'] = 2 * $pieces[1];
+            $pieces = explode("|", $slots['even']);
+            $slotstates['even'] = $pieces[0];
+            $totalreceives['even'] = $pieces[1];
+            $totalpayouts['even'] = 2 * $pieces[1];
+            $pieces = explode("|", $slots['f118']);
+            $slotstates['f118'] = $pieces[0];
+            $totalreceives['f118'] = $pieces[1];
+            $totalpayouts['f118'] = 2 * $pieces[1];
+            $pieces = explode("|", $slots['f1936']);
+            $slotstates['f1936'] = $pieces[0];
+            $totalreceives['f1936'] = $pieces[1];
+            $totalpayouts['f1936'] = 2 * $pieces[1];
+            return response()->json(["status" => 'success', 'data' => ['roundname' => $rname, 'totalbet' => $nowbet->totalbet, 'remaintime' => $remaintime, 'totalreceives' => $totalreceives, 'totalpayouts' => $totalpayouts]]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data'=> $e, 'response_code' => 0], 200);
         }
-        $slots = slotstate::get()->first();
-        $slotstates = array();
-        $totalreceives = array();
-        $totalpayouts = array();
-        for ($i = 0; $i < 37; $i ++) {
-            $pieces = explode("|", $slots['s'.$i]);
-            $slotstates['s'.$i] = $pieces[0];
-            $totalreceives['s'.$i] = $pieces[1];
-            $totalpayouts['s'.$i] =  36 * $pieces[1];
-        }
-        $pieces = explode("|", $slots['1st']);
-        $slotstates['1st'] = $pieces[0];
-        $totalreceives['1st'] = $pieces[1];
-        $totalpayouts['1st'] = 3 * $pieces[1];
-        $pieces = explode("|", $slots['2nd']);
-        $slotstates['2nd'] = $pieces[0];
-        $totalreceives['2nd'] = $pieces[1];
-        $totalpayouts['2nd'] = 3 * $pieces[1];
-        $pieces = explode("|", $slots['3rd']);
-        $slotstates['3rd'] = $pieces[0];
-        $totalreceives['3rd'] = $pieces[1];
-        $totalpayouts['3rd'] = 3 * $pieces[1];
-        $pieces = explode("|", $slots['red']);
-        $slotstates['red'] = $pieces[0];
-        $totalreceives['red'] = $pieces[1];
-        $totalpayouts['red'] = 2 * $pieces[1];
-        $pieces = explode("|", $slots['black']);
-        $slotstates['black'] = $pieces[0];
-        $totalreceives['black'] = $pieces[1];
-        $totalpayouts['black'] = 2 * $pieces[1];
-        $pieces = explode("|", $slots['odd']);
-        $slotstates['odd'] = $pieces[0];
-        $totalreceives['odd'] = $pieces[1];
-        $totalpayouts['odd'] = 2 * $pieces[1];
-        $pieces = explode("|", $slots['even']);
-        $slotstates['even'] = $pieces[0];
-        $totalreceives['even'] = $pieces[1];
-        $totalpayouts['even'] = 2 * $pieces[1];
-        $pieces = explode("|", $slots['f118']);
-        $slotstates['f118'] = $pieces[0];
-        $totalreceives['f118'] = $pieces[1];
-        $totalpayouts['f118'] = 2 * $pieces[1];
-        $pieces = explode("|", $slots['f1936']);
-        $slotstates['f1936'] = $pieces[0];
-        $totalreceives['f1936'] = $pieces[1];
-        $totalpayouts['f1936'] = 2 * $pieces[1];
-        return response()->json(["status" => 'success', 'data' => ['roundname' => $rname, 'totalbet' => $nowbet->totalbet, 'remaintime' => $remaintime, 'totalreceives' => $totalreceives, 'totalpayouts' => $totalpayouts]]);
     }
 
     public function trans_admin()
