@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\slotstate;
 use Illuminate\Console\Command;
 use App\round;
 use App\roundlist;
@@ -47,6 +48,8 @@ class NewRound extends Command
             $newround->roundname = $name;
             $newround->totalbet = 0;
             $newround->save();
+            $newslot = new slotstate();
+            $newslot->save();
         } else {
             $oldname = $round->roundname;
             $roundnumber = intval(str_replace("Round", "", $oldname));
@@ -69,6 +72,9 @@ class NewRound extends Command
             $newround->roundname = $nextname;
             $newround->totalbet = 0;
             $newround->save();
+            slotstate::truncate();
+            $newslot = new slotstate();
+            $newslot->save();
         }
         $this->info('New Round Craeted');
     }

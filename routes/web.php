@@ -46,6 +46,7 @@ Route::namespace('Admin')->prefix('admin')->group(function() {
         Route::post('/agentmange/sendmoney', 'AdminAgentController@sendmoney');
 		Route::post('/betmanagement/startnumberbet', 'AdminAgentController@startnumberbet');
         Route::post('/betmanagement/stopnumberbet', 'AdminAgentController@stopnumberbet');
+        Route::post('/betstatus', 'AdminAgentController@betstatus');
 //		Route::resource('/creditcard', 'AdminCreditController');
 	});
 	Route::get('/register', 'Auth\RegisterController@showRegistrationForm');

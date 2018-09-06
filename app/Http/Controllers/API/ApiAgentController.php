@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\betlist;
 use App\round;
 use App\roundlist;
+use App\slotstate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -58,6 +59,70 @@ class ApiAgentController extends Controller
             return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'response_code' => 1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
+        }
+    }
+
+    public function confirmBet(Request $request)
+    {
+        try{
+            $user = JWTAuth::parseToken()->authenticate();
+            $betstate = $request->betstate;
+            $betlist = new betlist();
+            $betlist->name = $user->name;
+            $betlist->betNumber = $betstate;
+            $betlist->total = $request->totalbet;
+            $nround = round::get()->first();
+            $betlist->round = $nround->roundname;
+            $betlist->save();
+            $nround->totalbet = $nround->totalbet + $request->totalbet;
+            $nround->save();
+            $data = $this->getbetinfo($betstate);
+            for ($i = 0; $i < count($data); $i ++) {
+                $nslot = slotstate::get()->first();
+                if ( $data[$i][0] < 37 ) {
+                    $changecol = 's' . $data[$i][0];
+                } else {
+                    switch ( $data[$i][0] ) {
+                        case 37:
+                            $changecol = '1st';
+                            break;
+                        case 38:
+                            $changecol = '2nd';
+                            break;
+                        case 39:
+                            $changecol = '3rd';
+                            break;
+                        case 40:
+                            $changecol = 'f118';
+                            break;
+                        case 41:
+                            $changecol = 'even';
+                            break;
+                        case 42:
+                            $changecol = 'black';
+                            break;
+                        case 43:
+                            $changecol = 'red';
+                            break;
+                        case 44:
+                            $changecol = 'odd';
+                            break;
+                        case 45:
+                            $changecol = 'f1936';
+                            break;
+                    }
+                }
+                $slices = explode("|", $nslot->value( $changecol ));
+                $namount = $slices[1];
+                $amount = $namount + intval($data[$i][1]);
+                $newval = '' . $slices[0] . '|' . $amount;
+                DB::table('slotstates')
+                    ->where('id','>', 0)
+                    ->update(array($changecol => $newval));
+            }
+            return response()->json(['message' => 'Confirm Bet', 'data' => null, 'response_code' => 1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data'=> $e, 'response_code' => 0], 200);
         }
     }
 

@@ -147,11 +147,11 @@
                 <div class="card-body">
                     <div class="card-title">
                         <div class="center-div">
-                        <label class="bet-time">28 - 08 - 2018 ----- ROUND 1 ----- 09 : 10 : 20</label>
+                        <label class="bet-time" id="roundname"></label>
                         </div>
                         <div class="center-div">
-                        <label class="bet-time">Remaining Time : 10</label>
-                        <label class="bet-time">Total Received : 1600</label>
+                        <label class="bet-time">Remaining Time : <span id="remaintime"></span></label>
+                        <label class="bet-time">Total Received : <span id="totalreceived"></span></label>
                         </div>
                     </div>
                     <div id="bet-main">
@@ -169,8 +169,8 @@
                             @endif
                             <div class="bet-detail-info">
                                 <p>
-                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
-                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                    Total Receive : <span id="totalreceives{{ $i }}">{{ $totalreceives['s'.$i] }}</span></br>
+                                    Total Payout : <span id="totalpayouts{{ $i }}">{{ $totalpayouts['s'.$i] }}</span>
                                 </p>
                             </div>
                                 @if($slotstates['s'.$i] == 1)
@@ -186,14 +186,14 @@
                             </div>
                             <div class="bet-detail-info">
                                 <p>
-                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
-                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                    Total Receive : <span id="totalreceives1st">{{ $totalreceives['1st'] }}</span></br>
+                                    Total Payout : <span id="totalpayouts1st">{{ $totalpayouts['1st'] }}</span>
                                 </p>
                             </div>
                             @if($slotstates['1st'] == 1)
-                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                                <button id="scbtn37" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
                             @else
-                            <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                            <button id="tcbtn37" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
                             @endif
                         </div>
                         <div class="bet-one">
@@ -202,14 +202,14 @@
                             </div>
                             <div class="bet-detail-info">
                                 <p>
-                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
-                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                    Total Receive : <span id="totalreceives2nd">{{ $totalreceives['2nd'] }}</span></br>
+                                    Total Payout : <span id="totalpayouts2nd">{{ $totalpayouts['2nd'] }}</span>
                                 </p>
                             </div>
                             @if($slotstates['2nd'] == 1)
-                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                                <button id="scbtn38" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
                             @else
-                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                                <button id="tcbtn38" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
                             @endif
                         </div>
                         <div class="bet-one">
@@ -218,14 +218,46 @@
                             </div>
                             <div class="bet-detail-info">
                                 <p>
-                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
-                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                    Total Receive : <span id="totalreceives3rd">{{ $totalreceives['3rd'] }}</span></br>
+                                    Total Payout : <span id="totalpayouts3rd">{{ $totalpayouts['3rd'] }}</span>
                                 </p>
                             </div>
                             @if($slotstates['3rd'] == 1)
-                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                                <button id="scbtn39" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
                             @else
-                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                                <button id="tcbtn39" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                            @endif
+                        </div>
+                        <div class="bet-one">
+                            <div class="header-bet">
+                                <button type="button" class="btn btn-info btn-lg bet-button bet-title">1-18</button>
+                            </div>
+                            <div class="bet-detail-info">
+                                <p>
+                                    Total Receive : <span id="totalreceivesf118">{{ $totalreceives['f118'] }}</span></br>
+                                    Total Payout : <span id="totalpayoutsf118">{{ $totalpayouts['f118'] }}</span>
+                                </p>
+                            </div>
+                            @if($slotstates['f118'] == 1)
+                                <button id="scbtn40" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                            @else
+                                <button id="tcbtn40" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                            @endif
+                        </div>
+                        <div class="bet-one">
+                            <div class="header-bet">
+                                <button type="button" class="btn btn-info btn-lg bet-button bet-title">19-36</button>
+                            </div>
+                            <div class="bet-detail-info">
+                                <p>
+                                    Total Receive : <span id="totalreceivesf1936">{{ $totalreceives['f1936'] }}</span></br>
+                                    Total Payout : <span id="totalpayoutsf1936">{{ $totalpayouts['f1936'] }}</span>
+                                </p>
+                            </div>
+                            @if($slotstates['f1936'] == 1)
+                                <button id="scbtn45" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                            @else
+                                <button id="tcbtn45" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
                             @endif
                         </div>
                         <div class="bet-one">
@@ -234,14 +266,14 @@
                             </div>
                             <div class="bet-detail-info">
                                 <p>
-                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
-                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                    Total Receive : <span id="totalreceivesred">{{ $totalreceives['red'] }}</span></br>
+                                    Total Payout : <span id="totalpayoutsred">{{ $totalpayouts['red'] }}</span>
                                 </p>
                             </div>
                             @if($slotstates['red'] == 1)
-                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                                <button id="scbtn43" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
                             @else
-                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                                <button id="tcbtn43" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
                             @endif
                         </div>
                         <div class="bet-one">
@@ -250,14 +282,14 @@
                             </div>
                             <div class="bet-detail-info">
                                 <p>
-                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
-                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                    Total Receive : <span id="totalreceivesblack">{{ $totalreceives['black'] }}</span></br>
+                                    Total Payout : <span id="totalpayoutsblack">{{ $totalpayouts['black'] }}</span>
                                 </p>
                             </div>
                             @if($slotstates['black'] == 1)
-                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                                <button id="scbtn42" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
                             @else
-                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                                <button id="tcbtn42" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
                             @endif
                         </div>
                         <div class="bet-one">
@@ -266,14 +298,14 @@
                             </div>
                             <div class="bet-detail-info">
                                 <p>
-                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
-                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                    Total Receive : <span id="totalreceivesodd">{{ $totalreceives['odd'] }}</span></br>
+                                    Total Payout : <span id="totalpayoutsodd">{{ $totalpayouts['odd'] }}</span>
                                 </p>
                             </div>
                             @if($slotstates['odd'] == 1)
-                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                                <button id="scbtn44" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
                             @else
-                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                                <button id="tcbtn44" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
                             @endif
                         </div>
                         <div class="bet-one">
@@ -282,14 +314,14 @@
                             </div>
                             <div class="bet-detail-info">
                                 <p>
-                                    Total Receive : {{--{{ $bets['r'.$i] }}--}}</br>
-                                    Total Payout : {{--{{ $bets['p'.$i] }}--}}
+                                    Total Receive : <span id="totalreceiveseven">{{ $totalreceives['even'] }}</span></br>
+                                    Total Payout : <span id="totalpayoutseven">{{ $totalpayouts['even'] }}</span>
                                 </p>
                             </div>
                             @if($slotstates['even'] == 1)
-                                <button id="scbtn{{ $i }}" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
+                                <button id="scbtn41" type="button" class="btn btn-success btn-lg bet-button">STOP BET</button>
                             @else
-                                <button id="tcbtn{{ $i }}" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
+                                <button id="tcbtn41" type="button" class="btn btn-outline-success btn-lg bet-button">START BET</button>
                             @endif
                         </div>
                     </div>
@@ -341,7 +373,7 @@
             alert("Correct Number is " + $correct);
         }
     });
-    @for($i=0;$i<=36;$i++)
+    @for($i=0;$i<=45;$i++)
         $('#scbtn{{ $i }}').click(function() {
             $.ajax({
                 /* the route pointing to the post function */
@@ -379,5 +411,28 @@
             });
         });
     @endfor
+    sendRequest();
+
+    function sendRequest() {
+        $.post({
+            url:"/admin/betstatus",
+            data: { _token: CSRF_TOKEN
+            },
+            dataType: 'JSON',
+            success:
+                function(data) {
+                    console.log(data);
+                    $('#roundname').text(data.data.roundname);
+                    $('#totalreceived').text(data.data.totalbet);
+                    $('#remaintime').text(data.data.remaintime);
+                    for( i = 0; i < 37; i ++) {
+                        $('#totalreceives'+i).text(data.data.totalreceives['s'+i]);
+                        $('#totalpayouts'+i).text(data.data.totalpayouts['s'+i]);
+                    }
+                }
+        });
+    }
+
+    setInterval(sendRequest, 5000);
 </script>
 @endsection
