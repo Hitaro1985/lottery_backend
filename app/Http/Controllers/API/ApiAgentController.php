@@ -66,6 +66,7 @@ class ApiAgentController extends Controller
     {
         try{
             $user = JWTAuth::parseToken()->authenticate();
+            $duplicate = false;
             $betstate = $request->betstate;
             $betlist = new betlist();
             $betlist->name = $user->name;
@@ -79,46 +80,64 @@ class ApiAgentController extends Controller
             $data = $this->getbetinfo($betstate);
             for ($i = 0; $i < count($data); $i ++) {
                 $nslot = slotstate::get()->first();
-                if ( $data[$i][0] < 37 ) {
+                if ( is_numeric($data[$i][0]) ) {
                     $changecol = 's' . $data[$i][0];
                 } else {
                     switch ( $data[$i][0] ) {
-                        case 37:
+                        case "1st":
                             $changecol = '1st';
                             break;
-                        case 38:
+                        case "2nd":
                             $changecol = '2nd';
                             break;
-                        case 39:
+                        case "3rd":
                             $changecol = '3rd';
                             break;
-                        case 40:
+                        case "1-18":
                             $changecol = 'f118';
                             break;
-                        case 41:
+                        case "EVEN":
                             $changecol = 'even';
                             break;
-                        case 42:
+                        case "BLACK":
                             $changecol = 'black';
                             break;
-                        case 43:
+                        case "RED":
                             $changecol = 'red';
                             break;
-                        case 44:
+                        case "ODD":
                             $changecol = 'odd';
                             break;
-                        case 45:
+                        case "19-36":
                             $changecol = 'f1936';
+                            break;
+                        default:
+                            $duplicate = true;
                             break;
                     }
                 }
-                $slices = explode("|", $nslot->value( $changecol ));
-                $namount = $slices[1];
-                $amount = $namount + intval($data[$i][1]);
-                $newval = '' . $slices[0] . '|' . $amount;
-                DB::table('slotstates')
-                    ->where('id','>', 0)
-                    ->update(array($changecol => $newval));
+                if ( $duplicate == false ) {
+                    $slices = explode("|", $nslot->value($changecol));
+                    $namount = $slices[1];
+                    $amount = $namount + intval($data[$i][1]);
+                    $newval = '' . $slices[0] . '|' . $amount;
+                    DB::table('slotstates')
+                        ->where('id', '>', 0)
+                        ->update(array($changecol => $newval));
+                } else {
+                    $slices = explode("|", $data[$i][0]);
+                    $amount = floatval($data[$i][1]) / count($slices);
+                    for( $j = 0; $j < count($slices); $j ++ ) {
+                        $changecol = 's' . $slices[$j];
+                        $sls = explode("|", $nslot->value($changecol));
+                        $oldamount = $sls[1];
+                        $newamount = $oldamount + $amount;
+                        $newval = '' . $sls[0] . "|" . $newamount;
+                        DB::table('slotstates')
+                            ->where('id', '>', 0)
+                            ->update(array($changecol => $newval));
+                    }
+                }
             }
             return response()->json(['message' => 'Confirm Bet', 'data' => null, 'response_code' => 1], 200);
         } catch (\Exception $e) {

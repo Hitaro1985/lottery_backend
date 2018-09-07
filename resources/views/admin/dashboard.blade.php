@@ -433,6 +433,6 @@
         });
     }
 
-    setInterval(sendRequest, 5000);
+    setInterval(sendRequest, 1000);
 </script>
 @endsection
