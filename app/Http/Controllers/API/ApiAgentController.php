@@ -66,6 +66,9 @@ class ApiAgentController extends Controller
     {
         try{
             $user = JWTAuth::parseToken()->authenticate();
+            if ($user->amount < $request->totalbet) {
+                return response()->json(['message' => 'Not Enough Cash', 'data'=> null, 'response_code' => 0], 200);
+            }
             $duplicate = false;
             $betstate = $request->betstate;
             $betlist = new betlist();
