@@ -84,6 +84,16 @@ class ApiAgentController extends Controller
         }
     }
 
+    public function getUserData(Request $request)
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            return response()->json(['message' => 'Confirm Bet', 'data' => $user, 'response_code' => 1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
+        }
+    }
+
     public function confirmBet(Request $request)
     {
         try{
