@@ -62,6 +62,27 @@ class ApiAgentController extends Controller
         }
     }
 
+    public function getReportInfo(Request $request)
+    {
+        try{
+            $user = JWTAuth::parseToken()->authenticate();
+            $betlists = betlist::where('name',$user->name)->where('wls','!=','')->orderBy('id','desc')->take(10)->get();
+            foreach ($betlists as $k => $betlist) {
+                $betstate = $betlist->betNumber;
+                $data = $this->getbetinfo($betstate);
+                $reslist = array();
+                for ($i = 0; $i < count($data); $i ++) {
+                    $res = "Number #" . $data[$i][0] . "=" . "MYR " . $data[$i][1];
+                    $reslist[$i] = $res;
+                }
+                $betlists[$k]['betstate'] = $reslist;
+            }
+            return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'response_code' => 1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
+        }
+    }
+
     public function confirmBet(Request $request)
     {
         try{
