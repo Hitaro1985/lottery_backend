@@ -58,10 +58,13 @@
                                     @endif
                                     <td>{{ $rounds[$i]->created_at }}</td>
                                     <td>
-                                        @if(!$rounds[$i]->rightNumber)
-                                        <button class="btn btn-outline-info" onclick="onSetResult({{ $rounds[$i]->id }})" data-toggle="modal" data-target="#setResult">SET RESULT</button>
+                                        @if(!$rounds[$i]->paidstatus)
+                                            @if(!$rounds[$i]->rightNumber)
+                                            <button class="btn btn-outline-info" onclick="onSetResult({{ $rounds[$i]->id }})" data-toggle="modal" data-target="#setResult">SET RESULT</button>
+                                            @else
+                                            <button class="btn btn-outline-info" onclick="onPayPrize({{ $rounds[$i]->id }})" data-toggle="modal" data-target="#payPrize">PAY PRIZE</button>
+                                            @endif
                                         @endif
-                                        <button class="btn btn-outline-info" onclick="onPayPrize({{ $rounds[$i]->id }})" data-toggle="modal" data-target="#payPrize">PAY PRIZE</button>
                                         {{--</a>--}}
                                     </td>
                                 </tr>
@@ -226,6 +229,7 @@
                 },
             dataType: 'JSON',
             success: function (data) {
+                console.log(data);
                 if (data.status == "failed") {
                     alert(data.status + " : " + data.errMsg);
                 } else {
