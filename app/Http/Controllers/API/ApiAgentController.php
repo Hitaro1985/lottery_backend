@@ -55,6 +55,7 @@ class ApiAgentController extends Controller
                     $res = "Number #" . $data[$i][0] . "=" . "MYR " . $data[$i][1];
                     $reslist[$i] = $res;
                 }
+                $betlists[$k]['roundinfo'] = str_replace("Round", "R", $betlists[$k]['round']);
                 $betlists[$k]['betstate'] = $reslist;
             }
             return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'response_code' => 1], 200);
@@ -67,7 +68,20 @@ class ApiAgentController extends Controller
     {
         try{
             $user = JWTAuth::parseToken()->authenticate();
-            $betlists = betlist::where('name',$user->name)->where('wls','!=','')->orderBy('id','desc')->take(10)->get();
+            if ($request->datefilter) {
+                $slices = explode(" - ", $request->datefilter);
+                $from = $slices[0];
+                $to = $slices[1];
+            }
+            if ($request->roundname && $request->datefilter) {
+                $betlists = betlist::where('name', $user->name)->where('wls', '!=', '')->where('round', '=', $request->roundname)->whereBetween('created_at', [date($from), date($to)])->orderBy('id', 'desc')->take(10)->get();
+            } else if($request->roundname) {
+                $betlists = betlist::where('name', $user->name)->where('wls', '!=', '')->where('round', '=', $request->roundname)->orderBy('id', 'desc')->take(10)->get();
+            } else if($request->datefilter) {
+                $betlists = betlist::where('name', $user->name)->where('wls', '!=', '')->whereBetween('created_at', [date($from), date($to)])->orderBy('id', 'desc')->take(10)->get();
+            } else {
+                $betlists = betlist::where('name',$user->name)->where('wls','!=','')->orderBy('id','desc')->take(10)->get();
+            }
             foreach ($betlists as $k => $betlist) {
                 $betstate = $betlist->betNumber;
                 $data = $this->getbetinfo($betstate);
@@ -78,7 +92,7 @@ class ApiAgentController extends Controller
                 }
                 $betlists[$k]['betstate'] = $reslist;
             }
-            return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'response_code' => 1], 200);
+            return response()->json(['message' => 'My Bet Info', 'request' => $request->roundname, 'data' => $betlists, 'response_code' => 1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
@@ -103,12 +117,18 @@ class ApiAgentController extends Controller
             }
             $duplicate = false;
             $betstate = $request->betstate;
+            $nround = round::get()->first();
+            $lastbet = betlist::where('name', $user->name)->where('round', $nround->roundname)->orderBy('receiptNumber', 'desc')->get()->first();
             $betlist = new betlist();
             $betlist->name = $user->name;
             $betlist->betNumber = $betstate;
             $betlist->total = $request->totalbet;
-            $nround = round::get()->first();
             $betlist->round = $nround->roundname;
+            if (!$lastbet) {
+                $betlist->receiptNumber = 1;
+            } else {
+                $betlist->receiptNumber = $lastbet->receiptNumber + 1;
+            }
             $betlist->save();
             $nround->totalbet = $nround->totalbet + $request->totalbet;
             $nround->save();
@@ -180,7 +200,9 @@ class ApiAgentController extends Controller
                     }
                 }
             }
-            return response()->json(['message' => 'Confirm Bet', 'data' => null, 'response_code' => 1], 200);
+            $betlist['round'] = str_replace("Round", "R", $betlist['round']);
+            $betlist['betNumbers'] = $this->getbetinfo($betlist['betNumber']);
+            return response()->json(['message' => 'Confirm Bet', 'data' => $betlist, 'response_code' => 1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data'=> $e, 'response_code' => 0], 200);
         }
