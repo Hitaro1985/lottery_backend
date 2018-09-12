@@ -60,7 +60,7 @@ class ApiAgentController extends Controller
             }
             return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'response_code' => 1], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
+            return response()->json(['message' => 'Request Error', 'data' => $e, 'response_code' => 0], 200);
         }
     }
 
@@ -112,16 +112,68 @@ class ApiAgentController extends Controller
     {
         try{
             $user = JWTAuth::parseToken()->authenticate();
+            $betstate = $request->betstate;
+            $data = $this->getbetinfo($betstate);
+            $nbetstate = '';
+            for ($i = 0; $i < count($data); $i ++) {
+                $nslot = slotstate::get()->first();
+                if ( is_numeric($data[$i][0]) ) {
+                    $changecol = 's' . $data[$i][0];
+                } else {
+                    switch ( $data[$i][0] ) {
+                        case "1st":
+                            $changecol = '1st';
+                            break;
+                        case "2nd":
+                            $changecol = '2nd';
+                            break;
+                        case "3rd":
+                            $changecol = '3rd';
+                            break;
+                        case "1-18":
+                            $changecol = 'f118';
+                            break;
+                        case "EVEN":
+                            $changecol = 'even';
+                            break;
+                        case "BLACK":
+                            $changecol = 'black';
+                            break;
+                        case "RED":
+                            $changecol = 'red';
+                            break;
+                        case "ODD":
+                            $changecol = 'odd';
+                            break;
+                        case "19-36":
+                            $changecol = 'f1936';
+                            break;
+                        default:
+                            $duplicate = true;
+                            break;
+                    }
+                }
+                $slices = explode("|", $nslot->value($changecol));
+                $sst = $slices[0];
+                if ($sst == 0) {
+                    $request->totalbet = $request->totalbet - $data[$i][1];
+                } else {
+                    if ($nbetstate == '') {
+                        $nbetstate = '' . $data[$i][0] . '&' . $data[$i][1];
+                    } else {
+                        $nbetstate = $nbetstate . '%' . $data[$i][0] . '&' . $data[$i][1];
+                    }
+                }
+            }
             if ($user->amount < $request->totalbet) {
                 return response()->json(['message' => 'Not Enough Cash', 'data'=> null, 'response_code' => 0], 200);
             }
             $duplicate = false;
-            $betstate = $request->betstate;
             $nround = round::get()->first();
             $lastbet = betlist::where('name', $user->name)->where('round', $nround->roundname)->orderBy('receiptNumber', 'desc')->get()->first();
             $betlist = new betlist();
             $betlist->name = $user->name;
-            $betlist->betNumber = $betstate;
+            $betlist->betNumber = $nbetstate;
             $betlist->total = $request->totalbet;
             $betlist->round = $nround->roundname;
             if (!$lastbet) {
@@ -138,7 +190,7 @@ class ApiAgentController extends Controller
             $au = Admin::where('name', 'Tony')->get()->first();
             $au->amount = $au->amount + $request->totalbet;
             $au->save();
-            $data = $this->getbetinfo($betstate);
+            $data = $this->getbetinfo($nbetstate);
             for ($i = 0; $i < count($data); $i ++) {
                 $nslot = slotstate::get()->first();
                 if ( is_numeric($data[$i][0]) ) {
