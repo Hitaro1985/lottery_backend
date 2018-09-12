@@ -58,9 +58,9 @@
                                         <a class="btn btn-outline-info " onclick="onSendmoney({{$all_users[$i]->id}})" data-toggle="modal" data-target="#sendMoney">
                                             <i class="fas fa-dollar-sign "></i>
                                         </a>
-                                        <a class="btn btn-outline-danger" onclick="onDelete({{$all_users[$i]->id}})">
-                                            <i class="fas fa-trash-alt "></i>
-                                        </a>
+                                        {{--<a class="btn btn-outline-danger" onclick="onDelete({{$all_users[$i]->id}})">--}}
+                                            {{--<i class="fas fa-trash-alt "></i>--}}
+                                        {{--</a>--}}
                                     </td>
                                 </tr>
                             @endfor
@@ -93,7 +93,7 @@
 
                     </div>
                 </div>
-                <!-- Modal -->
+                <!-- Edit Modal -->
                 <div id="editUser" class="modal fade" role="dialog">
                   <div class="modal-dialog modal-primary">
 
@@ -114,7 +114,7 @@
                         <div class="form-group row">
                             <label for="editemail" class="col-sm-3 text-right control-label col-form-label">Email : </label>
                             <div class="col-sm-9">
-                                <input id="editemail" type="email" class="form-control" placeholder="Password">
+                                <input id="editemail" type="email" class="form-control" placeholder="Email">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -130,6 +130,49 @@
                     </div>
 
                   </div>
+                </div>
+                <!-- Create Modal -->
+                <div id="createNew" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-primary">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Create Master Agent</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group row">
+                                    <label for="editname" class="col-sm-3 text-right control-label col-form-label">Name : </label>
+                                    <div class="col-sm-9">
+                                        <input id="createname" type="text" class="form-control" placeholder="Name">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="editemail" class="col-sm-3 text-right control-label col-form-label">Email : </label>
+                                    <div class="col-sm-9">
+                                        <input id="createemail" type="email" class="form-control" placeholder="Email">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="editpassword" class="col-sm-3 text-right control-label col-form-label">Password : </label>
+                                    <div class="col-sm-9">
+                                        <input id="createpassword" type="password" class="form-control" placeholder="Password">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="editphoneno" class="col-sm-3 text-right control-label col-form-label">Phone : </label>
+                                    <div class="col-sm-9">
+                                        <input id="createphoneno" type="text" class="form-control" placeholder="Phone">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" onclick="onCreate()" class="btn btn-success">Create</button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
             </div>
@@ -266,6 +309,31 @@
                     email:preemail,
                     password:prepassword
                 },
+            dataType: 'JSON',
+            /* remind that 'data' is the response of the AjaxController */
+            success: function (data) {
+                alert(data.status);
+                location.reload();
+            }
+        });
+    }
+
+    function onCreate() {
+        prename = $("#createname").val();
+        preemail = $("#createemail").val();
+        prepassword = $("#createpassword").val();
+        prephoneno = $("#createphoneno").val();
+        $.ajax({
+            /* the route pointing to the post function */
+            url: '/admin/magentmanage/create-new',
+            type: 'POST',
+            /* send the csrf-token and the input to the controller */
+            data: { _token: CSRF_TOKEN,
+                name:prename,
+                email:preemail,
+                password:prepassword,
+                phoneno:prephoneno
+            },
             dataType: 'JSON',
             /* remind that 'data' is the response of the AjaxController */
             success: function (data) {

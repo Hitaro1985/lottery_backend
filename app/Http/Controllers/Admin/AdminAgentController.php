@@ -134,6 +134,42 @@ class AdminAgentController extends Controller
         return response()->json(["status" => 'success']);
     }
 
+    public function master_create_new(Request $request)
+    {
+        try{
+            $user = new Admin();
+            //$user = Admin::where('id', $request->id)->first();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->amount = 0;
+            $user->phoneno = $request->phoneno;
+            $user->role_id = 2;
+            $user->save();
+            return response()->json(["status" => 'success']);
+        } catch (\Exception $e) {
+            return response()->json(["status" => "failed", "msg" => $e->getMessage()]);
+        }
+    }
+
+    public function create_new(Request $request)
+    {
+        try{
+            $user = new Admin();
+            //$user = Admin::where('id', $request->id)->first();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->amount = 0;
+            $user->phoneno = $request->phoneno;
+            $user->role_id = 3;
+            $user->save();
+            return response()->json(["status" => 'success']);
+        } catch (\Exception $e) {
+            return response()->json(["status" => "failed", "msg" => $e->getMessage()]);
+        }
+    }
+
     public function update_info(Request $request)
     {
         $user = Admin::where('id', $request->id)->first();

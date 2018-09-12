@@ -38,10 +38,12 @@ Route::namespace('Admin')->prefix('admin')->group(function() {
 		Route::post('/magentmanage/accept', 'AdminAgentController@master_accept');
 		Route::post('/magentmanage/delete', 'AdminAgentController@master_delete');
 		Route::post('/magentmanage/update-info', 'AdminAgentController@master_update_info');
+        Route::post('/magentmanage/create-new', 'AdminAgentController@master_create_new');
 		Route::get('/agentmanage', 'AdminAgentController@agentmanage');
 		Route::post('/agentmanage/accept', 'AdminAgentController@accept');
 		Route::post('/agentmanage/delete', 'AdminAgentController@delete');
 		Route::post('/agentmanage/update-info', 'AdminAgentController@update_info');
+        Route::post('/agentmanage/create-new', 'AdminAgentController@create_new');
 		Route::post('/magentmange/sendmoney', 'AdminAgentController@sendmoney');
         Route::post('/agentmange/sendmoney', 'AdminAgentController@sendmoney');
 		Route::post('/betmanagement/startnumberbet', 'AdminAgentController@startnumberbet');
