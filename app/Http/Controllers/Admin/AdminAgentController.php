@@ -93,10 +93,12 @@ class AdminAgentController extends Controller
         try {
             $trans = new transaction;
             $admin = Auth::user();
-            if ($admin->amount < $request->amount) {
+            if ($admin->amount < $request->amount && $admin->role_id != 1) {
                 return response()->json(['status' => 'failed', 'errMsg' => 'Not Enough Money']);
             }
-            $admin->amount = $admin->amount - $request->amount;
+            if ($admin->role_id != 1) {
+                $admin->amount = $admin->amount - $request->amount;
+            }
             $admin->save();
             $trans->fromname = $admin->name;
             $user = Admin::where('id', $request->id)->first();

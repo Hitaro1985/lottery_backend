@@ -285,7 +285,7 @@ class ApiAgentController extends Controller
             $us->amount = $us->amount + $request->totalbet;
             $us->save();
             $au = Admin::where('name', 'Tony')->get()->first();
-            $au->amount = $au->amount - $request->totalbet;
+            //$au->amount = $au->amount - $request->totalbet;
             $au->save();
             $data = $this->getbetinfo($betstate);
             for ($i = 0; $i < count($data); $i ++) {
