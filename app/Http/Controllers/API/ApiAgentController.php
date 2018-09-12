@@ -102,7 +102,7 @@ class ApiAgentController extends Controller
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
-            return response()->json(['message' => 'Confirm Bet', 'data' => $user, 'response_code' => 1], 200);
+            return response()->json(['message' => 'Get User Data', 'data' => $user, 'response_code' => 1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
@@ -205,6 +205,65 @@ class ApiAgentController extends Controller
             return response()->json(['message' => 'Confirm Bet', 'data' => $betlist, 'response_code' => 1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data'=> $e, 'response_code' => 0], 200);
+        }
+    }
+
+    public function getallowednumber(Request $request)
+    {
+        try {
+            $slotstates = slotstate::get()->first();
+            return response()->json(['message' => "slotstates", "data" => $slotstates, 'response_code' => 1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data'=>$e, 'response_code' => 0], 200);
+        }
+    }
+
+    public function checknumberallow(Request $request)
+    {
+        try {
+            $slotstates = slotstate::get()->first();
+            $check = true;
+            $number = '';
+            if ($request->amount < 37) {
+                $slot = $slotstates->value('s'.$request->amount);
+                $slices = explode('|', $slot);
+                $state = $slices[0];
+                if ($state == 0) {
+                    $check = false;
+                }
+                $number = ''.$request->amount;
+            } else {
+                $arr = array();
+                $arr[0] = "1st";
+                $arr[1] = "2nd";
+                $arr[2] = "3rd";
+                $arr[3] = "f118";
+                $arr[4] = "even";
+                $arr[5] = "black";
+                $arr[6] = "red";
+                $arr[7] = "odd";
+                $arr[8] = "f1936";
+                $arr2 = array();
+                $arr2[0] = "1st 12";
+                $arr2[1] = "2nd 12";
+                $arr2[2] = "3rd 12";
+                $arr2[3] = "1-18";
+                $arr2[4] = "even";
+                $arr2[5] = "black";
+                $arr2[6] = "red";
+                $arr2[7] = "odd";
+                $arr2[8] = "19-36";
+                $slot = $slotstates->value($arr[$request->amount - 37]);
+                $slices = explode('|', $slot);
+                $state = $slices[0];
+                if ($state == 0) {
+                    $check = false;
+                }
+                $number = $arr2[$request->amount - 37];
+            }
+            return response()->json(['message' => "check slot allow", "data" => $check, 'number'=>$number, 'response_code' => 1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data'=>$e, 'response_code' => 0], 200);
         }
     }
 
