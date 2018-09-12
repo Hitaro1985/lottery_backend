@@ -19,7 +19,7 @@
                     <table id="zero_config" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                {{--<th>Enable</th>--}}
+                                <th>Enable</th>
                                 <th>Name</th>
                                 <th>Email Address</th>
                                 <th>Phone Number</th>
@@ -32,17 +32,17 @@
                         <tbody>
                             @for ($i = 0; $i < count($all_users); $i++)
                                 <tr id="item{{$all_users[$i]->id}}">
-                                    {{--<th>--}}
-                                        {{--<label class="customcheckbox">--}}
-                                            {{--@if ( $all_users[$i]->accept == 0)--}}
-                                                {{--<input id="agent{{$all_users[$i]->id}}" type="checkbox" class="listCheckbox" onclick="onAccept({{$all_users[$i]->id}})" />--}}
-                                                {{--<span class="checkmark"></span>--}}
-                                            {{--@else--}}
-                                                {{--<input id="agent{{$all_users[$i]->id}}" type="checkbox" class="listCheckbox" onclick="onAccept({{$all_users[$i]->id}})" checked="checked" />--}}
-                                                {{--<span class="checkmark"></span>--}}
-                                            {{--@endif--}}
-                                        {{--</label>--}}
-                                    {{--</th>--}}
+                                    <th>
+                                        <label class="customcheckbox">
+                                            @if ( $all_users[$i]->enabled == false)
+                                                <input id="agent{{$all_users[$i]->id}}" type="checkbox" class="listCheckbox" onclick="onAccept({{$all_users[$i]->id}})" />
+                                                <span class="checkmark"></span>
+                                            @else
+                                                <input id="agent{{$all_users[$i]->id}}" type="checkbox" class="listCheckbox" onclick="onAccept({{$all_users[$i]->id}})" checked="checked" />
+                                                <span class="checkmark"></span>
+                                            @endif
+                                        </label>
+                                    </th>
                                     <td id="name{{$all_users[$i]->id}}">{{ $all_users[$i]->name }}</td>
                                     <td id="email{{$all_users[$i]->id}}">{{ $all_users[$i]->email }}</td>
                                     <td id="phoneno{{ $all_users[$i]->id }}">{{ $all_users[$i]->phoneno }}</td>

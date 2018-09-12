@@ -39,7 +39,7 @@ class LoginController extends Controller
         ]);
         $user = Admin::where('email', $request->email)->first();
         if (isset($user)) {
-            if ($user['role_id'] == 0) {
+            if ($user['enabled'] == false) {
                 return redirect()->route('admin.dashboard');
             }
         }

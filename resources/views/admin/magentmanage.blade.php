@@ -35,7 +35,7 @@
                                 <tr>
                                     <th>
                                         <label class="customcheckbox">
-                                            @if ( $all_users[$i]->role_id == 0)
+                                            @if ( $all_users[$i]->enabled == false)
                                                 <input id="agent{{$all_users[$i]->id}}" type="checkbox" class="listCheckbox" onclick="onAccept({{$all_users[$i]->id}})" />
                                                 <span class="checkmark"></span>
                                             @else

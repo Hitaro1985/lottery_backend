@@ -69,11 +69,16 @@ class AdminAgentController extends Controller
     public function master_accept(Request $request)
     {
         $user = Admin::where('id', $request->id)->first();
-        if ($user->role_id == 0) {
-            $user->role_id = 2;
-        }
-        else {
-            $user->role_id = 0;
+//        if ($user->role_id == 0) {
+//            $user->role_id = 2;
+//        }
+//        else {
+//            $user->role_id = 0;
+//        }
+        if ($user->enabled == true) {
+            $user->enabled = false;
+        } else {
+            $user->enabled = true;
         }
         $response = array(
             'role_id' => $user->role_id,
@@ -109,18 +114,21 @@ class AdminAgentController extends Controller
 
     public function accept(Request $request)
     {
-        $user = User::where('id', $request->id)->first();
-        if ($user->accept == 0) {
-            $user->accept = 1;
+        try {
+            $user = Admin::where('id', $request->id)->first();
+            if ($user->enabled == false) {
+                $user->enabled = true;
+            } else {
+                $user->enabled = false;
+            }
+            $response = array(
+                'updated_at' => $user->updated_at,
+            );
+            $user->save();
+            return response()->json($response);
+        } catch (\Exception $e) {
+            return response()->json($e);
         }
-        else {
-            $user->accept = 0;
-        }
-        $response = array(
-            'updated_at' => $user->updated_at,
-        );
-        $user->save();
-        return response()->json($response);
     }
 
     public function master_update_info(Request $request)
