@@ -135,13 +135,17 @@ class AdminAgentController extends Controller
 
     public function master_update_info(Request $request)
     {
-        $user = Admin::where('id', $request->id)->first();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->amount = $request->amount;
-        $user->save();
-        return response()->json(["status" => 'success']);
+        try {
+            $user = Admin::where('id', $request->id)->first();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            //$user->amount = $request->amount;
+            $user->save();
+            return response()->json(["status" => 'success']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'failed', 'msg' => $e->getMessage()]);
+        }
     }
 
     public function master_create_new(Request $request)
@@ -186,7 +190,7 @@ class AdminAgentController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->amount = $request->credit;
+        //$user->amount = $request->credit;
         $user->save();
         return response()->json(["status" => 'success']);
     }
