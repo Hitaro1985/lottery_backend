@@ -27,7 +27,7 @@ class ApiAuthUserCtrl extends Controller
     public function authenticate(Request $request)
     {
         // grab credentials from the request
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('name', 'password');
 
         try {
             // attempt to verify the credentials and create a token for the user
@@ -40,6 +40,6 @@ class ApiAuthUserCtrl extends Controller
         }
         
         return response()->json(['message' => 'successfully login and user is verified', 'response_code' => 1,
-                    'user' => Admin::where(['email' => $request->email])->first(), 'token'=>$token], 200);
+                    'user' => Admin::where(['name' => $request->name])->first(), 'token'=>$token], 200);
     }
 }
