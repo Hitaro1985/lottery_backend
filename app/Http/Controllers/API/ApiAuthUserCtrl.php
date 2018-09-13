@@ -31,7 +31,7 @@ class ApiAuthUserCtrl extends Controller
         $user = Admin::where(['name' => $request->name])->first();
         if($user) {
             if ($user->enabled == false) {
-                return response()->json(['message' => 'Your account has been blocked', 'data' => null, 'response_code' => 0], 500);
+                return response()->json(['message' => 'Your account has been blocked', 'data' => null, 'response_code' => 0], 200);
             }
         }
 
