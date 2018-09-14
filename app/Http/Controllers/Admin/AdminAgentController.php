@@ -473,7 +473,7 @@ class AdminAgentController extends Controller
         } else {
             $trans = transaction::all();
         }
-        return view('admin.transhistory', ['create_new' => 'false', 'user_role' => $user_role['role'], 'trans' => $trans]);
+        return view('admin.transhistory', ['create_new' => 'false', 'user_role' => $user_role['role'], 'trans' => $trans, 'receive' => 'Admin', 'current' => 'Admin']);
     }
 
     public function trans(Request $request)
@@ -506,7 +506,14 @@ class AdminAgentController extends Controller
                     ->orWhere('toname', '=', $user->name);
             })->get();
         }
-        return view('admin.transhistory', ['create_new' => 'false', 'user_role' => $user_role['role'], 'trans' => $trans]);
+        $receive = 0;
+        $current = $user->amount;
+        foreach ($trans as $tran) {
+            if ($tran['toname'] == $user->name) {
+                $receive = $receive + $tran->amount;
+            }
+        }
+        return view('admin.transhistory', ['create_new' => 'false', 'user_role' => $user_role['role'], 'trans' => $trans, 'receive' => $receive, 'current' => $current]);
     }
     /**
      * Store a newly created resource in storage.

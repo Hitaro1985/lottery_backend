@@ -7,6 +7,7 @@ use App\Admin;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Hash;
 use Illuminate\Support\Facades\Validator;
 
 use JWTAuth;
@@ -47,5 +48,17 @@ class ApiAuthUserCtrl extends Controller
         
         return response()->json(['message' => 'successfully login and user is verified', 'response_code' => 1,
                     'user' => Admin::where(['name' => $request->name])->first(), 'token'=>$token], 200);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            $user->password = Hash::make($request->password);
+            $user->save();
+            return response()->json(['message' => 'resetPassword', 'data' => $user, 'response_code' => 1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Unknown Error', 'data' => $e->getMessage(), 'response_code' => 0], 200);
+        }
     }
 }
