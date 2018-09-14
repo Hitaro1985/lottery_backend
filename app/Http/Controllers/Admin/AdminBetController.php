@@ -41,13 +41,13 @@ class AdminBetController extends Controller
         $totalData = roundlist::count();
         $limit = $request->input('length');
         $start = $request->input('start');
-//        $order = $columns[$request->input('order.0.column')];
-//        $dir = $request->input('order.0.dir');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
 
         $posts = roundlist::offset($start)
             ->limit($limit)
+            ->orderBy($order,$dir)
             ->get();
-//            ->orderBy($order,$dir)
 
         $data = array();
         if($posts) {
@@ -58,11 +58,25 @@ class AdminBetController extends Controller
                 $nestedData['totalbet'] = $r->totalbet;
                 $nestedData['totalpayout'] = $r->totalpayout;
                 $nestedData['profit'] = $r->profit;
-                $nestedData['paidstatus'] = $r->paidstatus;
+                if ($r->paidstatus == 1) {
+                    $nestedData['paidstatus'] = "Paid";
+                } else {
+                    $nestedData['paidstatus'] = "Not paid";
+                }
                 $nestedData['created_at'] = date('d-m-Y H:i:s', strtotime($r->created_at));
-                $nestedData['action'] = '
-                    <button class="btn btn-outline-info" data-toggle="modal" data-target="#setResult">SET RESULT</button>
-                ';
+                if ($r->paidstatus != 1) {
+                    if(!$r->rightNumber) {
+                        $nestedData['action'] = '
+                        <button class="btn btn-outline-info" onclick="onPayPrize(' . $r->id . ')" data-toggle="modal" data-target="#setResult">SET RESULT</button>
+                        ';
+                    } else {
+                        $nestedData['action'] = '
+                        <button class="btn btn-outline-info" onclick="onPayPrize(' . $r->id . ')" data-toggle="modal" data-target="#payPrize">PAY PRIZE</button>
+                        ';
+                    }
+                } else {
+                    $nestedData['action'] = '';
+                }
                 $data[] = $nestedData;
             }
         }
@@ -70,6 +84,7 @@ class AdminBetController extends Controller
         $json_data = array(
             "draw"          => intval($request->input('draw')),
             "recordsTotal"  => intval($totalData),
+            "recordsFiltered"  => intval($totalData),
             "data"          => $data
         );
 
@@ -91,9 +106,10 @@ class AdminBetController extends Controller
     public function setresult(Request $request) {
         try {
             $bet = roundlist::where('id', $request->id)->first();
-            $bet->rightNumber = $request->amount;
             $roundtotal = 0;
-            $betlists = betlist::where('round', $bet->name)->get();
+            $start = $bet->created_at;
+            $end = $bet->created_at->modify('+30 minutes');
+            $betlists = betlist::where('round', $bet->name)->whereBetween('created_at', [$start, $end])->get();
             foreach ($betlists as $betlist) {
                 $betstate = $betlist['betNumber'];
                 $betNumbers = $this->getbetinfo($betstate);

@@ -49,6 +49,7 @@
                                 Date : <input type="text" id="searchdate" name="datefilter" autocomplete="off" value="{{ app('request')->input('datefilter') }}" style="width:200px; text-align:center;" placeholder="Date Range" />
                                 <input type="button" value="Search" class="button" onclick="onSearchDetail();">
                                 <input type="button" value="All" class="button" onclick="onSearchAll();">
+                                <div style="display: inline-block;border-color: red;border-width: 3px;border-style: solid;width: 50px;height: 33px;text-align: center;vertical-align: middle;"><span>350</span></div>
                             </form>
                         </div>
                         <tbody>

@@ -26,7 +26,7 @@
                 @else
                     <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/admin/trans') }}" aria-expanded="false"><i class="fas fa-exchange-alt"></i><span class="hide-menu">Transaction History</span></a></li>
                 @endif
-                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/admin/credit') }}" aria-expanded="false"><i class="mdi mdi-receipt"></i><span class="hide-menu">Credit Card</span></a></li>
+                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/admin/credit') }}" aria-expanded="false"><i class="mdi mdi-receipt"></i><span class="hide-menu">Credit</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/admin/result') }}" aria-expanded="false"><i class="mdi mdi-receipt"></i><span class="hide-menu">Result</span></a></li>
             </ul>
         </nav>
