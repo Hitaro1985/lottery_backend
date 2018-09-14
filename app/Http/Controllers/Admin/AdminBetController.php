@@ -11,14 +11,69 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
 use App\Role;
+use Yajra\Datatables\Datatables;
 
 class AdminBetController extends Controller
 {
     public function index() {
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
-        $rounds = roundlist::all();
-        return view("admin.betcontroller", ['create_new' => 'false', 'user_role' => $user_role['role'], 'rounds' => $rounds]);
+        //$rounds = roundlist::all();
+        //return view("admin.betcontroller", ['create_new' => 'false', 'user_role' => $user_role['role'], 'rounds' => $rounds]);
+        return view("admin.betcontroller", ['create_new' => 'false', 'user_role' => $user_role['role']]);
+    }
+
+    public function serverSide(Request $request) {
+//        $rounds = roundlist::select('id', 'name', 'rightNumber', 'totalbet', 'totalpayout', 'profit', 'paidstatus', 'created_at');
+//        return Datatables::of($rounds)->make(true);
+        $columns = array(
+            0 => 'id',
+            1 => 'name',
+            2 => 'rightNumber',
+            3 => 'totalbet',
+            4 => 'totalpayout',
+            5 => 'profit',
+            6 => 'paidstatus',
+            7 => 'created_at',
+            8 => 'action',
+        );
+
+        $totalData = roundlist::count();
+        $limit = $request->input('length');
+        $start = $request->input('start');
+//        $order = $columns[$request->input('order.0.column')];
+//        $dir = $request->input('order.0.dir');
+
+        $posts = roundlist::offset($start)
+            ->limit($limit)
+            ->get();
+//            ->orderBy($order,$dir)
+
+        $data = array();
+        if($posts) {
+            foreach ($posts as $r) {
+                $nestedData['id'] = $r->id;
+                $nestedData['name'] = $r->name;
+                $nestedData['rightNumber'] = $r->rightNumber;
+                $nestedData['totalbet'] = $r->totalbet;
+                $nestedData['totalpayout'] = $r->totalpayout;
+                $nestedData['profit'] = $r->profit;
+                $nestedData['paidstatus'] = $r->paidstatus;
+                $nestedData['created_at'] = date('d-m-Y H:i:s', strtotime($r->created_at));
+                $nestedData['action'] = '
+                    <button class="btn btn-outline-info" data-toggle="modal" data-target="#setResult">SET RESULT</button>
+                ';
+                $data[] = $nestedData;
+            }
+        }
+
+        $json_data = array(
+            "draw"          => intval($request->input('draw')),
+            "recordsTotal"  => intval($totalData),
+            "data"          => $data
+        );
+
+        echo json_encode($json_data);
     }
 
     public function getbetinfo($betinfo)

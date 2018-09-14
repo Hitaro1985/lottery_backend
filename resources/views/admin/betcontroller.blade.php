@@ -4,6 +4,7 @@
 <!-- Custom CSS -->
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/extra-libs/multicheck/multicheck.css') }}">
 <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css') }}" rel="stylesheet">
+{{--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>--}}
 <!--<link href="{{ asset('dist/css/font-awesome.min.css') }}" rel="stylesheet">-->
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <div class="container-fluid">
@@ -16,7 +17,7 @@
             <div class="card-body">
                 <h5 class="card-title">Bet Management</h5>
                 <div class="table-responsive">
-                    <table id="zero_config" class="table table-striped table-bordered">
+                    <table id="zero_config" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="zero_config_info">
                         <thead>
                             <tr>
                                 {{--<th>Enable</th>--}}
@@ -32,43 +33,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for ($i = 0; $i < count($rounds); $i++)
-                                <tr id="item{{$rounds[$i]->id}}">
-                                    {{--<th>--}}
-                                        {{--<label class="customcheckbox">--}}
-                                            {{--@if ( $all_users[$i]->accept == 0)--}}
-                                                {{--<input id="agent{{$all_users[$i]->id}}" type="checkbox" class="listCheckbox" onclick="onAccept({{$all_users[$i]->id}})" />--}}
-                                                {{--<span class="checkmark"></span>--}}
+                            {{--<th></th>--}}
+                            {{--<th></th>--}}
+                            {{--<th></th>--}}
+                            {{--<th></th>--}}
+                            {{--<th></th>--}}
+                            {{--<th></th>--}}
+                            {{--<th></th>--}}
+                            {{--@for ($i = 0; $i < count($rounds); $i++)--}}
+                                {{--<tr id="item{{$rounds[$i]->id}}">--}}
+                                    {{--<td id="id{{ $rounds[$i]->id }}">{{ $rounds[$i]->id }}</td>--}}
+                                    {{--<td id="name{{$rounds[$i]->id}}">{{ $rounds[$i]->name }}</td>--}}
+                                    {{--<td id="prize{{$rounds[$i]->id}}">{{ $rounds[$i]->rightNumber }}</td>--}}
+                                    {{--<td id="totalbet{{ $rounds[$i]->id }}">{{ $rounds[$i]->totalbet }}</td>--}}
+                                    {{--<td id="totalpayout{{ $rounds[$i]->id }}">{{ $rounds[$i]->totalpayout }}</td>--}}
+                                    {{--<td id="profit{{ $rounds[$i]->id }}">{{ $rounds[$i]->profit }}</td>--}}
+                                    {{--@if($rounds[$i]->paidstatus)--}}
+                                        {{--<td id="paidstatus{{ $rounds[$i]->id }}">Paid</td>--}}
+                                    {{--@else--}}
+                                        {{--<td id="paidstatus{{ $rounds[$i]->id }}">Not Paid</td>--}}
+                                    {{--@endif--}}
+                                    {{--<td>{{ $rounds[$i]->created_at }}</td>--}}
+                                    {{--<td>--}}
+                                        {{--@if(!$rounds[$i]->paidstatus)--}}
+                                            {{--@if(!$rounds[$i]->rightNumber)--}}
+                                            {{--<button class="btn btn-outline-info" onclick="onSetResult({{ $rounds[$i]->id }})" data-toggle="modal" data-target="#setResult">SET RESULT</button>--}}
                                             {{--@else--}}
-                                                {{--<input id="agent{{$all_users[$i]->id}}" type="checkbox" class="listCheckbox" onclick="onAccept({{$all_users[$i]->id}})" checked="checked" />--}}
-                                                {{--<span class="checkmark"></span>--}}
+                                            {{--<button class="btn btn-outline-info" onclick="onPayPrize({{ $rounds[$i]->id }})" data-toggle="modal" data-target="#payPrize">PAY PRIZE</button>--}}
                                             {{--@endif--}}
-                                        {{--</label>--}}
-                                    {{--</th>--}}
-                                    <td id="id{{ $rounds[$i]->id }}">{{ $rounds[$i]->id }}</td>
-                                    <td id="name{{$rounds[$i]->id}}">{{ $rounds[$i]->name }}</td>
-                                    <td id="prize{{$rounds[$i]->id}}">{{ $rounds[$i]->rightNumber }}</td>
-                                    <td id="totalbet{{ $rounds[$i]->id }}">{{ $rounds[$i]->totalbet }}</td>
-                                    <td id="totalpayout{{ $rounds[$i]->id }}">{{ $rounds[$i]->totalpayout }}</td>
-                                    <td id="profit{{ $rounds[$i]->id }}">{{ $rounds[$i]->profit }}</td>
-                                    @if($rounds[$i]->paidstatus)
-                                        <td id="paidstatus{{ $rounds[$i]->id }}">Paid</td>
-                                    @else
-                                        <td id="paidstatus{{ $rounds[$i]->id }}">Not Paid</td>
-                                    @endif
-                                    <td>{{ $rounds[$i]->created_at }}</td>
-                                    <td>
-                                        @if(!$rounds[$i]->paidstatus)
-                                            @if(!$rounds[$i]->rightNumber)
-                                            <button class="btn btn-outline-info" onclick="onSetResult({{ $rounds[$i]->id }})" data-toggle="modal" data-target="#setResult">SET RESULT</button>
-                                            @else
-                                            <button class="btn btn-outline-info" onclick="onPayPrize({{ $rounds[$i]->id }})" data-toggle="modal" data-target="#payPrize">PAY PRIZE</button>
-                                            @endif
-                                        @endif
-                                        {{--</a>--}}
-                                    </td>
-                                </tr>
-                            @endfor
+                                        {{--@endif--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
+                            {{--@endfor--}}
                         </tbody>
                     </table>
                 </div>
@@ -165,12 +161,46 @@
 <script src="{{ asset('assets/extra-libs/multicheck/datatable-checkbox-init.js') }}"></script>
 <script src="{{ asset('assets/extra-libs/multicheck/jquery.multicheck.js') }}"></script>
 <script src="{{ asset('assets/extra-libs/DataTables/datatables.min.js') }}"></script>
+{{--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>--}}
+{{--<script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>--}}
 <script>
     /****************************************
      *       Basic Table                   *
      ****************************************/
-    $('#zero_config').DataTable();
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+    function ajaxData(){
+        var obj = {
+            _token: CSRF_TOKEN,
+        };
+        return obj;
+    }
+    $(document).ready( function() {
+        $('#zero_config').DataTable({
+            processing: true,
+            serverSide: true,
+            paging: true,
+            pageLength: 10,
+            ajax: {
+                type: "POST",
+                url: '{{route('serverSide')}}',
+                "dataType": "json",
+                data: {
+                    _token: CSRF_TOKEN
+                }
+            },
+            "columns":[
+                {"data":"id"},
+                {"data":"name"},
+                {"data":"rightNumber"},
+                {"data":"totalbet"},
+                {"data":"totalpayout"},
+                {"data":"profit"},
+                {"data":"paidstatus"},
+                {"data":"created_at"},
+                {"data":"action"}
+            ]
+        });
+    });
 
     function onSetResult(agentID) {
         $("#editid").val(agentID);

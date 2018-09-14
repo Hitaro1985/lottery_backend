@@ -35,6 +35,7 @@ Route::namespace('Admin')->prefix('admin')->group(function() {
         Route::get('/credit', 'AdminAgentController@view_credit');
         Route::get('/trans-admin', 'AdminAgentController@trans_admin');
         Route::get('/trans', 'AdminAgentController@trans');
+        Route::post('/serverSide', 'AdminBetController@serverSide')->name('serverSide');
 		Route::get('/magentmanage', 'AdminAgentController@index');
 		Route::post('/magentmanage/accept', 'AdminAgentController@master_accept');
 		Route::post('/magentmanage/delete', 'AdminAgentController@master_delete');
