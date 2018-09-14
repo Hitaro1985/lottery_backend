@@ -22,30 +22,80 @@ class AdminAgentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
-        $all_users = Admin::leftJoin('roles', function($join) {
-            $join->on('admins.role_id', '=', 'roles.id');
-        })->where('admins.role_id', '=', 2)->get([
-            'admins.*',
-            'roles.role'
-        ]);
-        return view('admin.magentmanage', ['user_role' => $user_role['role'], 'user_name' => $user->name, 'all_users' => $all_users]);
+        if ($request->has('datefilter') && $request->input('datefilter') != '') {
+            try {
+                $daterange = $request->input('datefilter');
+                $daterange = str_replace(' ', '', $daterange);
+                $dates = explode('-', $daterange);
+                $t1 = explode('/', $dates[0]);
+                $from = $t1[2] . '-' . $t1[0] . '-' . $t1[1];
+                $t2 = explode('/', $dates[1]);
+                $to = $t2[2] . '-' . $t2[0] . '-' . $t2[1];
+                $all_users = Admin::leftJoin('roles', function($join) {
+                    $join->on('admins.role_id', '=', 'roles.id');
+                })->where('admins.role_id', '=', 2)->whereBetween('created_at', [date($from), date($to)])->get([
+                    'admins.*',
+                    'roles.role'
+                ]);
+            } catch(\Exception $e) {
+                $all_users = Admin::leftJoin('roles', function($join) {
+                    $join->on('admins.role_id', '=', 'roles.id');
+                })->where('admins.role_id', '=', 2)->get([
+                    'admins.*',
+                    'roles.role'
+                ]);
+            }
+        } else {
+            $all_users = Admin::leftJoin('roles', function($join) {
+                $join->on('admins.role_id', '=', 'roles.id');
+            })->where('admins.role_id', '=', 2)->get([
+                'admins.*',
+                'roles.role'
+            ]);
+        }
+        return view('admin.magentmanage', ['create_new' => 'true', 'user_role' => $user_role['role'], 'user_name' => $user->name, 'all_users' => $all_users]);
     }
 
-    public function agentmanage()
+    public function agentmanage(Request $request)
     {
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
-        $all_users = Admin::leftJoin('roles', function($join) {
-            $join->on('admins.role_id', '=', 'roles.id');
-        })->where('admins.role_id', '=', 3)->get([
-            'admins.*',
-            'roles.role'
-        ]);
-        return view('admin.agentmanage', ['user_role' => $user_role['role'], 'user_name' => $user->name, 'all_users' => $all_users]);
+        if ($request->has('datefilter') && $request->input('datefilter') != '') {
+            try {
+                $daterange = $request->input('datefilter');
+                $daterange = str_replace(' ', '', $daterange);
+                $dates = explode('-', $daterange);
+                $t1 = explode('/', $dates[0]);
+                $from = $t1[2] . '-' . $t1[0] . '-' . $t1[1];
+                $t2 = explode('/', $dates[1]);
+                $to = $t2[2] . '-' . $t2[0] . '-' . $t2[1];
+                $all_users = Admin::leftJoin('roles', function($join) {
+                    $join->on('admins.role_id', '=', 'roles.id');
+                })->where('admins.role_id', '=', 3)->whereBetween('created_at', [date($from), date($to)])->get([
+                    'admins.*',
+                    'roles.role'
+                ]);
+            } catch(\Exception $e) {
+                $all_users = Admin::leftJoin('roles', function($join) {
+                    $join->on('admins.role_id', '=', 'roles.id');
+                })->where('admins.role_id', '=', 3)->get([
+                    'admins.*',
+                    'roles.role'
+                ]);
+            }
+        } else {
+            $all_users = Admin::leftJoin('roles', function($join) {
+                $join->on('admins.role_id', '=', 'roles.id');
+            })->where('admins.role_id', '=', 3)->get([
+                'admins.*',
+                'roles.role'
+            ]);
+        }
+        return view('admin.agentmanage', ['create_new' => 'true', 'user_role' => $user_role['role'], 'user_name' => $user->name, 'all_users' => $all_users]);
     }
 
     public function view_credit()
@@ -54,7 +104,7 @@ class AdminAgentController extends Controller
         $user_role = Role::where('id', $user->role_id)->first();
 
         $current_user = User::where('id', $user->id)->first();
-        return view('admin.credit', ['user_role' => $user_role['role'], 'current_user'=>$user]);
+        return view('admin.credit', ['create_new' => 'false', 'user_role' => $user_role['role'], 'current_user'=>$user]);
     }
     /**
      * Show the form for creating a new resource.
@@ -156,7 +206,15 @@ class AdminAgentController extends Controller
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
-            $user->amount = 0;
+            $currentuser = Auth::user();
+            if ($currentuser->role_id == 2) {
+                if ($currentuser->amount < $request->credit) {
+                    return response()->json(['status' => 'failed', 'msg' => 'Not enough credit']);
+                }
+                $currentuser->amount = $currentuser->amount - $request->credit;
+                $currentuser->save();
+            }
+            $user->amount = $request->credit;
             $user->phoneno = $request->phoneno;
             $user->role_id = 2;
             $user->save();
@@ -174,7 +232,15 @@ class AdminAgentController extends Controller
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
-            $user->amount = 0;
+            $currentuser = Auth::user();
+            if ($currentuser->role_id == 2) {
+                if ($currentuser->amount < $request->credit) {
+                    return response()->json(['status' => 'failed', 'msg' => 'Not enough credit']);
+                }
+                $currentuser->amount = $currentuser->amount - $request->credit;
+                $currentuser->save();
+            }
+            $user->amount = $request->credit;
             $user->phoneno = $request->phoneno;
             $user->role_id = 3;
             $user->save();
@@ -371,23 +437,60 @@ class AdminAgentController extends Controller
         }
     }
 
-    public function trans_admin()
+    public function trans_admin(Request $request)
     {
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
-        $trans = transaction::all();
-        return view('admin.transhistory', ['user_role' => $user_role['role'], 'trans' => $trans]);
+        if ($request->has('datefilter') && $request->input('datefilter') != '') {
+            try {
+                $daterange = $request->input('datefilter');
+                $daterange = str_replace(' ', '', $daterange);
+                $dates = explode('-', $daterange);
+                $t1 = explode('/', $dates[0]);
+                $from = $t1[2] . '-' . $t1[0] . '-' . $t1[1];
+                $t2 = explode('/', $dates[1]);
+                $to = $t2[2] . '-' . $t2[0] . '-' . $t2[1];
+                $trans = transaction::whereBetween('created_at', [date($from), date($to)])->get();
+            } catch(\Exception $e) {
+                $trans = transaction::all();
+            }
+        } else {
+            $trans = transaction::all();
+        }
+        return view('admin.transhistory', ['create_new' => 'false', 'user_role' => $user_role['role'], 'trans' => $trans]);
     }
 
-    public function trans()
+    public function trans(Request $request)
     {
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
-        $trans = transaction::where(function ($query) use ($user) {
-            $query->where('fromname', '=', $user->name)
-                ->orWhere('toname', '=', $user->name);
-        })->get();
-        return view('admin.transhistory', ['user_role' => $user_role['role'], 'trans' => $trans]);
+        if ($request->has('datefilter') && $request->input('datefilter') != '') {
+            try {
+                $daterange = $request->input('datefilter');
+                $daterange = str_replace(' ', '', $daterange);
+                $dates = explode('-', $daterange);
+                $t1 = explode('/', $dates[0]);
+                $from = $t1[2] . '-' . $t1[0] . '-' . $t1[1];
+                $t2 = explode('/', $dates[1]);
+                $to = $t2[2] . '-' . $t2[0] . '-' . $t2[1];
+                $trans = transaction::whereBetween('created_at', [date($from), date($to)])->get();
+                $trans = transaction::whereBetween('created_at', [date($from), date($to)])->where(function ($query) use ($user) {
+                    $query->where('fromname', '=', $user->name)
+                        ->orWhere('toname', '=', $user->name);
+                })->get();
+            } catch(\Exception $e) {
+                $trans = transaction::where(function ($query) use ($user) {
+                    $query->where('fromname', '=', $user->name)
+                        ->orWhere('toname', '=', $user->name);
+                })->get();
+            }
+        } else {
+            $trans = transaction::where(function ($query) use ($user) {
+                $query->where('fromname', '=', $user->name)
+                    ->orWhere('toname', '=', $user->name);
+            })->get();
+        }
+        return view('admin.transhistory', ['create_new' => 'false', 'user_role' => $user_role['role'], 'trans' => $trans]);
     }
     /**
      * Store a newly created resource in storage.

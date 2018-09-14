@@ -46,7 +46,8 @@ class ApiAgentController extends Controller
     {
         try{
             $user = JWTAuth::parseToken()->authenticate();
-            $betlists = betlist::where('name',$user->name)->orderBy('id','desc')->take(10)->get();
+            $betlistcount = betlist::where('name',$user->name)->count();
+            $betlists = betlist::where('name',$user->name)->orderBy('id','desc')->skip(($request->cur_page_num - 1) * $request->count_per_page)->take($request->count_per_page)->get();
             foreach ($betlists as $k => $betlist) {
                 $betstate = $betlist->betNumber;
                 $data = $this->getbetinfo($betstate);
@@ -58,7 +59,7 @@ class ApiAgentController extends Controller
                 $betlists[$k]['roundinfo'] = str_replace("Round", "R", $betlists[$k]['round']);
                 $betlists[$k]['betstate'] = $reslist;
             }
-            return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'response_code' => 1], 200);
+            return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'total_count' => $betlistcount,  'response_code' => 1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => $e, 'response_code' => 0], 200);
         }
@@ -68,6 +69,9 @@ class ApiAgentController extends Controller
     {
         try{
             $user = JWTAuth::parseToken()->authenticate();
+            if ($user->enabled == false) {
+                return response()->json(['message' => 'Your account has been blocked', 'data' => null, 'response_code' => 0], 200);
+            }
             if ($request->datefilter) {
                 $slices = explode(" - ", $request->datefilter);
                 $from = $slices[0];
@@ -92,7 +96,7 @@ class ApiAgentController extends Controller
                 }
                 $betlists[$k]['betstate'] = $reslist;
             }
-            return response()->json(['message' => 'My Bet Info', 'request' => $request->roundname, 'data' => $betlists, 'response_code' => 1], 200);
+            return response()->json(['message' => 'Report Info', 'request' => $request->roundname, 'data' => $betlists, 'response_code' => 1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
@@ -102,6 +106,9 @@ class ApiAgentController extends Controller
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
+            if ($user->enabled == false) {
+                return response()->json(['message' => 'Your account has been blocked', 'data' => null, 'response_code' => 0], 200);
+            }
             return response()->json(['message' => 'Get User Data', 'data' => $user, 'response_code' => 1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
@@ -112,6 +119,9 @@ class ApiAgentController extends Controller
     {
         try{
             $user = JWTAuth::parseToken()->authenticate();
+            if ($user->enabled == false) {
+                return response()->json(['message' => 'Your account has been blocked', 'data' => null, 'response_code' => 0], 200);
+            }
             $betstate = $request->betstate;
             $data = $this->getbetinfo($betstate);
             $nbetstate = '';
@@ -323,6 +333,9 @@ class ApiAgentController extends Controller
     {
         try{
             $user = JWTAuth::parseToken()->authenticate();
+            if ($user->enabled == false) {
+                return response()->json(['message' => 'Your account has been blocked', 'data' => null, 'response_code' => 0], 200);
+            }
             $duplicate = false;
             $betid = $request->id;
             $nbet = betlist::where('id', $betid)->get()->first();

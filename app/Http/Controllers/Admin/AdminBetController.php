@@ -18,7 +18,7 @@ class AdminBetController extends Controller
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
         $rounds = roundlist::all();
-        return view("admin.betcontroller", ['user_role' => $user_role['role'], 'rounds' => $rounds]);
+        return view("admin.betcontroller", ['create_new' => 'false', 'user_role' => $user_role['role'], 'rounds' => $rounds]);
     }
 
     public function getbetinfo($betinfo)
@@ -48,12 +48,12 @@ class AdminBetController extends Controller
                     if ($betNumbers[$i][0] != "1st"
                         && $betNumbers[$i][0] != "2nd"
                         && $betNumbers[$i][0] != "3rd"
-                        && $betNumbers[$i][0] != "red"
-                        && $betNumbers[$i][0] != "black"
-                        && $betNumbers[$i][0] != "odd"
-                        && $betNumbers[$i][0] != "even"
-                        && $betNumbers[$i][0] != "f118"
-                        && $betNumbers[$i][0] != "f1936"
+                        && $betNumbers[$i][0] != "RED"
+                        && $betNumbers[$i][0] != "BLACK"
+                        && $betNumbers[$i][0] != "ODD"
+                        && $betNumbers[$i][0] != "EVEN"
+                        && $betNumbers[$i][0] != "1-18"
+                        && $betNumbers[$i][0] != "19-36"
                     ) {
                         if (strpos((string)$betNumbers[$i][0], (string)$request->amount) !== false) {
                             $totalpayout = $totalpayout + 36 * $betNumbers[$i][1];
@@ -78,37 +78,37 @@ class AdminBetController extends Controller
                                 $res = "winner";
                             }
                         }
-                        if ($betNumbers[$i][0] == "red") {
+                        if ($betNumbers[$i][0] == "RED") {
                             if (in_array($request->amount, [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 35, 34, 36])) {
                                 $totalpayout = $totalpayout + 2 * $betNumbers[$i][1];
                                 $res = "winner";
                             }
                         }
-                        if ($betNumbers[$i][0] == "red") {
+                        if ($betNumbers[$i][0] == "BLACK") {
                             if (in_array($request->amount, [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35])) {
                                 $totalpayout = $totalpayout + 2 * $betNumbers[$i][1];
                                 $res = "winner";
                             }
                         }
-                        if ($betNumbers[$i][0] == "odd") {
+                        if ($betNumbers[$i][0] == "ODD") {
                             if ($request->amount % 2 == 1 ) {
                                 $totalpayout = $totalpayout + 2 * $betNumbers[$i][1];
                                 $res = "winner";
                             }
                         }
-                        if ($betNumbers[$i][0] == "even") {
+                        if ($betNumbers[$i][0] == "EVEN") {
                             if ($request->amount % 2 == 0 ) {
                                 $totalpayout = $totalpayout + 2 * $betNumbers[$i][1];
                                 $res = "winner";
                             }
                         }
-                        if ($betNumbers[$i][0] == "f118") {
+                        if ($betNumbers[$i][0] == "1-18") {
                             if ($request->amount > 0 && $request->amount < 19) {
                                 $totalpayout = $totalpayout + 2 * $betNumbers[$i][1];
                                 $res = "winner";
                             }
                         }
-                        if ($betNumbers[$i][0] == "f1936") {
+                        if ($betNumbers[$i][0] == "19-36") {
                             if ($request->amount > 18 && $request->amount < 37) {
                                 $totalpayout = $totalpayout + 2 * $betNumbers[$i][1];
                                 $res = "winner";

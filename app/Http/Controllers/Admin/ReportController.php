@@ -72,7 +72,7 @@ class ReportController extends Controller
         {
             array_push($betNumbers,$this->getbetinfo($bets[$i]->betNumber));
         }
-        return view('admin.reportagent', ['user_role' => $user_role['role'], 'bets' => $bets, 'betinfos' => $betNumbers]);
+        return view('admin.reportagent', ['create_new' => 'false', 'user_role' => $user_role['role'], 'bets' => $bets, 'betinfos' => $betNumbers]);
     }
 
     public function report_agent(Request $request)
@@ -106,6 +106,6 @@ class ReportController extends Controller
         {
             array_push($betNumbers,$this->getbetinfo($bets[$i]->betNumber));
         }
-        return view('admin.reportagent', ['user_role' => $user_role['role'], 'bets' => $bets, 'betinfos' => $betNumbers]);
+        return view('admin.reportagent', ['create_new' => 'false', 'user_role' => $user_role['role'], 'bets' => $bets, 'betinfos' => $betNumbers]);
     }
 }

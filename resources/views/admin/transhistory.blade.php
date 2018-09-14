@@ -5,7 +5,23 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/extra-libs/multicheck/multicheck.css') }}">
 <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css') }}" rel="stylesheet">
 <!--<link href="{{ asset('dist/css/font-awesome.min.css') }}" rel="stylesheet">-->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" >
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+<style>
+    .button {
+        margin-left: 20px;
+        position:relative;
+        padding:6px 15px;
+        left:-8px;
+        border:2px solid #207cca;
+        background-color:#207cca;
+        color:#fafafa;
+    }
+    .button:hover  {
+        background-color:#fafafa;
+        color:#207cca;
+    }
+</style>
 <div class="container-fluid">
     <!-- ============================================================== -->
     <!-- Start Page Content -->
@@ -27,6 +43,14 @@
                                 <th>Date</th>
                             </tr>
                         </thead>
+                        <div style="margin:20px;">
+                            <form id="searchDetail" action="" method="get">
+                                Search -
+                                Date : <input type="text" id="searchdate" name="datefilter" autocomplete="off" value="{{ app('request')->input('datefilter') }}" style="width:200px; text-align:center;" placeholder="Date Range" />
+                                <input type="button" value="Search" class="button" onclick="onSearchDetail();">
+                                <input type="button" value="All" class="button" onclick="onSearchAll();">
+                            </form>
+                        </div>
                         <tbody>
                         @for ($i = 0; $i < count($trans); $i++)
                             <tr id="item{{$trans[$i]->id}}">
@@ -78,10 +102,30 @@
 <script src="{{ asset('assets/extra-libs/multicheck/datatable-checkbox-init.js') }}"></script>
 <script src="{{ asset('assets/extra-libs/multicheck/jquery.multicheck.js') }}"></script>
 <script src="{{ asset('assets/extra-libs/DataTables/datatables.min.js') }}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
     /****************************************
      *       Basic Table                   *
      ****************************************/
+    $(function() {
+
+        $('input[name="datefilter"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        });
+
+        $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+
+    });
     $('#zero_config').DataTable();
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     function onAccept(agentID) {
@@ -158,6 +202,12 @@
                 alert(data.status);
             }
         });
+    }
+    function onSearchDetail() {
+        $('#searchDetail').submit();
+    }
+    function onSearchAll() {
+        window.location = window.location.href.split("?")[0];
     }
 </script>
 @endsection

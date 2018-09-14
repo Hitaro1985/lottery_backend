@@ -5,7 +5,23 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/extra-libs/multicheck/multicheck.css') }}">
 <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css') }}" rel="stylesheet">
 <!--<link href="{{ asset('dist/css/font-awesome.min.css') }}" rel="stylesheet">-->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" >
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+<style>
+    .button {
+        margin-left: 20px;
+        position:relative;
+        padding:6px 15px;
+        left:-8px;
+        border:2px solid #207cca;
+        background-color:#207cca;
+        color:#fafafa;
+    }
+    .button:hover  {
+        background-color:#fafafa;
+        color:#207cca;
+    }
+</style>
 <div class="container-fluid">
     <!-- ============================================================== -->
     <!-- Start Page Content -->
@@ -20,7 +36,7 @@
                         <thead>
                             <tr>
                                 <th>Enable</th>
-                                <th>Name</th>
+                                <th>UserName</th>
                                 <th>Email Address</th>
                                 <th>Phone Number</th>
                                 <th>Role</th>
@@ -30,6 +46,14 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
+                        <div style="margin:20px;">
+                            <form id="searchDetail" action="" method="get">
+                                Search -
+                                Date : <input type="text" id="searchdate" name="datefilter" autocomplete="off" value="{{ app('request')->input('datefilter') }}" style="width:200px; text-align:center;" placeholder="Date Range" />
+                                <input type="button" value="Search" class="button" onclick="onSearchDetail();">
+                                <input type="button" value="All" class="button" onclick="onSearchAll();">
+                            </form>
+                        </div>
                         <tbody>
                             @for ($i = 0; $i < count($all_users); $i++)
                                 <tr>
@@ -48,7 +72,7 @@
                                     <td id="email{{$all_users[$i]->id}}">{{ $all_users[$i]->email }}</td>
                                     <td id="phoneno{{ $all_users[$i]->id }}">{{ $all_users[$i]->phoneno }}</td>
                                     <td id="role{{$all_users[$i]->id}}">{{ $all_users[$i]->role }}</td>
-                                    <td id="amount{{$all_users[$i]->id}}">{{ $all_users[$i]->amount }}</td>
+                                    <td id="amount{{$all_users[$i]->id}}"><a href="/admin/trans-admin">{{ $all_users[$i]->amount }}</a></td>
                                     <td>{{ $all_users[$i]->created_at }}</td>
                                     <td id="updatetime{{$all_users[$i]->id}}">{{ $all_users[$i]->updated_at }}</td>
                                     <td>
@@ -143,9 +167,9 @@
                             </div>
                             <div class="modal-body">
                                 <div class="form-group row">
-                                    <label for="editname" class="col-sm-3 text-right control-label col-form-label">Name : </label>
+                                    <label for="editname" class="col-sm-3 text-right control-label col-form-label">UserName : </label>
                                     <div class="col-sm-9">
-                                        <input id="createname" type="text" class="form-control" placeholder="Name">
+                                        <input id="createname" type="text" class="form-control" placeholder="UserName">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -164,6 +188,12 @@
                                     <label for="editphoneno" class="col-sm-3 text-right control-label col-form-label">Phone : </label>
                                     <div class="col-sm-9">
                                         <input id="createphoneno" type="text" class="form-control" placeholder="Phone">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="editcredit" class="col-sm-3 text-right control-label col-form-label">Credit : </label>
+                                    <div class="col-sm-9">
+                                        <input id="createcredit" type="text" class="form-control" placeholder="Credit" value="0">
                                     </div>
                                 </div>
                             </div>
@@ -211,10 +241,30 @@
 <script src="{{ asset('assets/extra-libs/multicheck/datatable-checkbox-init.js') }}"></script>
 <script src="{{ asset('assets/extra-libs/multicheck/jquery.multicheck.js') }}"></script>
 <script src="{{ asset('assets/extra-libs/DataTables/datatables.min.js') }}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
     /****************************************
      *       Basic Table                   *
      ****************************************/
+    $(function() {
+
+        $('input[name="datefilter"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        });
+
+        $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+
+    });
     $('#zero_config').DataTable();
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     function onAccept(agentID) {
@@ -323,6 +373,7 @@
         preemail = $("#createemail").val();
         prepassword = $("#createpassword").val();
         prephoneno = $("#createphoneno").val();
+        precredit = $('#createcredit').val();
         $.ajax({
             /* the route pointing to the post function */
             url: '/admin/magentmanage/create-new',
@@ -332,15 +383,26 @@
                 name:prename,
                 email:preemail,
                 password:prepassword,
-                phoneno:prephoneno
+                phoneno:prephoneno,
+                credit:precredit
             },
             dataType: 'JSON',
             /* remind that 'data' is the response of the AjaxController */
             success: function (data) {
-                alert(data.status);
-                location.reload();
+                if ( data.status == "failed" ) {
+                    alert(data.msg);
+                } else {
+                    alert(data.status);
+                    location.reload();
+                }
             }
         });
+    }
+    function onSearchDetail() {
+        $('#searchDetail').submit();
+    }
+    function onSearchAll() {
+        window.location = window.location.href.split("?")[0];
     }
 </script>
 @endsection

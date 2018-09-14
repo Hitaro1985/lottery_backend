@@ -429,6 +429,24 @@
                         $('#totalreceives'+i).text(data.data.totalreceives['s'+i]);
                         $('#totalpayouts'+i).text(data.data.totalpayouts['s'+i]);
                     }
+                    $('#totalreceives1st').text(data.data.totalreceives['1st']);
+                    $('#totalpayouts1st').text(data.data.totalpayouts['1st']);
+                    $('#totalreceives2nd').text(data.data.totalreceives['2nd']);
+                    $('#totalpayouts2nd').text(data.data.totalpayouts['2nd']);
+                    $('#totalreceives3rd').text(data.data.totalreceives['3rd']);
+                    $('#totalpayouts3rd').text(data.data.totalpayouts['3rd']);
+                    $('#totalreceivesf118').text(data.data.totalreceives['f118']);
+                    $('#totalpayoutsf118').text(data.data.totalpayouts['f118']);
+                    $('#totalreceivesf1936').text(data.data.totalreceives['f1936']);
+                    $('#totalpayoutsf1936').text(data.data.totalpayouts['f1936']);
+                    $('#totalreceivesred').text(data.data.totalreceives['red']);
+                    $('#totalpayoutsred').text(data.data.totalpayouts['red']);
+                    $('#totalreceivesblack').text(data.data.totalreceives['black']);
+                    $('#totalpayoutsblack').text(data.data.totalpayouts['black']);
+                    $('#totalreceivesodd').text(data.data.totalreceives['odd']);
+                    $('#totalpayoutsodd').text(data.data.totalpayouts['odd']);
+                    $('#totalreceiveseven').text(data.data.totalreceives['even']);
+                    $('#totalpayoutseven').text(data.data.totalpayouts['even']);
                 }
         });
     }

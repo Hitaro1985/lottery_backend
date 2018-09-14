@@ -36,40 +36,27 @@
                         <thead>
                             <tr>
                                 <th>id</th>
-                                <th>Username</th>
-                                <th>BetInfo</th>
-                                <th>TotalBet</th>
-                                <th>Round</th>
-                                <th>W/L</th>
-                                <th>Time</th>
+                                <th>Name</th>
+                                <th>Prize</th>
+                                <th>Createtime</th>
                             </tr>
                         </thead>
                         <tbody>
                         <div style="margin:20px;">
                             <form id="searchDetail" action="" method="get">
                             Search -
-                            @if($user_role == "Admin")
-                            Agent : <input type="text" id="searchagent" name="searchagent" style="width:200px; text-align:center;" placeholder="Agent Name" value="{{ app('request')->input('searchagent') }}">
-                            @endif
-                            Date : <input type="text" id="searchdate" autocomplete="off" name="datefilter" value="{{ app('request')->input('datefilter') }}" style="width:200px; text-align:center;" placeholder="Date Range" />
                             Round : <input type="text" id="searchround" name="searchround" style="width:200px; text-align:center;" placeholder="Round Name" value="{{ app('request')->input('searchround') }}">
+                            Date : <input type="text" id="searchdate" autocomplete="off" name="datefilter" value="{{ app('request')->input('datefilter') }}" style="width:200px; text-align:center;" placeholder="Date Range" />
                             <input type="button" value="Search" class="button" onclick="onSearchDetail();">
                             <input type="button" value="All" class="button" onclick="onSearchAll();">
                             </form>
                         </div>
-                        @for ($i = 0; $i < count($bets); $i++)
-                            <tr id="item{{$bets[$i]->id}}">
-                                <td id="id{{ $bets[$i]->id }}">{{ $bets[$i]->id }}</td>
-                                <td id="name{{$bets[$i]->id}}">{{ $bets[$i]->name }}</td>
-                                <td id="betinfo{{$bets[$i]->id}}">
-                                    @for ($j = 0; $j < count($betinfos[$i]); $j++)
-                                        {{ $betinfos[$i][$j][0] }} : {{ $betinfos[$i][$j][1] }}MYR </br>
-                                    @endfor
-                                </td>
-                                <td id="totalbet{{ $bets[$i]->id }}">{{ $bets[$i]->total }}MYR</td>
-                                <td id="round{{ $bets[$i]->id }}">{{ $bets[$i]->round }}</td>
-                                <td id="wls{{ $bets[$i]->id }}">{{ $bets[$i]->wls }}</td>
-                                <td>{{ $bets[$i]->created_at }}</td>
+                        @for ($i = 0; $i < count($rounds); $i++)
+                            <tr id="item{{$rounds[$i]->id}}">
+                                <td id="id{{ $rounds[$i]->id }}">{{ $rounds[$i]->id }}</td>
+                                <td id="name{{$rounds[$i]->id}}">{{ $rounds[$i]->name }}</td>
+                                <td id="prize{{ $rounds[$i]->id }}">{{ $rounds[$i]->rightNumber }}</td>
+                                <td>{{ $rounds[$i]->created_at }}</td>
                             </tr>
                         @endfor
                         </tbody>

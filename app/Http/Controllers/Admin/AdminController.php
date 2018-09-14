@@ -95,6 +95,6 @@ class AdminController extends Controller
         if ($user_role['role'] == 'Agent') {
             return redirect('/admin/report');
         }
-        return view('admin.dashboard', ['user_role' => $user_role['role'], 'slotstates'=>$slotstates, 'totalreceives' => $totalreceives, 'totalpayouts' => $totalpayouts]);
+        return view('admin.dashboard', ['create_new' => 'false', 'user_role' => $user_role['role'], 'slotstates'=>$slotstates, 'totalreceives' => $totalreceives, 'totalpayouts' => $totalpayouts]);
     }
 }

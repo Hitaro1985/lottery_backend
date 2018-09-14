@@ -55,7 +55,7 @@
                 <!-- ============================================================== -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     <span class="d-none d-md-block">Create New <i class="fa fa-angle-down"></i></span>
+                    @if ($create_new == 'true' and ($user_role == 'Admin' or $user_role == 'Master Agent'))<span class="d-none d-md-block">Create New <i class="fa fa-angle-down"></i></span>@endif
                      <span class="d-block d-md-none"><i class="fa fa-plus"></i></span>   
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">

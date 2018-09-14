@@ -31,6 +31,7 @@ Route::namespace('Admin')->prefix('admin')->group(function() {
 		Route::post('/betmanage/pay', 'AdminBetController@pay');
         Route::get('/report-admin', 'ReportController@index')->name('report');
         Route::get('/report', 'ReportController@report_agent');
+        Route::get('/result', 'ResultController@index')->name('result');
         Route::get('/credit', 'AdminAgentController@view_credit');
         Route::get('/trans-admin', 'AdminAgentController@trans_admin');
         Route::get('/trans', 'AdminAgentController@trans');
