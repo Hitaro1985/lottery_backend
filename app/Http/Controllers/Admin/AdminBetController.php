@@ -193,6 +193,7 @@ class AdminBetController extends Controller
                 $betlist->save();
             }
             $bet->totalpayout = $roundtotal;
+            $bet->rightNumber = $request->amount;
             $bet->profit = $bet->totalbet - $roundtotal;
             $bet->save();
             return response()->json(['status' => 'success']);
