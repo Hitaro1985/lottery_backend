@@ -26,6 +26,10 @@ class AdminAgentController extends Controller
     {
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
+        $query = array();
+        if ($user->role_id != 1) {
+            $query['created_by'] = $user->name;
+        }
         if ($request->has('datefilter') && $request->input('datefilter') != '') {
             try {
                 $daterange = $request->input('datefilter');
@@ -37,14 +41,14 @@ class AdminAgentController extends Controller
                 $to = $t2[2] . '-' . $t2[0] . '-' . $t2[1];
                 $all_users = Admin::leftJoin('roles', function($join) {
                     $join->on('admins.role_id', '=', 'roles.id');
-                })->where('admins.role_id', '=', 2)->whereBetween('created_at', [date($from), date($to)])->get([
+                })->where('admins.role_id', '=', 2)->where($query)->whereBetween('created_at', [date($from), date($to)])->get([
                     'admins.*',
                     'roles.role'
                 ]);
             } catch(\Exception $e) {
                 $all_users = Admin::leftJoin('roles', function($join) {
                     $join->on('admins.role_id', '=', 'roles.id');
-                })->where('admins.role_id', '=', 2)->get([
+                })->where($query)->where('admins.role_id', '=', 2)->get([
                     'admins.*',
                     'roles.role'
                 ]);
@@ -52,7 +56,7 @@ class AdminAgentController extends Controller
         } else {
             $all_users = Admin::leftJoin('roles', function($join) {
                 $join->on('admins.role_id', '=', 'roles.id');
-            })->where('admins.role_id', '=', 2)->get([
+            })->where($query)->where('admins.role_id', '=', 2)->get([
                 'admins.*',
                 'roles.role'
             ]);
@@ -64,6 +68,9 @@ class AdminAgentController extends Controller
     {
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
+        if ($user->role_id != 1) {
+            $query['created_by'] = $user->name;
+        }
         if ($request->has('datefilter') && $request->input('datefilter') != '') {
             try {
                 $daterange = $request->input('datefilter');
@@ -75,14 +82,14 @@ class AdminAgentController extends Controller
                 $to = $t2[2] . '-' . $t2[0] . '-' . $t2[1];
                 $all_users = Admin::leftJoin('roles', function($join) {
                     $join->on('admins.role_id', '=', 'roles.id');
-                })->where('admins.role_id', '=', 3)->whereBetween('created_at', [date($from), date($to)])->get([
+                })->where($query)->where('admins.role_id', '=', 3)->whereBetween('created_at', [date($from), date($to)])->get([
                     'admins.*',
                     'roles.role'
                 ]);
             } catch(\Exception $e) {
                 $all_users = Admin::leftJoin('roles', function($join) {
                     $join->on('admins.role_id', '=', 'roles.id');
-                })->where('admins.role_id', '=', 3)->get([
+                })->where($query)->where('admins.role_id', '=', 3)->get([
                     'admins.*',
                     'roles.role'
                 ]);
@@ -90,7 +97,7 @@ class AdminAgentController extends Controller
         } else {
             $all_users = Admin::leftJoin('roles', function($join) {
                 $join->on('admins.role_id', '=', 'roles.id');
-            })->where('admins.role_id', '=', 3)->get([
+            })->where($query)->where('admins.role_id', '=', 3)->get([
                 'admins.*',
                 'roles.role'
             ]);
@@ -201,6 +208,10 @@ class AdminAgentController extends Controller
     public function master_create_new(Request $request)
     {
         try{
+            $checkif = Admin::where('name', $request->name)->get();
+            if (count($checkif) > 0) {
+                return response()->json(['status' => 'failed', 'msg' => 'Username Exists']);
+            }
             $user = new Admin();
             //$user = Admin::where('id', $request->id)->first();
             $user->name = $request->name;
