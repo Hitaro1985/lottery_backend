@@ -212,6 +212,7 @@ class AdminAgentController extends Controller
             if (count($checkif) > 0) {
                 return response()->json(['status' => 'failed', 'msg' => 'Username Exists']);
             }
+            $nuser = Auth::user();
             $user = new Admin();
             //$user = Admin::where('id', $request->id)->first();
             $user->name = $request->name;
@@ -228,6 +229,7 @@ class AdminAgentController extends Controller
             $user->amount = $request->credit;
             $user->phoneno = $request->phoneno;
             $user->role_id = 2;
+            $user->created_by = $nuser->name;
             $user->save();
             return response()->json(["status" => 'success']);
         } catch (\Exception $e) {
@@ -239,6 +241,7 @@ class AdminAgentController extends Controller
     {
         try{
             $user = new Admin();
+            $nuser = Auth::user();
             //$user = Admin::where('id', $request->id)->first();
             $user->name = $request->name;
             $user->email = $request->email;
@@ -254,6 +257,7 @@ class AdminAgentController extends Controller
             $user->amount = $request->credit;
             $user->phoneno = $request->phoneno;
             $user->role_id = 3;
+            $user->created_by = $nuser->name;
             $user->save();
             return response()->json(["status" => 'success']);
         } catch (\Exception $e) {
