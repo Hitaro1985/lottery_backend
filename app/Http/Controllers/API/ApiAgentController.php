@@ -52,12 +52,47 @@ class ApiAgentController extends Controller
                 $betstate = $betlist->betNumber;
                 $data = $this->getbetinfo($betstate);
                 $reslist = array();
+                $totalpay = 0;
                 for ($i = 0; $i < count($data); $i ++) {
+                    if (is_numeric($data[$i][0])) {
+                        $totalpay = $totalpay + $data[$i][1] * 36;
+                    } else {
+                        switch ($data[$i][0]) {
+                            case "1st":
+                                $totalpay = $totalpay + $data[$i][1] * 3;
+                                break;
+                            case "2nd":
+                                $totalpay = $totalpay + $data[$i][1] * 3;
+                                break;
+                            case "3rd":
+                                $totalpay = $totalpay + $data[$i][1] * 3;
+                                break;
+                            case "EVEN":
+                                $totalpay = $totalpay + $data[$i][1] * 2;
+                                break;
+                            case "ODD":
+                                $totalpay = $totalpay + $data[$i][1] * 2;
+                                break;
+                            case "BLACK":
+                                $totalpay = $totalpay + $data[$i][1] * 2;
+                                break;
+                            case "RED":
+                                $totalpay = $totalpay + $data[$i][1] * 2;
+                                break;
+                            case "1-18":
+                                $totalpay = $totalpay + $data[$i][1] * 2;
+                                break;
+                            case "19-36":
+                                $totalpay = $totalpay + $data[$i][1] * 2;
+                                break;
+                        }
+                    }
                     $res = "Number #" . $data[$i][0] . "=" . "MYR " . $data[$i][1];
                     $reslist[$i] = $res;
                 }
                 $betlists[$k]['roundinfo'] = str_replace("Round", "R", $betlists[$k]['round']);
                 $betlists[$k]['betstate'] = $reslist;
+                $betlists[$k]['total_pay'] = $totalpay;
             }
             return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'total_count' => $betlistcount,  'response_code' => 1], 200);
         } catch (\Exception $e) {
