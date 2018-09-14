@@ -68,6 +68,7 @@ class AdminAgentController extends Controller
     {
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
+        $query = array();
         if ($user->role_id != 1) {
             $query['created_by'] = $user->name;
         }
