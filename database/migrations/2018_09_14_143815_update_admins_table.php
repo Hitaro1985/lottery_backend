@@ -17,6 +17,7 @@ class UpdateAdminsTable extends Migration
         Schema::table('admins', function (Blueprint $table) {
             $table->dropUnique('admins_email_unique');
             $table->dropUnique('admins_phoneno_unique');
+            $table->string('created_by');
         });
     }
 
