@@ -144,10 +144,10 @@ class AdminAgentController extends Controller
                         $tnum = 18;
                     }
                     foreach ($infs as $inf) {
-                        if ($k[(string)$inf] == null) {
-                            $k[(string)$inf] = $betNumbers[$i][1] / $tnum;
+                        if (!array_key_exists((string)$inf, $k)) {
+                            $k[(string)$inf] = number_format($betNumbers[$i][1] / $tnum, 2, '.', '');
                         } else {
-                            $k[(string)$inf] = $k[(string)$betNumbers[$i][0]] + $betNumbers[$i][1] / $tnum;
+                            $k[(string)$inf] = number_format($k[(string)$inf] + $betNumbers[$i][1] / $tnum, 2, '.', '');
                         }
                     }
                 }

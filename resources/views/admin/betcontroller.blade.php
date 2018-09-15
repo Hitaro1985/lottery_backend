@@ -182,8 +182,8 @@
                                 <tr>
                                     <td>8</td>
                                     <td id="totalbet8"></td>
-                                    <td id="totalpayout8"></td>
-                                    <td id="profit8"></td>
+                                    <td id="totalpayout88"></td>
+                                    <td id="profit88"></td>
                                     <td>27</td>
                                     <td id="totalbet27"></td>
                                     <td id="totalpayout27"></td>
@@ -192,8 +192,8 @@
                                 <tr>
                                     <td>9</td>
                                     <td id="totalbet9"></td>
-                                    <td id="totalpayout9"></td>
-                                    <td id="profit9"></td>
+                                    <td id="totalpayout99"></td>
+                                    <td id="profit99"></td>
                                     <td>28</td>
                                     <td id="totalbet28"></td>
                                     <td id="totalpayout28"></td>
@@ -202,8 +202,8 @@
                                 <tr>
                                     <td>10</td>
                                     <td id="totalbet10"></td>
-                                    <td id="totalpayout10"></td>
-                                    <td id="profit10"></td>
+                                    <td id="totalpayout1010"></td>
+                                    <td id="profit1010"></td>
                                     <td>29</td>
                                     <td id="totalbet29"></td>
                                     <td id="totalpayout29"></td>
@@ -212,8 +212,8 @@
                                 <tr>
                                     <td>11</td>
                                     <td id="totalbet11"></td>
-                                    <td id="totalpayout11"></td>
-                                    <td id="profit11"></td>
+                                    <td id="totalpayout1111"></td>
+                                    <td id="profit1111"></td>
                                     <td>30</td>
                                     <td id="totalbet30"></td>
                                     <td id="totalpayout30"></td>
@@ -222,8 +222,8 @@
                                 <tr>
                                     <td>12</td>
                                     <td id="totalbet12"></td>
-                                    <td id="totalpayout12"></td>
-                                    <td id="profit12"></td>
+                                    <td id="totalpayout1212"></td>
+                                    <td id="profit1212"></td>
                                     <td>31</td>
                                     <td id="totalbet31"></td>
                                     <td id="totalpayout31"></td>
@@ -232,8 +232,8 @@
                                 <tr>
                                     <td>13</td>
                                     <td id="totalbet13"></td>
-                                    <td id="totalpayout13"></td>
-                                    <td id="profit13"></td>
+                                    <td id="totalpayout1313"></td>
+                                    <td id="profit1313"></td>
                                     <td>32</td>
                                     <td id="totalbet32"></td>
                                     <td id="totalpayout32"></td>
@@ -242,8 +242,8 @@
                                 <tr>
                                     <td>14</td>
                                     <td id="totalbet14"></td>
-                                    <td id="totalpayout14"></td>
-                                    <td id="profit14"></td>
+                                    <td id="totalpayout1414"></td>
+                                    <td id="profit1414"></td>
                                     <td>33</td>
                                     <td id="totalbet33"></td>
                                     <td id="totalpayout33"></td>
@@ -252,8 +252,8 @@
                                 <tr>
                                     <td>15</td>
                                     <td id="totalbet15"></td>
-                                    <td id="totalpayout15"></td>
-                                    <td id="profit15"></td>
+                                    <td id="totalpayout1515"></td>
+                                    <td id="profit1515"></td>
                                     <td>34</td>
                                     <td id="totalbet34"></td>
                                     <td id="totalpayout34"></td>
@@ -262,8 +262,8 @@
                                 <tr>
                                     <td>16</td>
                                     <td id="totalbet16"></td>
-                                    <td id="totalpayout16"></td>
-                                    <td id="profit16"></td>
+                                    <td id="totalpayout1616"></td>
+                                    <td id="profit1616"></td>
                                     <td>35</td>
                                     <td id="totalbet35"></td>
                                     <td id="totalpayout35"></td>
@@ -272,8 +272,8 @@
                                 <tr>
                                     <td>17</td>
                                     <td id="totalbet17"></td>
-                                    <td id="totalpayout17"></td>
-                                    <td id="profit17"></td>
+                                    <td id="totalpayout1717"></td>
+                                    <td id="profit1717"></td>
                                     <td>36</td>
                                     <td id="totalbet36"></td>
                                     <td id="totalpayout36"></td>
@@ -419,22 +419,28 @@
                 console.log(data);
                 if (data.status == "success") {
                     for (i = 0; i < 37; i ++) {
-                        $("#totalbet"+i).text("aa");
-                        if ( data.totalbet[i] ) {
-                            $("#totalbet" + i).text(data.totalbet[i]);
+                        if ( i > 7 && i < 18 ) {
+                            if ( data.totalbet[i] ) {
+                                console.log('aa');
+                                $("#totalbet" + i).text(data.totalbet[i]);
+                                $("#totalpayout" + i + i).text((data.totalbet[i] * 36).toFixed(2));
+                                $("#profit" + i + i).text((data.total - data.totalbet[i] * 36).toFixed(2));
+                            } else {
+                                $("#totalbet" + i).text("0");
+                                $("#totalpayout" + i + i).text("0");
+                                $("#profit" + i + i).text("0");
+                            }
                         } else {
-                            $("#totalbet" + i).text("0");
-                        }
-                        $("#totalpayout"+i).text("aa");
-                        if ( data.totalbet[i] ) {
-                            $("#totalpayout" + i).text(data.totalbet[i] * 36);
-                        } else {
-                            $("#totalpayout" + i).text("0");
-                        }
-                        if ( data.totalbet[i] ) {
-                            $("#profit" + i).text(data.total - data.totalbet[i] * 36);
-                        } else {
-                            $("#profit" + i).text("0");
+                            if ( data.totalbet[i] ) {
+                                console.log('aa');
+                                $("#totalbet" + i).text(data.totalbet[i]);
+                                $("#totalpayout" + i).text((data.totalbet[i] * 36).toFixed(2));
+                                $("#profit" + i).text((data.total - data.totalbet[i] * 36).toFixed(2));
+                            } else {
+                                $("#totalbet" + i).text("0");
+                                $("#totalpayout" + i).text("0");
+                                $("#profit" + i).text("0");
+                            }
                         }
                     }
 //                    $("#betexpects").text(data.data);
@@ -443,6 +449,7 @@
                 }
             }
         });
+        console.log($("#totalpayout27").text());
         $("#editid").val(agentID);
     }
 
