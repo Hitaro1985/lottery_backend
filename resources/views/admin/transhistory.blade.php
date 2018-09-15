@@ -50,8 +50,32 @@
                                 <input type="button" value="Search" class="button" onclick="onSearchDetail();">
                                 <input type="button" value="All" class="button" onclick="onSearchAll();">
                                 @if( app('request')->input('datefilter'))
-                                <div style="display: inline-block;border-color: red;border-width: 3px;border-style: solid;width: 100px;height: 39px;line-height: 39px;text-align: center;vertical-align: middle;">{{ $receive }}</div>
-                                <div style="display: inline-block;border-color: blue;border-width: 3px;border-style: solid;width: 100px;height: 39px;line-height: 39px;text-align: center;vertical-align: middle;">{{ $current }}</div>
+                                    Total credit added  &nbsp;<div style="    display: inline-block;
+                                                border-color: red;
+                                                border-width: 3px;
+                                                border-style: solid;
+                                                width: 100px;
+                                                height: 39px;
+                                                line-height: 39px;
+                                                text-align: center;
+                                                vertical-align: middle;
+                                                background-color: #DE4747;
+                                                color: white;
+                                                font-size: 21px;
+                                                font-weight: bold;">{{ $receive }}</div>
+                                    &nbsp;&nbsp; Current credit &nbsp;<div style="display: inline-block;
+                                                border-color: green;
+                                                border-width: 3px;
+                                                border-style: solid;
+                                                width: 100px;
+                                                height: 39px;
+                                                line-height: 39px;
+                                                text-align: center;
+                                                vertical-align: middle;
+                                                background-color: #43CB29;
+                                                color: white;
+                                                font-size: 21px;
+                                                font-weight: bold;">{{ $current }}</div>
                                 @endif
                             </form>
                         </div>

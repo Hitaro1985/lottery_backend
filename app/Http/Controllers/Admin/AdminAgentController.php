@@ -145,9 +145,11 @@ class AdminAgentController extends Controller
                     }
                     foreach ($infs as $inf) {
                         if (!array_key_exists((string)$inf, $k)) {
-                            $k[(string)$inf] = number_format($betNumbers[$i][1] / $tnum, 2, '.', '');
+                            $k[(string)$inf] = $betNumbers[$i][1];
+                            //$k[(string)$inf] = number_format($betNumbers[$i][1] / $tnum, 2, '.', '');
                         } else {
-                            $k[(string)$inf] = number_format($k[(string)$inf] + $betNumbers[$i][1] / $tnum, 2, '.', '');
+                            $k[(string)$inf] = $k[(string)$inf] + $betNumbers[$i][1];
+                            //$k[(string)$inf] = number_format($k[(string)$inf] + $betNumbers[$i][1] / $tnum, 2, '.', '');
                         }
                     }
                 }

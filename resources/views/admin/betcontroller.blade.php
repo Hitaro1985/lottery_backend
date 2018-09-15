@@ -7,6 +7,17 @@
 {{--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>--}}
 <!--<link href="{{ asset('dist/css/font-awesome.min.css') }}" rel="stylesheet">-->
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+<style>
+    .red-color {
+        color:red;
+    }
+    .black-color {
+        color:black;
+    }
+    .green-color {
+        color:green;
+    }
+</style>
 <div class="container-fluid">
     <!-- ============================================================== -->
     <!-- Start Page Content -->
@@ -100,17 +111,17 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>0</td>
+                                    <td class="green-color">0</td>
                                     <td id="totalbet0"></td>
                                     <td id="totalpayout0"></td>
                                     <td id="profit0"></td>
-                                    <td>19</td>
+                                    <td class="red-color">19</td>
                                     <td id="totalbet19"></td>
                                     <td id="totalpayout19"></td>
                                     <td id="profit19"></td>
                                 </tr>
                                 <tr>
-                                    <td>1</td>
+                                    <td class="red-color">1</td>
                                     <td id="totalbet1"></td>
                                     <td id="totalpayout1"></td>
                                     <td id="profit1"></td>
@@ -124,13 +135,13 @@
                                     <td id="totalbet2"></td>
                                     <td id="totalpayout2"></td>
                                     <td id="profit2"></td>
-                                    <td>21</td>
+                                    <td class="red-color">21</td>
                                     <td id="totalbet21"></td>
                                     <td id="totalpayout21"></td>
                                     <td id="profit21"></td>
                                 </tr>
                                 <tr>
-                                    <td>3</td>
+                                    <td class="red-color">3</td>
                                     <td id="totalbet3"></td>
                                     <td id="totalpayout3"></td>
                                     <td id="profit3"></td>
@@ -144,13 +155,13 @@
                                     <td id="totalbet4"></td>
                                     <td id="totalpayout4"></td>
                                     <td id="profit4"></td>
-                                    <td>23</td>
+                                    <td class="red-color">23</td>
                                     <td id="totalbet23"></td>
                                     <td id="totalpayout23"></td>
                                     <td id="profit23"></td>
                                 </tr>
                                 <tr>
-                                    <td>5</td>
+                                    <td class="red-color">5</td>
                                     <td id="totalbet5"></td>
                                     <td id="totalpayout5"></td>
                                     <td id="profit5"></td>
@@ -164,13 +175,13 @@
                                     <td id="totalbet6"></td>
                                     <td id="totalpayout6"></td>
                                     <td id="profit6"></td>
-                                    <td>25</td>
+                                    <td class="red-color">25</td>
                                     <td id="totalbet25"></td>
                                     <td id="totalpayout25"></td>
                                     <td id="profit25"></td>
                                 </tr>
                                 <tr>
-                                    <td>7</td>
+                                    <td class="red-color">7</td>
                                     <td id="totalbet7"></td>
                                     <td id="totalpayout7"></td>
                                     <td id="profit7"></td>
@@ -184,13 +195,13 @@
                                     <td id="totalbet8"></td>
                                     <td id="totalpayout88"></td>
                                     <td id="profit88"></td>
-                                    <td>27</td>
+                                    <td class="red-color">27</td>
                                     <td id="totalbet27"></td>
                                     <td id="totalpayout27"></td>
                                     <td id="profit27"></td>
                                 </tr>
                                 <tr>
-                                    <td>9</td>
+                                    <td class="red-color">9</td>
                                     <td id="totalbet9"></td>
                                     <td id="totalpayout99"></td>
                                     <td id="profit99"></td>
@@ -214,13 +225,13 @@
                                     <td id="totalbet11"></td>
                                     <td id="totalpayout1111"></td>
                                     <td id="profit1111"></td>
-                                    <td>30</td>
+                                    <td class="red-color">30</td>
                                     <td id="totalbet30"></td>
                                     <td id="totalpayout30"></td>
                                     <td id="profit30"></td>
                                 </tr>
                                 <tr>
-                                    <td>12</td>
+                                    <td class="red-color">12</td>
                                     <td id="totalbet12"></td>
                                     <td id="totalpayout1212"></td>
                                     <td id="profit1212"></td>
@@ -234,13 +245,13 @@
                                     <td id="totalbet13"></td>
                                     <td id="totalpayout1313"></td>
                                     <td id="profit1313"></td>
-                                    <td>32</td>
+                                    <td class="red-color">32</td>
                                     <td id="totalbet32"></td>
                                     <td id="totalpayout32"></td>
                                     <td id="profit32"></td>
                                 </tr>
                                 <tr>
-                                    <td>14</td>
+                                    <td class="red-color">14</td>
                                     <td id="totalbet14"></td>
                                     <td id="totalpayout1414"></td>
                                     <td id="profit1414"></td>
@@ -254,13 +265,13 @@
                                     <td id="totalbet15"></td>
                                     <td id="totalpayout1515"></td>
                                     <td id="profit1515"></td>
-                                    <td>34</td>
+                                    <td class="red-color">34</td>
                                     <td id="totalbet34"></td>
                                     <td id="totalpayout34"></td>
                                     <td id="profit34"></td>
                                 </tr>
                                 <tr>
-                                    <td>16</td>
+                                    <td class="red-color">16</td>
                                     <td id="totalbet16"></td>
                                     <td id="totalpayout1616"></td>
                                     <td id="profit1616"></td>
@@ -274,13 +285,13 @@
                                     <td id="totalbet17"></td>
                                     <td id="totalpayout1717"></td>
                                     <td id="profit1717"></td>
-                                    <td>36</td>
+                                    <td class="red-color">36</td>
                                     <td id="totalbet36"></td>
                                     <td id="totalpayout36"></td>
                                     <td id="profit36"></td>
                                 </tr>
                                 <tr>
-                                    <td>18</td>
+                                    <td class="red-color">18</td>
                                     <td id="totalbet18"></td>
                                     <td id="totalpayout18"></td>
                                     <td id="profit18"></td>
@@ -423,8 +434,11 @@
                             if ( data.totalbet[i] ) {
                                 console.log('aa');
                                 $("#totalbet" + i).text(data.totalbet[i]);
-                                $("#totalpayout" + i + i).text((data.totalbet[i] * 36).toFixed(2));
-                                $("#profit" + i + i).text((data.total - data.totalbet[i] * 36).toFixed(2));
+                                $("#totalpayout" + i + i).text(data.totalbet[i] * 36);
+                                $("#profit" + i + i).text(data.totalbet[i] - data.totalbet[i] * 36);
+                                if ( data.totalbet[i] - data.totalbet[i] * 36 < 0 ) {
+                                    $("#profit" + i + i).addClass("red-color");
+                                }
                             } else {
                                 $("#totalbet" + i).text("0");
                                 $("#totalpayout" + i + i).text("0");
@@ -434,8 +448,11 @@
                             if ( data.totalbet[i] ) {
                                 console.log('aa');
                                 $("#totalbet" + i).text(data.totalbet[i]);
-                                $("#totalpayout" + i).text((data.totalbet[i] * 36).toFixed(2));
-                                $("#profit" + i).text((data.total - data.totalbet[i] * 36).toFixed(2));
+                                $("#totalpayout" + i).text(data.totalbet[i] * 36);
+                                $("#profit" + i).text(data.totalbet[i] - data.totalbet[i] * 36);
+                                if ( data.totalbet[i] - data.totalbet[i] * 36 < 0 ) {
+                                    $("#profit" + i).addClass("red-color");
+                                }
                             } else {
                                 $("#totalbet" + i).text("0");
                                 $("#totalpayout" + i).text("0");
