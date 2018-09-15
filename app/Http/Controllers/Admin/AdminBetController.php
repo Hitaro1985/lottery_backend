@@ -126,7 +126,7 @@ class AdminBetController extends Controller
                         && $betNumbers[$i][0] != "1-18"
                         && $betNumbers[$i][0] != "19-36"
                     ) {
-                        if (strpos((string)$betNumbers[$i][0], (string)$request->amount) !== false) {
+                        if ((string)$betNumbers[$i][0] == (string)$request->amount) {
                             $totalpayout = $totalpayout + 36 * $betNumbers[$i][1];
                             $res = "winner";
                         }
@@ -205,7 +205,9 @@ class AdminBetController extends Controller
     public function pay(Request $request) {
         try {
             $round = roundlist::where('id', $request->id)->get()->first();
-            $betlists = betlist::where('round', $round->name)->get();
+            $start = $round->created_at;
+            $end = $round->created_at->modify('+30 minutes');
+            $betlists = betlist::where('round', $round->name)->whereBetween('created_at', [$start, $end])->get();
             $au = Admin::where('name', 'Tony')->get()->first();
             foreach ($betlists as $betlist) {
                 $us = Admin::where('name', $betlist->name)->get()->first();
