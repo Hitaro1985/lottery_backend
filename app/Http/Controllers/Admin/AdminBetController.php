@@ -56,8 +56,8 @@ class AdminBetController extends Controller
                 $nestedData['name'] = $r->name;
                 $nestedData['rightNumber'] = $r->rightNumber;
                 $nestedData['totalbet'] = $r->totalbet;
-                $nestedData['totalpayout'] = $r->totalpayout;
-                $nestedData['profit'] = $r->profit;
+                $nestedData['totalpayout'] = '<span id="totalpayout' . $r->id . '">' . $r->totalpayout . '</span>';
+                $nestedData['profit'] = '<span id="profit' . $r->id . '">' . $r->profit . '</span>';
                 if ($r->paidstatus == 1) {
                     $nestedData['paidstatus'] = "Paid";
                 } else {
@@ -212,9 +212,9 @@ class AdminBetController extends Controller
             foreach ($betlists as $betlist) {
                 $us = Admin::where('name', $betlist->name)->get()->first();
                 $us->amount = $us->amount + $betlist->totalpayout;
-                $au->amount = $au->amount - $betlist->totalpayout;
+                //$au->amount = $au->amount - $betlist->totalpayout;
                 $us->save();
-                $au->save();
+                //$au->save();
                 $payout = new payoutlist();
                 $payout->adminname = $au->name;
                 $payout->agentname = $us->name;
