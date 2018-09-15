@@ -49,8 +49,10 @@
                                 Date : <input type="text" id="searchdate" name="datefilter" autocomplete="off" value="{{ app('request')->input('datefilter') }}" style="width:200px; text-align:center;" placeholder="Date Range" />
                                 <input type="button" value="Search" class="button" onclick="onSearchDetail();">
                                 <input type="button" value="All" class="button" onclick="onSearchAll();">
+                                @if( app('request')->input('datefilter'))
                                 <div style="display: inline-block;border-color: red;border-width: 3px;border-style: solid;width: 100px;height: 39px;line-height: 39px;text-align: center;vertical-align: middle;">{{ $receive }}</div>
                                 <div style="display: inline-block;border-color: blue;border-width: 3px;border-style: solid;width: 100px;height: 39px;line-height: 39px;text-align: center;vertical-align: middle;">{{ $current }}</div>
+                                @endif
                             </form>
                         </div>
                         <tbody>

@@ -67,7 +67,7 @@ class AdminBetController extends Controller
                 if ($r->paidstatus != 1) {
                     if(!$r->rightNumber) {
                         $nestedData['action'] = '
-                        <button class="btn btn-outline-info" onclick="onPayPrize(' . $r->id . ')" data-toggle="modal" data-target="#setResult">SET RESULT</button>
+                        <button class="btn btn-outline-info" onclick="onSetResult(' . $r->id . ')" data-toggle="modal" data-target="#setResult">SET RESULT</button>
                         ';
                     } else {
                         $nestedData['action'] = '

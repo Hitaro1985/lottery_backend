@@ -26,6 +26,7 @@ Route::namespace('Admin')->prefix('admin')->group(function() {
 	
 	Route::group(['middleware' => ['auth:admin']], function() {
 		Route::get('/', 'AdminController@index')->name('admin.dashboard');
+		Route::post('/getbetexpects', 'AdminAgentController@getbetexpects');
 		Route::get('/betmanage', 'AdminBetController@index')->name('betcontroller');
 		Route::post('/betmanage/setresult', 'AdminBetController@setresult');
 		Route::post('/betmanage/pay', 'AdminBetController@pay');
