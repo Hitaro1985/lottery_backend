@@ -575,7 +575,7 @@ class AdminAgentController extends Controller
         }
         $receive = 0;
         foreach ($trans as $tran) {
-            if ($tran['toname'] == $user->name) {
+            if ($tran['fromname'] == $user->name) {
                 $receive = $receive + $tran->amount;
             }
         }
@@ -615,7 +615,7 @@ class AdminAgentController extends Controller
         $receive = 0;
         $current = $user->amount;
         foreach ($trans as $tran) {
-            if ($tran['toname'] == $user->name) {
+            if ($tran['fromname'] == $user->name) {
                 $receive = $receive + $tran->amount;
             }
         }
