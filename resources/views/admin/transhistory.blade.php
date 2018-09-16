@@ -49,7 +49,7 @@
                                 Date : <input type="text" id="searchdate" name="datefilter" autocomplete="off" value="{{ app('request')->input('datefilter') }}" style="width:200px; text-align:center;" placeholder="Date Range" />
                                 <input type="button" value="Search" class="button" onclick="onSearchDetail();">
                                 <input type="button" value="All" class="button" onclick="onSearchAll();">
-                                @if( app('request')->input('datefilter'))
+                                @if( app('request')->input('name'))
                                     Total credit added  &nbsp;<div style="    display: inline-block;
                                                 border-color: red;
                                                 border-width: 3px;
@@ -76,6 +76,7 @@
                                                 color: white;
                                                 font-size: 21px;
                                                 font-weight: bold;">{{ $current }}</div>
+                                    <input type="hidden" name="name" value="{{app('request')->input('name')}}">
                                 @endif
                             </form>
                         </div>

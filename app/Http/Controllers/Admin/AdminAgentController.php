@@ -559,6 +559,10 @@ class AdminAgentController extends Controller
     {
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
+        $searchName = $user->name;
+        if ($request->has('name') && $request->input('name') != '') {
+            $searchName = $request->input('name');
+        }
         if ($request->has('datefilter') && $request->input('datefilter') != '') {
             try {
                 $daterange = $request->input('datefilter');
@@ -568,20 +572,38 @@ class AdminAgentController extends Controller
                 $from = $t1[2] . '-' . $t1[0] . '-' . $t1[1];
                 $t2 = explode('/', $dates[1]);
                 $to = $t2[2] . '-' . $t2[0] . '-' . $t2[1];
-                $trans = transaction::whereBetween('created_at', [date($from), date($to)])->get();
+                if ($request->has('name') && $request->input('name') != '') {
+                    $trans = transaction::whereBetween('created_at', [date($from), date($to)])->where(function ($query) use ($searchName) {
+                        $query->where('fromname', '=', $searchName)
+                            ->orWhere('toname', '=', $searchName);
+                    })->get();
+                } else {
+                    $trans = transaction::whereBetween('created_at', [date($from), date($to)])->get();
+                }
             } catch(\Exception $e) {
                 $trans = transaction::all();
             }
         } else {
-            $trans = transaction::all();
+            if ($request->has('name') && $request->input('name') != '') {
+                $trans = transaction::where(function ($query) use ($searchName) {
+                    $query->where('fromname', '=', $searchName)
+                        ->orWhere('toname', '=', $searchName);
+                })->get();
+            } else {
+                $trans = transaction::all();
+            }
         }
         $receive = 0;
         foreach ($trans as $tran) {
-            if ($tran['fromname'] == $user->name) {
+            if ($tran['fromname'] == $searchName) {
                 $receive = $receive + $tran->amount;
             }
         }
         $current = $user->amount;
+        if ($request->has('name') && $request->input('name') != '') {
+            $curuser = Admin::where('name', $request->input('name'))->get()->first();
+            $current = $curuser->amount;
+        }
         return view('admin.transhistory', ['create_new' => 'false', 'user_role' => $user_role['role'], 'trans' => $trans, 'receive' => $receive, 'current' => $current]);
     }
 
@@ -589,6 +611,10 @@ class AdminAgentController extends Controller
     {
         $user = Auth::user();
         $user_role = Role::where('id', $user->role_id)->first();
+        $searchName = $user->name;
+        if ($request->has('name') && $request->input('name') != '') {
+            $searchName = $request->input('name');
+        }
         if ($request->has('datefilter') && $request->input('datefilter') != '') {
             try {
                 $daterange = $request->input('datefilter');
@@ -598,10 +624,20 @@ class AdminAgentController extends Controller
                 $from = $t1[2] . '-' . $t1[0] . '-' . $t1[1];
                 $t2 = explode('/', $dates[1]);
                 $to = $t2[2] . '-' . $t2[0] . '-' . $t2[1];
-                $trans = transaction::whereBetween('created_at', [date($from), date($to)])->where(function ($query) use ($user) {
-                    $query->where('fromname', '=', $user->name)
-                        ->orWhere('toname', '=', $user->name);
-                })->get();
+                if ($request->has('name') && $request->input('name') != '') {
+                    $trans = transaction::whereBetween('created_at', [date($from), date($to)])->where(function ($query) use ($searchName) {
+                        $query->where('fromname', '=', $searchName)
+                            ->orWhere('toname', '=', $searchName);
+                    })->where(function ($query) use ($user) {
+                        $query->where('fromname', '=', $user->name)
+                            ->orWhere('toname', '=', $user->name);
+                    })->get();
+                } else {
+                    $trans = transaction::whereBetween('created_at', [date($from), date($to)])->where(function ($query) use ($user) {
+                        $query->where('fromname', '=', $user->name)
+                            ->orWhere('toname', '=', $user->name);
+                    })->get();
+                }
             } catch(\Exception $e) {
                 $trans = transaction::where(function ($query) use ($user) {
                     $query->where('fromname', '=', $user->name)
@@ -609,17 +645,31 @@ class AdminAgentController extends Controller
                 })->get();
             }
         } else {
-            $trans = transaction::where(function ($query) use ($user) {
-                $query->where('fromname', '=', $user->name)
-                    ->orWhere('toname', '=', $user->name);
-            })->get();
+            if ($request->has('name') && $request->input('name') != '') {
+                $trans = transaction::where(function ($query) use ($user) {
+                    $query->where('fromname', '=', $user->name)
+                        ->orWhere('toname', '=', $user->name);
+                })->where(function ($query) use ($searchName) {
+                    $query->where('fromname', '=', $searchName)
+                        ->orWhere('toname', '=', $searchName);
+                })->get();
+            } else {
+                $trans = transaction::where(function ($query) use ($user) {
+                    $query->where('fromname', '=', $user->name)
+                        ->orWhere('toname', '=', $user->name);
+                })->get();
+            }
         }
         $receive = 0;
-        $current = $user->amount;
         foreach ($trans as $tran) {
-            if ($tran['fromname'] == $user->name) {
+            if ($tran['fromname'] == $searchName) {
                 $receive = $receive + $tran->amount;
             }
+        }
+        $current = $user->amount;
+        if ($request->has('name') && $request->input('name') != '') {
+            $curuser = Admin::where('name', $request->input('name'))->get()->first();
+            $current = $curuser->amount;
         }
         return view('admin.transhistory', ['create_new' => 'false', 'user_role' => $user_role['role'], 'trans' => $trans, 'receive' => $receive, 'current' => $current]);
     }

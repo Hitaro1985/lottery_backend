@@ -72,7 +72,11 @@
                                     <td id="email{{$all_users[$i]->id}}">{{ $all_users[$i]->email }}</td>
                                     <td id="phoneno{{ $all_users[$i]->id }}">{{ $all_users[$i]->phoneno }}</td>
                                     <td id="role{{$all_users[$i]->id}}">{{ $all_users[$i]->role }}</td>
-                                    <td id="amount{{$all_users[$i]->id}}"><a href="/admin/trans-admin">{{ $all_users[$i]->amount }}</a></td>
+                                    <td id="amount{{$all_users[$i]->id}}">
+                                        @if($user_role == "Admin")<a href="/admin/trans-admin?name={{ $all_users[$i]->name }}">{{ $all_users[$i]->amount }}</a>
+                                        @else<a href="/admin/trans?name={{ $all_users[$i]->name }}">{{ $all_users[$i]->amount }}</a>
+                                        @endif
+                                    </td>
                                     <td>{{ $all_users[$i]->created_at }}</td>
                                     <td id="updatetime{{$all_users[$i]->id}}">{{ $all_users[$i]->updated_at }}</td>
                                     <td>

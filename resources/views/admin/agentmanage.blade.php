@@ -71,8 +71,8 @@
                                     <td id="email{{$all_users[$i]->id}}">{{ $all_users[$i]->email }}</td>
                                     <td id="phoneno{{ $all_users[$i]->id }}">{{ $all_users[$i]->phoneno }}</td>
                                     <td id="credit{{ $all_users[$i]->id }}">
-                                        @if($user_role == "Admin")<a href="/admin/trans-admin">{{ $all_users[$i]->amount }}</a>
-                                        @else<a href="/admin/trans">{{ $all_users[$i]->amount }}</a>
+                                        @if($user_role == "Admin")<a href="/admin/trans-admin?name={{ $all_users[$i]->name }}">{{ $all_users[$i]->amount }}</a>
+                                        @else<a href="/admin/trans?name={{ $all_users[$i]->name }}">{{ $all_users[$i]->amount }}</a>
                                         @endif
                                     </td>
                                     <td>{{ $all_users[$i]->created_at }}</td>
