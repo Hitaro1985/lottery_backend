@@ -23,8 +23,18 @@ class ApiAgentController extends Controller
         try{
             $cround = round::get()->first();
             $lround = roundlist::get()->last();
-            $passedround = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(10)->get();
-            return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround, 'passedround'=> $passedround], 'response_code' =>1], 200);
+            $passedrounds = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(10)->get();
+            $red = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+            foreach ( $passedrounds as $passedround ) {
+                if ( $passedround['rightNumber'] == 0 ) {
+                    $passedround['class'] = 'green';
+                } else if ( in_array($passedround['rightNumber'], $red)) {
+                    $passedround['class'] = 'red';
+                } else {
+                    $passedround['class'] = 'black';
+                }
+            }
+            return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround, 'passedround'=> $passedrounds], 'response_code' =>1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
@@ -150,7 +160,7 @@ class ApiAgentController extends Controller
         }
     }
 
-    public function confirmBet(Request $request)
+    public function betNow(Request $request)
     {
         try{
             $user = JWTAuth::parseToken()->authenticate();
@@ -216,12 +226,40 @@ class ApiAgentController extends Controller
             if ($user->amount < $request->totalbet) {
                 return response()->json(['message' => 'Not Enough Cash', 'data'=> null, 'response_code' => 0], 200);
             }
-            $duplicate = false;
             $nround = round::get()->first();
             $lastbet = betlist::where('name', $user->name)->where('round', $nround->roundname)->orderBy('receiptNumber', 'desc')->get()->first();
             $betlist = new betlist();
             $betlist->name = $user->name;
             $betlist->betNumber = $nbetstate;
+            $betlist->total = $request->totalbet;
+            $betlist->round = $nround->roundname;
+            if (!$lastbet) {
+                $betlist->receiptNumber = 1;
+            } else {
+                $betlist->receiptNumber = $lastbet->receiptNumber + 1;
+            }
+            $betlist['round'] = str_replace("Round", "R", $betlist['round']);
+            $betlist['betNumbers'] = $this->getbetinfo($betlist['betNumber']);
+            return response()->json(['message' => 'Confirm Bet', 'data' => $betlist, 'newbetstate' => $nbetstate, 'response_code' => 1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data'=> $e, 'response_code' => 0], 200);
+        }
+    }
+
+    public function confirmBet(Request $request)
+    {
+        try{
+            $user = JWTAuth::parseToken()->authenticate();
+            if ($user->enabled == false) {
+                return response()->json(['message' => 'Your account has been blocked', 'data' => null, 'response_code' => 0], 200);
+            }
+            $betstate = $request->betstate;
+            $duplicate = false;
+            $nround = round::get()->first();
+            $lastbet = betlist::where('name', $user->name)->where('round', $nround->roundname)->orderBy('receiptNumber', 'desc')->get()->first();
+            $betlist = new betlist();
+            $betlist->name = $user->name;
+            $betlist->betNumber = $betstate;
             $betlist->total = $request->totalbet;
             $betlist->round = $nround->roundname;
             if (!$lastbet) {
@@ -238,7 +276,7 @@ class ApiAgentController extends Controller
             $au = Admin::where('name', 'Tony')->get()->first();
             $au->amount = $au->amount + $request->totalbet;
             $au->save();
-            $data = $this->getbetinfo($nbetstate);
+            $data = $this->getbetinfo($betstate);
             for ($i = 0; $i < count($data); $i ++) {
                 $nslot = slotstate::get()->first();
                 if ( is_numeric($data[$i][0]) ) {
@@ -471,8 +509,18 @@ class ApiAgentController extends Controller
     public function getResultInfo(Request $request)
     {
         try{
-            $passedround = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(50)->get();
-            return response()->json(['message' => "Result Info", 'data' => ['passedround'=> $passedround], 'response_code' =>1], 200);
+            $passedrounds = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(50)->get();
+            $red = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+            foreach ( $passedrounds as $passedround ) {
+                if ( $passedround['rightNumber'] == 0 ) {
+                    $passedround['class'] = 'green';
+                } else if ( in_array($passedround['rightNumber'], $red)) {
+                    $passedround['class'] = 'red';
+                } else {
+                    $passedround['class'] = 'black';
+                }
+            }
+            return response()->json(['message' => "Result Info", 'data' => ['passedround'=> $passedrounds], 'response_code' =>1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }

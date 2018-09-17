@@ -27,6 +27,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('resetPassword', 'API\ApiAuthUserCtrl@resetPassword');
     Route::post('round/getMyBetInfo', 'API\ApiAgentController@getMyBetInfo');
     Route::post('round/getReportInfo', 'API\ApiAgentController@getReportInfo');
+    Route::post('round/betNow', 'API\ApiAgentController@betNow');
     Route::post('round/confirmBet', 'API\ApiAgentController@confirmBet');
     Route::post('round/cancelBet', 'API\ApiAgentController@cancelBet');
     Route::post('getUserData', 'API\ApiAgentController@getUserData');
