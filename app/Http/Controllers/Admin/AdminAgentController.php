@@ -361,7 +361,11 @@ class AdminAgentController extends Controller
             }
             $user->amount = $request->credit;
             $user->phoneno = $request->phoneno;
-            $user->role_id = 2;
+            if ( $request->role == "magent") {
+                $user->role_id = 2;
+            } else {
+                $user->role_id = 3;
+            }
             $user->created_by = $nuser->name;
             $user->save();
             return response()->json(["status" => 'success']);
@@ -389,7 +393,11 @@ class AdminAgentController extends Controller
             }
             $user->amount = $request->credit;
             $user->phoneno = $request->phoneno;
-            $user->role_id = 3;
+            if ( $request->role ==  "agent" ) {
+                $user->role_id = 3;
+            } else {
+                $user->role_id = 2;
+            }
             $user->created_by = $nuser->name;
             $user->save();
             return response()->json(["status" => 'success']);

@@ -197,6 +197,16 @@
                                         <input id="createcredit" type="text" class="form-control" placeholder="Credit" value="0">
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label for="editrole" class="col-sm-3 text-right control-label col-form-label">Role : </label>
+                                    <div class="col-sm-9">
+                                        {{--<input id="createRole" type="text" class="form-control" placeholder="Role" value="0">--}}
+                                        <select style="width: 100%; height: 100%;" id="createRole">
+                                            <option value="agent">Agent</option>
+                                            <option value="magent">Master Agent</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" onclick="onCreate()" class="btn btn-success">Create</button>
@@ -373,6 +383,7 @@
         prepassword = $("#createpassword").val();
         prephoneno = $("#createphoneno").val();
         precredit = $("#createcredit").val();
+        prerole = $('#createRole').val();
         $.ajax({
             /* the route pointing to the post function */
             url: '/admin/agentmanage/create-new',
@@ -384,7 +395,8 @@
                 email: preemail,
                 password: prepassword,
                 phoneno: prephoneno,
-                credit: precredit
+                credit: precredit,
+                role: prerole
             },
             dataType: 'JSON',
             /* remind that 'data' is the response of the AjaxController */
