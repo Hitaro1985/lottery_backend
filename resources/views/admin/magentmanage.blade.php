@@ -68,7 +68,10 @@
                                             @endif
                                         </label>
                                     </th>
-                                    <td id="name{{$all_users[$i]->id}}">{{ $all_users[$i]->name }}</td>
+                                    <td id="name{{$all_users[$i]->id}}">
+                                        @if( $all_users[$i]->role == "Agent") {{ $all_users[$i]->name }}
+                                        @else <a href="?name={{ $all_users[$i]->name }}">{{ $all_users[$i]->name }}</a></td>
+                                        @endif
                                     <td id="email{{$all_users[$i]->id}}">{{ $all_users[$i]->email }}</td>
                                     <td id="phoneno{{ $all_users[$i]->id }}">{{ $all_users[$i]->phoneno }}</td>
                                     <td id="role{{$all_users[$i]->id}}">{{ $all_users[$i]->role }}</td>
