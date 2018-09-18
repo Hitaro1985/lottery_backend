@@ -68,9 +68,9 @@
                                             @endif
                                         </label>
                                     </th>
-                                    <td id="name{{$all_users[$i]->id}}">
-                                        @if( $all_users[$i]->role == "Agent") {{ $all_users[$i]->name }}
-                                        @else <a href="?name={{ $all_users[$i]->name }}">{{ $all_users[$i]->name }}</a></td>
+                                    <td>
+                                        @if( $all_users[$i]->role == "Agent") <span id="name{{$all_users[$i]->id}}">{{ $all_users[$i]->name }}</span>
+                                        @else <a href="?name={{ $all_users[$i]->name }}"><span id="name{{$all_users[$i]->id}}">{{ $all_users[$i]->name }}</span></a></td>
                                         @endif
                                     <td id="email{{$all_users[$i]->id}}">{{ $all_users[$i]->email }}</td>
                                     <td id="phoneno{{ $all_users[$i]->id }}">{{ $all_users[$i]->phoneno }}</td>
@@ -298,6 +298,7 @@
     function onEdit(agentID) {
         prename = $("#name" + agentID).text();
         preemail = $("#email" + agentID).text();
+        console.log(prename);
         
         $("#editid").val(agentID);
         $("#editname").val(prename);
