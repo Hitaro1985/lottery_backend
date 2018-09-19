@@ -52,6 +52,10 @@ Route::namespace('Admin')->prefix('admin')->group(function() {
 		Route::post('/betmanagement/startnumberbet', 'AdminAgentController@startnumberbet');
         Route::post('/betmanagement/stopnumberbet', 'AdminAgentController@stopnumberbet');
         Route::post('/betstatus', 'AdminAgentController@betstatus');
+        Route::get('/jackmanage', 'JackpotController@index');
+        Route::post('/jackpot/getAgents', 'JackpotController@getAgents');
+        Route::post('/jackpot/getJack', 'JackpotController@getJack');
+        Route::post('/jackpot/release', 'JackpotController@release');
 //		Route::resource('/creditcard', 'AdminCreditController');
 	});
 	Route::get('/register', 'Auth\RegisterController@showRegistrationForm');

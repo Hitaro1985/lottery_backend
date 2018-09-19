@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Admin;
 use App\betlist;
+use App\jackpot;
 use App\round;
 use App\roundlist;
 use App\slotstate;
@@ -106,7 +107,7 @@ class ApiAgentController extends Controller
             }
             return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'total_count' => $betlistcount,  'response_code' => 1], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Request Error', 'data' => $e, 'response_code' => 0], 200);
+            return response()->json(['message' => 'Request Error', 'data' => $e->getMessage(), 'response_code' => 0], 200);
         }
     }
 
@@ -154,9 +155,18 @@ class ApiAgentController extends Controller
             if ($user->enabled == false) {
                 return response()->json(['message' => 'Your account has been blocked', 'data' => null, 'response_code' => 0], 200);
             }
-            return response()->json(['message' => 'Get User Data', 'data' => $user, 'response_code' => 1], 200);
+            $jacks = jackpot::where('agent', $user->name)->where('notify', 0)->get();
+            if ( $jacks ) {
+                foreach ( $jacks as $jack ) {
+//                    $jack->notify = true;
+//                    $jack->save();
+                }
+                return response()->json(['message' => 'Get User Data', 'data' => $user, 'jack' => $jacks->last(), 'response_code' => 1], 200);
+            } else {
+                return response()->json(['message' => 'Get User Data', 'data' => $user, 'response_code' => 1], 200);
+            }
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
+            return response()->json(['message' => 'Request Error', 'data' => $e->getMessage(), 'response_code' => 0], 200);
         }
     }
 
