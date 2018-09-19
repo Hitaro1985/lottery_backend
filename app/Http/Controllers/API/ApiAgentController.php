@@ -162,8 +162,8 @@ class ApiAgentController extends Controller
             $jacks = jackpot::where('agent', $user->name)->where('notify', 0)->get();
             if ( $jacks ) {
                 foreach ( $jacks as $jack ) {
-//                    $jack->notify = true;
-//                    $jack->save();
+                    $jack->notify = true;
+                    $jack->save();
                 }
                 return response()->json(['message' => 'Get User Data', 'data' => $user, 'jack' => $jacks->last(), 'response_code' => 1], 200);
             } else {
