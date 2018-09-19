@@ -58,7 +58,11 @@ class ApiAgentController extends Controller
         try{
             $user = JWTAuth::parseToken()->authenticate();
             $betlistcount = betlist::where('name',$user->name)->count();
-            $betlists = betlist::where('name',$user->name)->orderBy('id','desc')->skip(($request->cur_page_num - 1) * $request->count_per_page)->take($request->count_per_page)->get();
+            if ($request->cur_page_num == 1) {
+                $betlists = betlist::where('name',$user->name)->orderBy('id','desc')->take($request->count_per_page)->get();
+            } else {
+                $betlists = betlist::where('name', $user->name)->orderBy('id', 'desc')->skip(($request->cur_page_num - 1) * $request->count_per_page)->take($request->count_per_page)->get();
+            }
             foreach ($betlists as $k => $betlist) {
                 $betstate = $betlist->betNumber;
                 $data = $this->getbetinfo($betstate);
