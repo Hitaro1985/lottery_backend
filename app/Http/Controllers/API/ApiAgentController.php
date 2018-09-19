@@ -237,6 +237,9 @@ class ApiAgentController extends Controller
             if($nbetstate == '') {
                 return response()->json(['message' => 'limit exceed', 'data'=> null, 'response_code' => 0], 200);
             }
+            if($request->totalbet == 0) {
+                return response()->json(['message' => 'limit exceed', 'data'=> null, 'response_code' => 0], 200);
+            }
             if ($user->amount < $request->totalbet) {
                 return response()->json(['message' => 'Not Enough Cash', 'data'=> null, 'response_code' => 0], 200);
             }
