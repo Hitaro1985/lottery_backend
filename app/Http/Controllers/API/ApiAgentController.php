@@ -107,7 +107,8 @@ class ApiAgentController extends Controller
                 }
                 $betlists[$k]['roundinfo'] = str_replace("Round", "R", $betlists[$k]['round']);
                 $betlists[$k]['betstate'] = $reslist;
-                $betlists[$k]['total_pay'] = $totalpay;
+                //$betlists[$k]['total_pay'] = $totalpay;
+                $betlists[$k]['total_pay'] = $betlist->totalpayout;
             }
             return response()->json(['message' => 'My Bet Info', 'data' => $betlists, 'total_count' => $betlistcount,  'response_code' => 1], 200);
         } catch (\Exception $e) {
@@ -127,6 +128,8 @@ class ApiAgentController extends Controller
                 $from = $slices[0];
                 $to = $slices[1];
             }
+            $totalbet = 0;
+            $totalwin = 0;
             if ($request->roundname && $request->datefilter) {
                 $betlists = betlist::where('name', $user->name)->where('wls', '!=', '')->where('round', '=', $request->roundname)->whereBetween('created_at', [date($from), date($to)])->orderBy('id', 'desc')->take(10)->get();
             } else if($request->roundname) {
@@ -145,8 +148,12 @@ class ApiAgentController extends Controller
                     $reslist[$i] = $res;
                 }
                 $betlists[$k]['betstate'] = $reslist;
+                $totalbet = $totalbet + $betlist->total;
+                if ( $betlist->wls == 'winner' ) {
+                    $totalwin = $totalwin + $betlist->totalpayout;
+                }
             }
-            return response()->json(['message' => 'Report Info', 'request' => $request->roundname, 'data' => $betlists, 'response_code' => 1], 200);
+            return response()->json(['message' => 'Report Info', 'data' => $betlists, 'totalbet' => $totalbet, 'totalwin' => $totalwin, 'response_code' => 1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
