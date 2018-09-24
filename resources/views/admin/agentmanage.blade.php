@@ -203,7 +203,6 @@
                                         {{--<input id="createRole" type="text" class="form-control" placeholder="Role" value="0">--}}
                                         <select style="width: 100%; height: 100%;" id="createRole">
                                             <option value="agent">Agent</option>
-                                            <option value="magent">Master Agent</option>
                                         </select>
                                     </div>
                                 </div>

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\jackpot;
+use App\majorjackpot;
 use Illuminate\Console\Command;
 
 class increaseJack extends Command
@@ -48,7 +49,18 @@ class increaseJack extends Command
             } else {
                 $jack->credit = $jack->credit + 0.1;
                 $jack->save();
-                $this->info('Jackpot incresed');
+                $this->info('Jackpot increased');
+            }
+            $mjack = majorjackpot::get()->last();
+            if ($mjack == null ) {
+                $newmjack = new majorjackpot();
+                $newmjack->credit = 2000;
+                $newmjack->save();
+                $this->info('New Major Jack Created');
+            } else {
+                $mjack->credit = $mjack->credit + 0.1;
+                $mjack->save();
+                $this->info('Major Jackpot increased.');
             }
             sleep(1);
         }

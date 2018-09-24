@@ -47,14 +47,14 @@ class AdminAgentController extends Controller
                 if ( $request->has('name') && $request->input('name') != '' ) {
                     $all_users = Admin::leftJoin('roles', function ($join) {
                         $join->on('admins.role_id', '=', 'roles.id');
-                    })->where('admins.role_id', '!=', 1)->where($query)->whereBetween('created_at', [date($from), date($to)])->get([
+                    })->where('admins.role_id', '!=', 1)->where('admins.role_id', '!=', 2)->where($query)->whereBetween('created_at', [date($from), date($to)])->get([
                         'admins.*',
                         'roles.role'
                     ]);
                 } else {
                     $all_users = Admin::leftJoin('roles', function ($join) {
                         $join->on('admins.role_id', '=', 'roles.id');
-                    })->where('admins.role_id', '=', 2)->where($query)->whereBetween('created_at', [date($from), date($to)])->get([
+                    })->where('admins.role_id', '=', 3)->where($query)->whereBetween('created_at', [date($from), date($to)])->get([
                         'admins.*',
                         'roles.role'
                     ]);
@@ -63,14 +63,14 @@ class AdminAgentController extends Controller
                 if ( $request->has('name') && $request->input('name') != '' ) {
                     $all_users = Admin::leftJoin('roles', function ($join) {
                         $join->on('admins.role_id', '=', 'roles.id');
-                    })->where($query)->where('admins.role_id', '!=', 1)->get([
+                    })->where($query)->where('admins.role_id', '!=', 1)->where('admins.role_id', '!=', 2)->get([
                         'admins.*',
                         'roles.role'
                     ]);
                 } else {
                     $all_users = Admin::leftJoin('roles', function ($join) {
                         $join->on('admins.role_id', '=', 'roles.id');
-                    })->where($query)->where('admins.role_id', '=', 2)->get([
+                    })->where($query)->where('admins.role_id', '=', 3)->get([
                         'admins.*',
                         'roles.role'
                     ]);
@@ -80,14 +80,14 @@ class AdminAgentController extends Controller
             if ( $request->has('name') && $request->input('name') != '' ) {
                 $all_users = Admin::leftJoin('roles', function ($join) {
                     $join->on('admins.role_id', '=', 'roles.id');
-                })->where($query)->where('admins.role_id', '!=', 1)->get([
+                })->where($query)->where('admins.role_id', '!=', 1)->where('admins.role_id', '!=', 2)->get([
                     'admins.*',
                     'roles.role'
                 ]);
             } else {
                 $all_users = Admin::leftJoin('roles', function ($join) {
                     $join->on('admins.role_id', '=', 'roles.id');
-                })->where($query)->where('admins.role_id', '=', 2)->get([
+                })->where($query)->where('admins.role_id', '=', 3)->get([
                     'admins.*',
                     'roles.role'
                 ]);
@@ -196,6 +196,86 @@ class AdminAgentController extends Controller
         return response()->json(['status' => 'success', 'totalbet' => $k, 'total' => $total], 200);
     }
 
+    public function sagentmanage(Request $request)
+    {
+        $user = Auth::user();
+        $user_role = Role::where('id', $user->role_id)->first();
+        $query = array();
+        if ($user->role_id != 1) {
+            $query['created_by'] = $user->name;
+        }
+        if ($request->has('datefilter') && $request->input('datefilter') != '') {
+            try {
+                $daterange = $request->input('datefilter');
+                $daterange = str_replace(' ', '', $daterange);
+                $dates = explode('-', $daterange);
+                $t1 = explode('/', $dates[0]);
+                $from = $t1[2] . '-' . $t1[0] . '-' . $t1[1];
+                $t2 = explode('/', $dates[1]);
+                $to = $t2[2] . '-' . $t2[0] . '-' . $t2[1];
+                $all_users = Admin::leftJoin('roles', function($join) {
+                    $join->on('admins.role_id', '=', 'roles.id');
+                })->where($query)->where('admins.role_id', '=', 2)->whereBetween('created_at', [date($from), date($to)])->get([
+                    'admins.*',
+                    'roles.role'
+                ]);
+            } catch(\Exception $e) {
+                $all_users = Admin::leftJoin('roles', function($join) {
+                    $join->on('admins.role_id', '=', 'roles.id');
+                })->where($query)->where('admins.role_id', '=', 2)->get([
+                    'admins.*',
+                    'roles.role'
+                ]);
+            }
+        } else {
+            $all_users = Admin::leftJoin('roles', function($join) {
+                $join->on('admins.role_id', '=', 'roles.id');
+            })->where($query)->where('admins.role_id', '=', 2)->get([
+                'admins.*',
+                'roles.role'
+            ]);
+        }
+        return view('admin.sagentmanage', ['create_new' => 'true', 'user_role' => $user_role['role'], 'user_name' => $user->name, 'all_users' => $all_users]);
+    }
+
+    public function senior_create_new(Request $request)
+    {
+        try{
+            $checkif = Admin::where('name', $request->name)->get();
+            if (count($checkif) > 0) {
+                return response()->json(['status' => 'failed', 'msg' => 'Username Exists']);
+            }
+            $nuser = Auth::user();
+            $user = new Admin();
+            //$user = Admin::where('id', $request->id)->first();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $currentuser = Auth::user();
+            if ($currentuser->role_id == 2 ) {
+                if ($currentuser->amount < $request->credit) {
+                    return response()->json(['status' => 'failed', 'msg' => 'Not enough credit']);
+                }
+                $currentuser->amount = $currentuser->amount - $request->credit;
+                $currentuser->save();
+            }
+            $user->amount = $request->credit;
+            $user->phoneno = $request->phoneno;
+            if ( $request->role == "sagent") {
+                $user->role_id = 2;
+            } else if ( $request->role == "magent" ) {
+                $user->role_id = 3;
+            } else {
+                $user->role_id = 4;
+            }
+            $user->created_by = $nuser->name;
+            $user->save();
+            return response()->json(["status" => 'success']);
+        } catch (\Exception $e) {
+            return response()->json(["status" => "failed", "msg" => $e->getMessage()]);
+        }
+    }
+
     public function agentmanage(Request $request)
     {
         $user = Auth::user();
@@ -215,14 +295,14 @@ class AdminAgentController extends Controller
                 $to = $t2[2] . '-' . $t2[0] . '-' . $t2[1];
                 $all_users = Admin::leftJoin('roles', function($join) {
                     $join->on('admins.role_id', '=', 'roles.id');
-                })->where($query)->where('admins.role_id', '=', 3)->whereBetween('created_at', [date($from), date($to)])->get([
+                })->where($query)->where('admins.role_id', '=', 4)->whereBetween('created_at', [date($from), date($to)])->get([
                     'admins.*',
                     'roles.role'
                 ]);
             } catch(\Exception $e) {
                 $all_users = Admin::leftJoin('roles', function($join) {
                     $join->on('admins.role_id', '=', 'roles.id');
-                })->where($query)->where('admins.role_id', '=', 3)->get([
+                })->where($query)->where('admins.role_id', '=', 4)->get([
                     'admins.*',
                     'roles.role'
                 ]);
@@ -230,7 +310,7 @@ class AdminAgentController extends Controller
         } else {
             $all_users = Admin::leftJoin('roles', function($join) {
                 $join->on('admins.role_id', '=', 'roles.id');
-            })->where($query)->where('admins.role_id', '=', 3)->get([
+            })->where($query)->where('admins.role_id', '=', 4)->get([
                 'admins.*',
                 'roles.role'
             ]);
@@ -362,9 +442,9 @@ class AdminAgentController extends Controller
             $user->amount = $request->credit;
             $user->phoneno = $request->phoneno;
             if ( $request->role == "magent") {
-                $user->role_id = 2;
-            } else {
                 $user->role_id = 3;
+            } else {
+                $user->role_id = 4;
             }
             $user->created_by = $nuser->name;
             $user->save();
@@ -394,9 +474,7 @@ class AdminAgentController extends Controller
             $user->amount = $request->credit;
             $user->phoneno = $request->phoneno;
             if ( $request->role ==  "agent" ) {
-                $user->role_id = 3;
-            } else {
-                $user->role_id = 2;
+                $user->role_id = 4;
             }
             $user->created_by = $nuser->name;
             $user->save();

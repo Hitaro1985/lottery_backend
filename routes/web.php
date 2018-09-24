@@ -42,6 +42,8 @@ Route::namespace('Admin')->prefix('admin')->group(function() {
 		Route::post('/magentmanage/delete', 'AdminAgentController@master_delete');
 		Route::post('/magentmanage/update-info', 'AdminAgentController@master_update_info');
         Route::post('/magentmanage/create-new', 'AdminAgentController@master_create_new');
+        Route::get('/sagentmanage', 'AdminAgentController@sagentmanage');
+        Route::post('/sagentmanage/create-new', 'AdminAgentController@senior_create_new');
 		Route::get('/agentmanage', 'AdminAgentController@agentmanage');
 		Route::post('/agentmanage/accept', 'AdminAgentController@accept');
 		Route::post('/agentmanage/delete', 'AdminAgentController@delete');
@@ -56,6 +58,7 @@ Route::namespace('Admin')->prefix('admin')->group(function() {
         Route::post('/jackpot/getAgents', 'JackpotController@getAgents');
         Route::post('/jackpot/getJack', 'JackpotController@getJack');
         Route::post('/jackpot/release', 'JackpotController@release');
+        Route::post('/jackpot/releaseMajor', 'JackpotController@releaseMajor');
 //		Route::resource('/creditcard', 'AdminCreditController');
 	});
 	Route::get('/register', 'Auth\RegisterController@showRegistrationForm');

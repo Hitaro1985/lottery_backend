@@ -21,6 +21,9 @@ class RolesTableSeeder extends Seeder
                 static::ROLE =>'Admin'
             ],
             [
+                static::ROLE =>'Senior Agent'
+            ],
+            [
                 static::ROLE =>'Master Agent'
             ],
             [

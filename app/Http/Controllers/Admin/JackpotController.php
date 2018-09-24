@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Admin;
 use App\jackpot;
+use App\majorjackpot;
 use App\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -28,7 +29,8 @@ class JackpotController extends Controller
     public function getJack()
     {
         $jack = jackpot::get()->last();
-        return response()->json(['jack' => $jack->credit], 200);
+        $mjack = majorjackpot::get()->last();
+        return response()->json(['jack' => $jack->credit, 'mjack' => $mjack->credit], 200);
     }
 
     public function release(Request $request)
@@ -41,6 +43,26 @@ class JackpotController extends Controller
             $jack->credit = $amount;
             $jack->agent = $request->name;
             $jack->save();
+            $user = Admin::where('name', $request->name)->get()->first();
+            $user->amount = $user->amount + $amount;
+            $user->save();
+            return response()->json(['status' => 'success'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'failed', 'msg' => $e->getMessage()], 200);
+        }
+    }
+
+    public function releaseMajor(Request $request)
+    {
+        try {
+            $mjack = majorjackpot::get()->last();
+            $amount = $mjack->credit;
+            $newjack = new majorjackpot();
+            $newjack->credit = 2000;
+            $newjack->save();
+            $mjack->credit = $amount;
+            $mjack->agent = $request->name;
+            $mjack->save();
             $user = Admin::where('name', $request->name)->get()->first();
             $user->amount = $user->amount + $amount;
             $user->save();

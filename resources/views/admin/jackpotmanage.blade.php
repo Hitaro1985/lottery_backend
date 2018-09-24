@@ -32,34 +32,70 @@
     <!-- ============================================================== -->
     <table class="tg">
         <tr>
-            <th class="tg-0lax">Jackpot Credit</th>
-            <th class="tg-0lax"><span id="jackcredit"></span></th>
+            <th class="tg-0lax">Smaller Jackpot Credit</th>
+            <th class="tg-0lax"><span id="smalljackcredit"></span></th>
         </tr>
     </table>
     <div style="margin: auto; width: 75px; margin-top: 25px;">
-        <button class="release-btn" onclick="onRelease()" data-toggle="modal" data-target="#selectUser">RELEASE</button>
+        <button class="release-btn" onclick="onReleaseSmall()" data-toggle="modal" data-target="#smalljackrelease">RELEASE</button>
     </div>
 
-    <div id="selectUser" class="modal fade" role="dialog">
+    <div id="smalljackrelease" class="modal fade" role="dialog">
         <div class="modal-dialog modal-primary">
 
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Release JACKPOT</h4>
+                    <h4 class="modal-title">Release Samll JACKPOT</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
                         <label for="selectUser" class="col-sm-3 text-right control-label col-form-label">UserName : </label>
                         <div class="col-sm-9">
-                            <select style="width: 100%; height: 100%;" id="userOptions">
+                            <select style="width: 100%; height: 100%;" id="userOptionssmall">
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" onclick="release()" class="btn btn-success">Release</button>
+                    <button type="button" onclick="releaseSmall()" class="btn btn-success">Release</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <table class="tg">
+        <tr>
+            <th class="tg-0lax">Major Jackpot Credit</th>
+            <th class="tg-0lax"><span id="majorjackcredit"></span></th>
+        </tr>
+    </table>
+    <div style="margin: auto; width: 75px; margin-top: 25px;">
+        <button class="release-btn" onclick="onReleaseMajor()" data-toggle="modal" data-target="#majorjackrelease">RELEASE</button>
+    </div>
+
+    <div id="majorjackrelease" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-primary">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Release Major JACKPOT</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="selectUser" class="col-sm-3 text-right control-label col-form-label">UserName : </label>
+                        <div class="col-sm-9">
+                            <select style="width: 100%; height: 100%;" id="userOptionsMajor">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="releaseMajor()" class="btn btn-success">Release</button>
                 </div>
             </div>
         </div>
@@ -101,7 +137,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-    function onRelease() {
+    function onReleaseSmall() {
         $.ajax({
             /* the route pointing to the post function */
             url: '/admin/jackpot/getAgents',
@@ -112,7 +148,24 @@
             /* remind that 'data' is the response of the AjaxController */
             success: function (data) {
                 data['admins'].forEach(function(ele) {
-                    userSelect = document.getElementById('userOptions');
+                    userSelect = document.getElementById('userOptionssmall');
+                    userSelect.options[userSelect.options.length] = new Option(ele, ele);
+                });
+            }
+        });
+    }
+    function onReleaseMajor() {
+        $.ajax({
+            /* the route pointing to the post function */
+            url: '/admin/jackpot/getAgents',
+            type: 'POST',
+            /* send the csrf-token and the input to the controller */
+            data: {_token: CSRF_TOKEN},
+            dataType: 'JSON',
+            /* remind that 'data' is the response of the AjaxController */
+            success: function (data) {
+                data['admins'].forEach(function(ele) {
+                    userSelect = document.getElementById('userOptionsMajor');
                     userSelect.options[userSelect.options.length] = new Option(ele, ele);
                 });
             }
@@ -129,17 +182,38 @@
             dataType: 'JSON',
             success:
                 function(data) {
-                    $('#jackcredit').text(data.jack);
+                    $('#smalljackcredit').text(data.jack);
+                    $('#majorjackcredit').text(data.mjack);
                 }
         });
     }
     setInterval(sendRequest, 1000);
 
-    function release() {
-        prename = $('#userOptions').val();
-        console.log(prename);
+    function releaseSmall() {
+        prename = $('#userOptionssmall').val();
         $.post({
             url:"/admin/jackpot/release",
+            data: {
+                _token: CSRF_TOKEN,
+                name: prename
+            },
+            dataType: 'JSON',
+            success:
+                function(data) {
+                    if (data.status == "failed") {
+                        alert(data.status + " : " + data.errMsg);
+                    } else {
+                        alert(data.status);
+                        location.reload();
+                    }
+                }
+        });
+    }
+
+    function releaseMajor() {
+        prename = $('#userOptionsMajor').val();
+        $.post({
+            url:"/admin/jackpot/releaseMajor",
             data: {
                 _token: CSRF_TOKEN,
                 name: prename
