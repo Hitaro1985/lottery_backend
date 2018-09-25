@@ -260,6 +260,14 @@ class AdminAgentController extends Controller
                 $currentuser->save();
             }
             $user->amount = $request->credit;
+            if ($request->credit > 0) {
+                $newtrans = new transaction();
+                $newtrans->fromname = $currentuser->name;
+                $newtrans->toname = $user->name;
+                $newtrans->amount = $request->credit;
+                $newtrans->status = "Create and send";
+                $newtrans->save();
+            }
             $user->phoneno = $request->phoneno;
             if ( $request->role == "sagent") {
                 $user->role_id = 2;
@@ -440,6 +448,14 @@ class AdminAgentController extends Controller
                 $currentuser->save();
             }
             $user->amount = $request->credit;
+            if ($request->credit > 0) {
+                $newtrans = new transaction();
+                $newtrans->fromname = $currentuser->name;
+                $newtrans->toname = $user->name;
+                $newtrans->amount = $request->credit;
+                $newtrans->status = "Create and send";
+                $newtrans->save();
+            }
             $user->phoneno = $request->phoneno;
             if ( $request->role == "magent") {
                 $user->role_id = 3;
@@ -472,6 +488,14 @@ class AdminAgentController extends Controller
                 $currentuser->save();
             }
             $user->amount = $request->credit;
+            if ($request->credit > 0) {
+                $newtrans = new transaction();
+                $newtrans->fromname = $currentuser->name;
+                $newtrans->toname = $user->name;
+                $newtrans->amount = $request->credit;
+                $newtrans->status = "Create and send";
+                $newtrans->save();
+            }
             $user->phoneno = $request->phoneno;
             if ( $request->role ==  "agent" ) {
                 $user->role_id = 4;

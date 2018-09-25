@@ -6,6 +6,7 @@
 <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css') }}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" >
 <!--<link href="{{ asset('dist/css/font-awesome.min.css') }}" rel="stylesheet">-->
+<link href="{{ asset('dist/css/sol.css') }}" rel="stylesheet">
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <style type="text/css">
     .tg  {border-collapse:collapse;border-spacing:0;margin: auto;margin-top: 70px;}
@@ -53,7 +54,7 @@
                     <div class="form-group row">
                         <label for="selectUser" class="col-sm-3 text-right control-label col-form-label">UserName : </label>
                         <div class="col-sm-9">
-                            <select style="width: 100%; height: 100%;" id="userOptionssmall">
+                            <select id="userOptionssmall" name="character">
                             </select>
                         </div>
                     </div>
@@ -89,7 +90,7 @@
                     <div class="form-group row">
                         <label for="selectUser" class="col-sm-3 text-right control-label col-form-label">UserName : </label>
                         <div class="col-sm-9">
-                            <select style="width: 100%; height: 100%;" id="userOptionsMajor">
+                            <select id="userOptionsMajor" name="character">
                             </select>
                         </div>
                     </div>
@@ -135,6 +136,7 @@
 <script src="{{ asset('assets/extra-libs/DataTables/datatables.min.js') }}"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="{{ asset('dist/js/sol.js') }}"></script>
 <script>
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     function onReleaseSmall() {
@@ -150,6 +152,9 @@
                 data['admins'].forEach(function(ele) {
                     userSelect = document.getElementById('userOptionssmall');
                     userSelect.options[userSelect.options.length] = new Option(ele, ele);
+                });
+                $(function() {
+                    $("#userOptionssmall").searchableOptionList();
                 });
             }
         });
@@ -167,6 +172,9 @@
                 data['admins'].forEach(function(ele) {
                     userSelect = document.getElementById('userOptionsMajor');
                     userSelect.options[userSelect.options.length] = new Option(ele, ele);
+                });
+                $(function() {
+                    $("#userOptionsMajor").searchableOptionList();
                 });
             }
         });
