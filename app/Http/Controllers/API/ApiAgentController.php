@@ -39,6 +39,15 @@ class ApiAgentController extends Controller
                     $passedround['class'] = 'black';
                 }
             }
+            foreach ( $totalResults as $totalResults ) {
+                if ( $totalResults['rightNumber'] == 0 ) {
+                    $totalResults['class'] = 'green';
+                } else if ( in_array($totalResults['rightNumber'], $red)) {
+                    $totalResults['class'] = 'red';
+                } else {
+                    $totalResults['class'] = 'black';
+                }
+            }
             return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround, 'passedround'=> $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit], 'response_code' =>1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
