@@ -39,13 +39,13 @@ class ApiAgentController extends Controller
                     $passedround['class'] = 'black';
                 }
             }
-            foreach ( $totalResults as $totalResults ) {
-                if ( $totalResults['rightNumber'] == 0 ) {
-                    $totalResults['class'] = 'green';
-                } else if ( in_array($totalResults['rightNumber'], $red)) {
-                    $totalResults['class'] = 'red';
+            foreach ( $totalResults as $totalResult ) {
+                if ( $totalResult['rightNumber'] == 0 ) {
+                    $totalResult['class'] = 'green';
+                } else if ( in_array($totalResult['rightNumber'], $red)) {
+                    $totalResult['class'] = 'red';
                 } else {
-                    $totalResults['class'] = 'black';
+                    $totalResult['class'] = 'black';
                 }
             }
             return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround, 'passedround'=> $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit], 'response_code' =>1], 200);
