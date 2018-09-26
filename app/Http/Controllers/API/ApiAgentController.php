@@ -26,6 +26,7 @@ class ApiAgentController extends Controller
             $cround = round::get()->first();
             $lround = roundlist::get()->last();
             $passedrounds = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(10)->get();
+            $totalResults = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(3)->get();
             $mjack = majorjackpot::get()->last();
             $jack = jackpot::get()->last();
             $red = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
@@ -38,7 +39,7 @@ class ApiAgentController extends Controller
                     $passedround['class'] = 'black';
                 }
             }
-            return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround, 'passedround'=> $passedrounds, 'mjack' => $mjack->credit, 'jack' => $jack->credit], 'response_code' =>1], 200);
+            return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround, 'passedround'=> $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit], 'response_code' =>1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
