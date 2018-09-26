@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Admin;
 use App\betlist;
 use App\jackpot;
+use App\majorjackpot;
 use App\round;
 use App\roundlist;
 use App\slotstate;
@@ -25,6 +26,8 @@ class ApiAgentController extends Controller
             $cround = round::get()->first();
             $lround = roundlist::get()->last();
             $passedrounds = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(10)->get();
+            $mjack = majorjackpot::get()->last();
+            $jack = jackpot::get()->last();
             $red = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
             foreach ( $passedrounds as $passedround ) {
                 if ( $passedround['rightNumber'] == 0 ) {
@@ -35,7 +38,7 @@ class ApiAgentController extends Controller
                     $passedround['class'] = 'black';
                 }
             }
-            return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround, 'passedround'=> $passedrounds], 'response_code' =>1], 200);
+            return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround, 'passedround'=> $passedrounds, 'mjack' => $mjack->credit, 'jack' => $jack->credit], 'response_code' =>1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
@@ -167,12 +170,21 @@ class ApiAgentController extends Controller
                 return response()->json(['message' => 'Your account has been blocked', 'data' => null, 'response_code' => 0], 200);
             }
             $jacks = jackpot::where('agent', $user->name)->where('notify', 0)->get();
+            $mjacks = majorjackpot::where('agent', $user->name)->where('notify', 0)->get();
             if ( $jacks ) {
                 foreach ( $jacks as $jack ) {
                     $jack->notify = true;
                     $jack->save();
                 }
-                return response()->json(['message' => 'Get User Data', 'data' => $user, 'jack' => $jacks->last(), 'response_code' => 1], 200);
+                foreach( $mjacks as $mjack) {
+                    $mjack->notify = true;
+                    $mjack->save();
+                }
+                if ( count($mjacks) > 0 ) {
+                    return response()->json(['message' => 'Get User Data', 'data' => $user, 'jack' => $mjacks->last(), 'response_code' => 1], 200);
+                } else {
+                    return response()->json(['message' => 'Get User Data', 'data' => $user, 'jack' => $jacks->last(), 'response_code' => 1], 200);
+                }
             } else {
                 return response()->json(['message' => 'Get User Data', 'data' => $user, 'response_code' => 1], 200);
             }
