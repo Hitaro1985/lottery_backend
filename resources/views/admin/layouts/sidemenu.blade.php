@@ -13,7 +13,7 @@
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/admin/jackmanage') }}" aria-expanded="false"><i class="fa fa-magnet"></i><span class="hide-menu">Jackpot Management</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/admin/sagentmanage') }}" aria-expanded="false"><i class="mdi mdi-border-inside"></i><span class="hide-menu">Senior Agent Management</span></a></li>
                 @endif
-                @if ($user_role == 'Admin' or $user_role == 'Senior Agent')
+                @if ($user_role == 'Admin' or $user_role == 'Senior Master Agent')
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/admin/magentmanage') }}" aria-expanded="false"><i class="mdi mdi-border-inside"></i><span class="hide-menu">Master Agent Management</span></a></li>
                 @endif
                 @if ($user_role == 'Admin' or $user_role == 'Master Agent' or $user_role == 'Senior Agent')

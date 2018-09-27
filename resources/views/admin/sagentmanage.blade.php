@@ -30,7 +30,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Senior Agent Management</h5>
+                        <h5 class="card-title">Senior Master Agent Management</h5>
                         <div class="table-responsive">
                             <table id="zero_config" class="table table-striped table-bordered">
                                 <thead>
@@ -131,7 +131,7 @@
                                 <!-- Modal content-->
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Edit Senior Agent</h4>
+                                        <h4 class="modal-title">Edit Senior Master Agent</h4>
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
@@ -169,7 +169,7 @@
                                 <!-- Modal content-->
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Create Senior Agent</h4>
+                                        <h4 class="modal-title">Create Senior Master Agent</h4>
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
                                     <div class="modal-body">
@@ -208,7 +208,7 @@
                                             <div class="col-sm-9">
                                                 {{--<input id="createRole" type="text" class="form-control" placeholder="Role" value="0">--}}
                                                 <select style="width: 100%; height: 100%;" id="createRole">
-                                                    <option value="sagent">Senior Agent</option>
+                                                    <option value="sagent">Senior Master Agent</option>
                                                     <option value="magent">Master Agent</option>
                                                     <option value="agent">Agent</option>
                                                 </select>
