@@ -735,9 +735,7 @@ class AdminAgentController extends Controller
         }
         $receive = 0;
         foreach ($trans as $tran) {
-            if ($tran['fromname'] == $searchName) {
-                $receive = $receive + $tran->amount;
-            }
+            $receive = $receive + $tran->amount;
         }
         $current = $user->amount;
         if ($request->has('name') && $request->input('name') != '') {
@@ -802,9 +800,7 @@ class AdminAgentController extends Controller
         }
         $receive = 0;
         foreach ($trans as $tran) {
-            if ($tran['fromname'] == $searchName) {
-                $receive = $receive + $tran->amount;
-            }
+            $receive = $receive + $tran->amount;
         }
         $current = $user->amount;
         if ($request->has('name') && $request->input('name') != '') {
