@@ -10,6 +10,8 @@ use App\transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
+use DateTime;
+use Illuminate\Support\Facades\Input;
 
 class JackpotController extends Controller
 {
@@ -44,6 +46,8 @@ class JackpotController extends Controller
             $newjack->save();
             $jack->credit = $amount;
             $jack->agent = $request->name;
+            $date = date("Y-m-d H:i:s");
+            $jack->assign_time = $date;
             $jack->save();
             $user = Admin::where('name', $request->name)->get()->first();
             $user->amount = $user->amount + $amount;
@@ -70,6 +74,8 @@ class JackpotController extends Controller
             $newjack->save();
             $mjack->credit = $amount;
             $mjack->agent = $request->name;
+            $date = date("Y-m-d H:i:s");
+            $mjack->assign_time = $date;
             $mjack->save();
             $user = Admin::where('name', $request->name)->get()->first();
             $user->amount = $user->amount + $amount;
