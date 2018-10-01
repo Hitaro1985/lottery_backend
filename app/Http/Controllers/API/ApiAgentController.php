@@ -48,7 +48,17 @@ class ApiAgentController extends Controller
                     $totalResult['class'] = 'black';
                 }
             }
-            return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround, 'passedround'=> $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit], 'response_code' =>1], 200);
+            $lastjack = jackpot::orderBy('created_at', 'desc')->skip(1)->take(1)->get()->first();
+            $lastmjack = majorjackpot::orderBy('created_at', 'desc')->skip(1)->take(1)->get()->first();
+            if ( $lastjack['assign_time'] > $lastmjack['assign_time'] ) {
+                return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround
+                    , 'passedround'=> $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit
+                    , 'lastjack' => $lastjack], 'response_code' =>1], 200);
+            } else {
+                return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround
+                    , 'passedround' => $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit
+                    , 'lastjack' => $lastmjack], 'response_code' => 1], 200);
+            }
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
