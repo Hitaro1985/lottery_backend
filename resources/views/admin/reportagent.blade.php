@@ -21,6 +21,12 @@
         background-color:#fafafa;
         color:#207cca;
     }
+    .color-red {
+        color: red;
+    }
+    .color-green {
+        color: green;
+    }
 </style>
 <div class="container-fluid">
     <!-- ============================================================== -->
@@ -63,7 +69,7 @@
                                 <td id="name{{$bets[$i]->id}}">{{ $bets[$i]->name }}</td>
                                 <td id="betinfo{{$bets[$i]->id}}">
                                     @for ($j = 0; $j < count($betinfos[$i]); $j++)
-                                        {{ $betinfos[$i][$j][0] }} : {{ $betinfos[$i][$j][1] }}MYR </br>
+                                        <span class="{{ $betinfos[$i][$j][2] }}">{{ $betinfos[$i][$j][0] }}</span> : {{ $betinfos[$i][$j][1] }}MYR </br>
                                     @endfor
                                 </td>
                                 <td id="totalbet{{ $bets[$i]->id }}">{{ $bets[$i]->total }}MYR</td>

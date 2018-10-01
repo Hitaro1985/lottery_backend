@@ -204,6 +204,9 @@ class AdminAgentController extends Controller
         if ($user->role_id != 1) {
             $query['created_by'] = $user->name;
         }
+        if ( $request->has('name') && $request->input('name') != '' ) {
+            $query['created_by'] = $request->input('name');
+        }
         if ($request->has('datefilter') && $request->input('datefilter') != '') {
             try {
                 $daterange = $request->input('datefilter');

@@ -30,7 +30,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Senior Master Agent Management</h5>
+                        <h5 class="card-title" style="display: inline-block;">Senior Master Agent Management</h5>
+                        <small>{{ app('request')->input('name') }}</small>
                         <div class="table-responsive">
                             <table id="zero_config" class="table table-striped table-bordered">
                                 <thead>

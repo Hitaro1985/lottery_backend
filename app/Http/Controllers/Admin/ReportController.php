@@ -30,9 +30,17 @@ class ReportController extends Controller
     {
         $bets = explode("%", $betinfo);
         $betNumbers = array();
+        $red = ["1","3","5","7","9","12","14","16","18","19","21","23","25","27","30","32","34","36","RED"];
         for ($i = 0; $i < count($bets); $i ++)
         {
             $res = explode('&', $bets[$i]);
+            if ($res[0] == "0") {
+                $res[2] = "color-green";
+            } else if ( in_array($res[0], $red)) {
+                $res[2] = "color-red";
+            } else {
+                $res[2] = "color-black";
+            }
             array_push($betNumbers, $res);
         }
         return $betNumbers;
