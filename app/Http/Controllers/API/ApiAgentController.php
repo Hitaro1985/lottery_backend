@@ -289,7 +289,11 @@ class ApiAgentController extends Controller
             $betlist->betNumber = $nbetstate;
             $betlist->total = $request->totalbet;
             $betlist->round = $nround->roundname;
-            $betlist->receipts = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );;
+            if (!$lastbet) {
+                $betlist->receipts = 100000000;
+            } else {
+                $betlist->receipts = $lastbet->receipts + 1;
+            }
             if (!$lastbet) {
                 $betlist->receiptNumber = 1;
             } else {
