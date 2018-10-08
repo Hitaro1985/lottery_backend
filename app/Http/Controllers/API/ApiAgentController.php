@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Admin;
 use App\betlist;
+use App\jackhistory;
 use App\jackpot;
 use App\majorjackpot;
 use App\round;
@@ -22,7 +23,6 @@ class ApiAgentController extends Controller
 
     public function getHomepageInfo(Request $request)
     {
-        try{
             $cround = round::get()->first();
             $lround = roundlist::get()->last();
             $passedrounds = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(10)->get();
@@ -48,20 +48,21 @@ class ApiAgentController extends Controller
                     $totalResult['class'] = 'black';
                 }
             }
-            $lastjack = jackpot::orderBy('created_at', 'desc')->skip(1)->take(1)->get()->first();
-            $lastmjack = majorjackpot::orderBy('created_at', 'desc')->skip(1)->take(1)->get()->first();
-            if ( $lastjack['assign_time'] > $lastmjack['assign_time'] ) {
-                return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround
-                    , 'passedround'=> $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit
-                    , 'lastjack' => $lastjack], 'response_code' =>1], 200);
-            } else {
-                return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround
-                    , 'passedround' => $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit
-                    , 'lastjack' => $lastmjack], 'response_code' => 1], 200);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
-        }
+//            $lastjack = jackpot::orderBy('created_at', 'desc')->skip(1)->take(1)->get()->first();
+//            $lastmjack = majorjackpot::orderBy('created_at', 'desc')->skip(1)->take(1)->get()->first();
+//            if ( $lastjack['assign_time'] > $lastmjack['assign_time'] ) {
+//                return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround
+//                    , 'passedround'=> $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit
+//                    , 'lastjack' => $lastjack], 'response_code' =>1], 200);
+//            } else {
+//                return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround
+//                    , 'passedround' => $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit
+//                    , 'lastjack' => $lastmjack], 'response_code' => 1], 200);
+//            }
+            $lastjacks = jackhistory::orderBy('id', 'desc')->take(10)->get();
+            return response()->json(['message' => "HomePage Info", 'data' => ["current" => $cround, 'last' => $lround
+                , 'passedround' => $passedrounds, 'totalResults' => $totalResults, 'mjack' => $mjack->credit, 'jack' => $jack->credit
+                , 'lastjacks' => $lastjacks], 'response_code' => 1], 200);
     }
 
     public function getbetinfo($betinfo)
@@ -189,22 +190,13 @@ class ApiAgentController extends Controller
             if ($user->enabled == false) {
                 return response()->json(['message' => 'Your account has been blocked', 'data' => null, 'response_code' => 0], 200);
             }
-            $jacks = jackpot::where('agent', $user->name)->where('notify', 0)->get();
-            $mjacks = majorjackpot::where('agent', $user->name)->where('notify', 0)->get();
+            $jacks = jackhistory::where('agent', $user->name)->where('notify', 0)->get();
             if ( $jacks ) {
                 foreach ( $jacks as $jack ) {
                     $jack->notify = true;
                     $jack->save();
                 }
-                foreach( $mjacks as $mjack) {
-                    $mjack->notify = true;
-                    $mjack->save();
-                }
-                if ( count($mjacks) > 0 ) {
-                    return response()->json(['message' => 'Get User Data', 'data' => $user, 'jack' => $mjacks->last(), 'response_code' => 1], 200);
-                } else {
-                    return response()->json(['message' => 'Get User Data', 'data' => $user, 'jack' => $jacks->last(), 'response_code' => 1], 200);
-                }
+                return response()->json(['message' => 'Get User Data', 'data' => $user, 'jack' => $jacks->last(), 'response_code' => 1], 200);
             } else {
                 return response()->json(['message' => 'Get User Data', 'data' => $user, 'response_code' => 1], 200);
             }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Admin;
+use App\jackhistory;
 use App\jackpot;
 use App\majorjackpot;
 use App\Role;
@@ -41,13 +42,16 @@ class JackpotController extends Controller
         try {
             $jack = jackpot::get()->last();
             $amount = floor($jack->credit);
-            $newjack = new jackpot();
-            $newjack->credit = $jack->credit - $amount;
-            $newjack->save();
-            $jack->credit = $amount;
-            $jack->agent = $request->name;
+            //-----new jack history save-----
+            $newjhis = new jackhistory();
+            $newjhis->credit = $amount;
+            $newjhis->agent = $request->name;
             $date = date("Y-m-d H:i:s");
-            $jack->assign_time = $date;
+            $newjhis->assign_time = $date;
+            $newjhis->jacks = "small jack";
+            $newjhis->save();
+
+            $jack->credit = $jack->credit - $amount;
             $jack->save();
             $user = Admin::where('name', $request->name)->get()->first();
             $user->amount = $user->amount + $amount;
@@ -69,13 +73,16 @@ class JackpotController extends Controller
         try {
             $mjack = majorjackpot::get()->last();
             $amount = floor($mjack->credit);
-            $newjack = new majorjackpot();
-            $newjack->credit = 2000 + ($mjack->credit - $amount);
-            $newjack->save();
-            $mjack->credit = $amount;
-            $mjack->agent = $request->name;
+            //-----new jack history save-----
+            $newjhis = new jackhistory();
+            $newjhis->credit = $amount;
+            $newjhis->agent = $request->name;
             $date = date("Y-m-d H:i:s");
-            $mjack->assign_time = $date;
+            $newjhis->assign_time = $date;
+            $newjhis->jacks = "major jack";
+            $newjhis->save();
+
+            $mjack->credit = 2000 + ($mjack->credit - $amount);
             $mjack->save();
             $user = Admin::where('name', $request->name)->get()->first();
             $user->amount = $user->amount + $amount;
