@@ -26,6 +26,12 @@
     .release-btn:active {
         background: #E8601B;
     }
+    .cReceiptSmall .sol-container .sol-selection-container {
+        top: 215px !important;
+    }
+    .cReceiptMajor .sol-container .sol-selection-container {
+        top: 215px !important;
+    }
 </style>
 <div class="container-fluid">
     <!-- ============================================================== -->
@@ -53,8 +59,15 @@
                 <div class="modal-body">
                     <div class="form-group row">
                         <label for="selectUser" class="col-sm-3 text-right control-label col-form-label">UserName : </label>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" id="userSelectSmall">
                             <select id="userOptionssmall" name="character">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="selectUser" class="col-sm-3 text-right control-label col-form-label">Receipt : </label>
+                        <div class="col-sm-9 cReceiptSmall" id="divReceiptSmall">
+                            <select id="userOptionsReceiptsmall" name="character">
                             </select>
                         </div>
                     </div>
@@ -91,6 +104,13 @@
                         <label for="selectUser" class="col-sm-3 text-right control-label col-form-label">UserName : </label>
                         <div class="col-sm-9">
                             <select id="userOptionsMajor" name="character">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="selectUser" class="col-sm-3 text-right control-label col-form-label">Receipt : </label>
+                        <div class="col-sm-9 cReceiptMajor" id="divReceiptMajor">
+                            <select id="userOptionsReceiptMajor" name="character">
                             </select>
                         </div>
                     </div>
@@ -155,6 +175,30 @@
                 });
                 $(function() {
                     $("#userOptionssmall").searchableOptionList();
+                    $('#userOptionssmall').change(function(){
+                        $.ajax({
+                            /* the route pointing to the post function */
+                            url: '/admin/jackpot/getReceipts',
+                            type: 'POST',
+                            /* send the csrf-token and the input to the controller */
+                            data: {
+                                _token: CSRF_TOKEN,
+                                name : $('#userOptionssmall').val()
+                            },
+                            dataType: 'JSON',
+                            /* remind that 'data' is the response of the AjaxController */
+                            success: function (data) {
+                                console.log(data);
+                                $("#divReceiptSmall").empty();
+                                $("#divReceiptSmall").append("<select id=\"userOptionsReceiptsmall\" name=\"character\"></select>");
+                                data['receipts'].forEach(function(ele) {
+                                    userSelect = document.getElementById('userOptionsReceiptsmall');
+                                    userSelect.options[userSelect.options.length] = new Option(ele, ele);
+                                });
+                                $("#userOptionsReceiptsmall").searchableOptionList();
+                            }
+                        });
+                    });
                 });
             }
         });
@@ -175,6 +219,30 @@
                 });
                 $(function() {
                     $("#userOptionsMajor").searchableOptionList();
+                    $('#userOptionsMajor').change(function(){
+                        $.ajax({
+                            /* the route pointing to the post function */
+                            url: '/admin/jackpot/getReceipts',
+                            type: 'POST',
+                            /* send the csrf-token and the input to the controller */
+                            data: {
+                                _token: CSRF_TOKEN,
+                                name : $('#userOptionsMajor').val()
+                            },
+                            dataType: 'JSON',
+                            /* remind that 'data' is the response of the AjaxController */
+                            success: function (data) {
+                                console.log(data);
+                                $("#divReceiptMajor").empty();
+                                $("#divReceiptMajor").append("<select id=\"userOptionsReceiptMajor\" name=\"character\"></select>");
+                                data['receipts'].forEach(function(ele) {
+                                    userSelect = document.getElementById('userOptionsReceiptMajor');
+                                    userSelect.options[userSelect.options.length] = new Option(ele, ele);
+                                });
+                                $("#userOptionsReceiptMajor").searchableOptionList();
+                            }
+                        });
+                    });
                 });
             }
         });
@@ -199,11 +267,13 @@
 
     function releaseSmall() {
         prename = $('#userOptionssmall').val();
+        prereceipt = $('#userOptionsReceiptsmall').val();
         $.post({
             url:"/admin/jackpot/release",
             data: {
                 _token: CSRF_TOKEN,
-                name: prename
+                name: prename,
+                receipt: prereceipt
             },
             dataType: 'JSON',
             success:
@@ -220,11 +290,13 @@
 
     function releaseMajor() {
         prename = $('#userOptionsMajor').val();
+        prereceipt = $('#userOptionsReceiptMajor').val();
         $.post({
             url:"/admin/jackpot/releaseMajor",
             data: {
                 _token: CSRF_TOKEN,
-                name: prename
+                name: prename,
+                receipt: prereceipt
             },
             dataType: 'JSON',
             success:

@@ -275,22 +275,44 @@ class ApiAgentController extends Controller
                 return response()->json(['message' => 'Not Enough Cash', 'data'=> null, 'response_code' => 0], 200);
             }
             $nround = round::get()->first();
-            $lastbet = betlist::where('name', $user->name)->where('round', $nround->roundname)->orderBy('receiptNumber', 'desc')->get()->first();
+            $lastbet = betlist::where('name', $user->name)->orderBy('receipts', 'desc')->get()->first();
             $betlist = new betlist();
             $betlist->name = $user->name;
             $betlist->betNumber = $nbetstate;
             $betlist->total = $request->totalbet;
             $betlist->round = $nround->roundname;
-            if (!$lastbet) {
+            $roundInt = intval(str_replace("Round", "", $nround->roundname));
+            $lastjack = jackhistory::where('agent', $user->name)->orderBy('receipts', 'desc')->get()->first();
+            if (!$lastbet && !$lastjack) {
                 $betlist->receipts = 100000000;
-            } else {
-                $betlist->receipts = $lastbet->receipts + 1;
-            }
-            if (!$lastbet) {
                 $betlist->receiptNumber = 1;
             } else {
-                $betlist->receiptNumber = $lastbet->receiptNumber + 1;
+                if ( !$lastbet ) {
+                    $betlist->receipts = $lastjack->receipts + 1;
+                    $betlist->receiptNumber = $lastjack->receiptNumber + 1;
+                } else if (!$lastjack ) {
+                    $betlist->receipts = $lastbet->receipts + 1;
+                    $betlist->receiptNumber = $lastbet->receiptNumber + 1;
+                } else {
+                    if ( $lastbet->receipts > $lastjack->receipts ) {
+                        $betlist->receipts = $lastbet->receipts + 1;
+                        $betlist->receiptNumber = $lastbet->receiptNumber + 1;
+                    } else {
+                        $betlist->receipts = $lastjack->receipts + 1;
+                        $betlist->receiptNumber = $lastjack->receiptNumber + 1;
+                    }
+                }
             }
+//            if (!$lastbet) {
+//                $betlist->receipts = 100000000;
+//            } else {
+//                $betlist->receipts = $lastbet->receipts + 1;
+//            }
+//            if (!$lastbet) {
+//                $betlist->receiptNumber = 1;
+//            } else {
+//                $betlist->receiptNumber = $lastbet->receiptNumber + 1;
+//            }
             $betlist['round'] = str_replace("Round", "R", $betlist['round']);
             $betlist['betNumbers'] = $this->getbetinfo($betlist['betNumber']);
             return response()->json(['message' => 'Confirm Bet', 'data' => $betlist, 'newbetstate' => $nbetstate, 'response_code' => 1], 200);

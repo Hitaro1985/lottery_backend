@@ -47,6 +47,7 @@
                                 <th>TotalBet</th>
                                 <th>Round</th>
                                 <th>W/L</th>
+                                <th>Receipt Number</th>
                                 <th>Time</th>
                             </tr>
                         </thead>
@@ -75,6 +76,7 @@
                                 <td id="totalbet{{ $bets[$i]->id }}">{{ $bets[$i]->total }}MYR</td>
                                 <td id="round{{ $bets[$i]->id }}">{{ $bets[$i]->round }}</td>
                                 <td id="wls{{ $bets[$i]->id }}">{{ $bets[$i]->wls }}</td>
+                                <td id="receiptNo{{ $bets[$i]->id }}">{{ $bets[$i]->receipts }}</td>
                                 <td>{{ $bets[$i]->created_at }}</td>
                             </tr>
                         @endfor

@@ -56,6 +56,7 @@ Route::namespace('Admin')->prefix('admin')->group(function() {
         Route::post('/betstatus', 'AdminAgentController@betstatus');
         Route::get('/jackmanage', 'JackpotController@index');
         Route::post('/jackpot/getAgents', 'JackpotController@getAgents');
+        Route::post('/jackpot/getReceipts', 'JackpotController@getReceipts');
         Route::post('/jackpot/getJack', 'JackpotController@getJack');
         Route::post('/jackpot/release', 'JackpotController@release');
         Route::post('/jackpot/releaseMajor', 'JackpotController@releaseMajor');
