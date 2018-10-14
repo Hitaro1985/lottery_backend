@@ -434,9 +434,9 @@
                             if ( data.totalbet[i] ) {
                                 console.log('aa');
                                 $("#totalbet" + i).text(data.totalbet[i]);
-                                $("#totalpayout" + i + i).text(data.totalbet[i] * 36);
-                                $("#profit" + i + i).text(data.totalbet[i] - data.totalbet[i] * 36);
-                                if ( data.totalbet[i] - data.totalbet[i] * 36 < 0 ) {
+                                $("#totalpayout" + i + i).text(data.totalpayout[i]);
+                                $("#profit" + i + i).text(data.totalbet[i] - data.totalpayout[i]);
+                                if ( data.totalbet[i] - data.totalpayout[i] < 0 ) {
                                     $("#profit" + i + i).addClass("red-color");
                                 }
                             } else {
@@ -448,9 +448,9 @@
                             if ( data.totalbet[i] ) {
                                 console.log('aa');
                                 $("#totalbet" + i).text(data.totalbet[i]);
-                                $("#totalpayout" + i).text(data.totalbet[i] * 36);
-                                $("#profit" + i).text(data.totalbet[i] - data.totalbet[i] * 36);
-                                if ( data.totalbet[i] - data.totalbet[i] * 36 < 0 ) {
+                                $("#totalpayout" + i).text(data.totalpayout[i]);
+                                $("#profit" + i).text(data.totalbet[i] - data.totalpayout[i]);
+                                if ( data.totalbet[i] - data.totalpayout[i] < 0 ) {
                                     $("#profit" + i).addClass("red-color");
                                 }
                             } else {

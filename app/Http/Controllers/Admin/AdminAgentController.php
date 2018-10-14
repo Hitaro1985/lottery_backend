@@ -115,6 +115,7 @@ class AdminAgentController extends Controller
         $end = $round->created_at->modify('+30 minutes');
         $betlists = betlist::where('round', $round->name)->whereBetween('created_at', [$start, $end])->get();
         $k = array();
+        $totalpayout = array();
         $total = 0;
         foreach ($betlists as $betlist) {
             $betstate = $betlist['betNumber'];
@@ -133,8 +134,10 @@ class AdminAgentController extends Controller
                 ) {
                     if (!array_key_exists((string)$betNumbers[$i][0], $k)) {
                         $k[(string)$betNumbers[$i][0]] = $betNumbers[$i][1];
+                        $totalpayout[(string)$betNumbers[$i][0]] = $betNumbers[$i][1] * 36;
                     } else {
                         $k[(string)$betNumbers[$i][0]] = $k[(string)$betNumbers[$i][0]] + $betNumbers[$i][1];
+                        $totalpayout[(string)$betNumbers[$i][0]] = $k[(string)$betNumbers[$i][0]] + $betNumbers[$i][1] * 36;
                     }
                 } else {
                     if ($betNumbers[$i][0] == "1st") {
@@ -176,24 +179,26 @@ class AdminAgentController extends Controller
                     foreach ($infs as $inf) {
                         if (!array_key_exists((string)$inf, $k)) {
                             $k[(string)$inf] = $betNumbers[$i][1];
+                            $totalpayout[(string)$inf] = $betNumbers[$i][1] * ( 36 / $tnum );
                             //$k[(string)$inf] = number_format($betNumbers[$i][1] / $tnum, 2, '.', '');
                         } else {
                             $k[(string)$inf] = $k[(string)$inf] + $betNumbers[$i][1];
+                            $totalpayout[(string)$inf] = $k[(string)$inf] + $betNumbers[$i][1] * ( 36 / $tnum );
                             //$k[(string)$inf] = number_format($k[(string)$inf] + $betNumbers[$i][1] / $tnum, 2, '.', '');
                         }
                     }
                 }
             }
         }
-        $result = "";
-        for ($i = 0; $i < 37; $i ++) {
-            if (!array_key_exists((string)$i, $k)) {
-                $result = $result . $i . "->0  ";
-            } else {
-                $result = $result . $i . "->" . $k[(string)$i] . "  ";
-            }
-        }
-        return response()->json(['status' => 'success', 'totalbet' => $k, 'total' => $total], 200);
+//        $result = "";
+//        for ($i = 0; $i < 37; $i ++) {
+//            if (!array_key_exists((string)$i, $k)) {
+//                $result = $result . $i . "->0  ";
+//            } else {
+//                $result = $result . $i . "->" . $k[(string)$i] . "  ";
+//            }
+//        }
+        return response()->json(['status' => 'success', 'totalbet' => $k, 'totalpayout' => $totalpayout, 'total' => $total], 200);
     }
 
     public function sagentmanage(Request $request)
