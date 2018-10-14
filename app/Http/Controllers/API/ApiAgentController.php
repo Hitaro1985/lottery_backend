@@ -604,8 +604,12 @@ class ApiAgentController extends Controller
 
     public function getNowRound(Request $request)
     {
-        $round = round::get()->first();
-        return response()->json(['message' => "Get Now Round", 'data' => ['round'=> $round["roundname"]], 'response_code' =>1], 200);
+        try{
+            $round = round::get()->first();
+            return response()->json(['message' => "Get Now Round", 'data' => ['round'=> $round["roundname"]], 'response_code' =>1], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Request Error', 'data' => $e->getMessage(), 'response_code' => 0], 200);
+        }
     }
 
     public function getCurrentInfo(Request $request)
