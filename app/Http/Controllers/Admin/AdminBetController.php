@@ -65,15 +65,24 @@ class AdminBetController extends Controller
                 }
                 $nestedData['created_at'] = date('d-m-Y H:i:s', strtotime($r->created_at));
                 if ($r->paidstatus != 1) {
-                    if(!$r->rightNumber) {
-                        $nestedData['action'] = '
-                        <button class="btn btn-outline-info" onclick="onSetResult(' . $r->id . ')" data-toggle="modal" data-target="#setResult">SET RESULT</button>
-                        ';
-                    } else {
+                    if($r->rightNumber > -1 and $r->rightNumber < 37) {
                         $nestedData['action'] = '
                         <button class="btn btn-outline-info" onclick="onPayPrize(' . $r->id . ')" data-toggle="modal" data-target="#payPrize">PAY PRIZE</button>
                         ';
+                    } else {
+                        $nestedData['action'] = '
+                        <button class="btn btn-outline-info" onclick="onSetResult(' . $r->id . ')" data-toggle="modal" data-target="#setResult">SET RESULT</button>
+                        ';
                     }
+//                    if($r->rightNumber == null) {
+//                        $nestedData['action'] = '
+//                        <button class="btn btn-outline-info" onclick="onSetResult(' . $r->id . ')" data-toggle="modal" data-target="#setResult">SET RESULT</button>
+//                        ';
+//                    } else {
+//                        $nestedData['action'] = '
+//                        <button class="btn btn-outline-info" onclick="onPayPrize(' . $r->id . ')" data-toggle="modal" data-target="#payPrize">PAY PRIZE</button>
+//                        ';
+//                    }
                 } else {
                     $nestedData['action'] = '';
                 }
