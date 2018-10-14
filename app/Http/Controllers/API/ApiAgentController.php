@@ -585,7 +585,7 @@ class ApiAgentController extends Controller
     public function getResultInfo(Request $request)
     {
         try{
-            $passedrounds = roundlist::where('rightNumber', '!=', 'null')->orderBy('id', 'desc')->take(50)->get();
+            $passedrounds = roundlist::whereNotNull('rightNumber')->orderBy('id', 'desc')->take(50)->get();
             $red = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
             foreach ( $passedrounds as $passedround ) {
                 if ( $passedround['rightNumber'] == 0 ) {
