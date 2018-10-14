@@ -606,7 +606,7 @@ class ApiAgentController extends Controller
     {
         try{
             $round = round::get()->first();
-            return response()->json(['message' => "Get Now Round", 'data' => ['round'=> $round->roundname], 'response_code' =>1], 200);
+            return response()->json(['message' => "Get Now Round", 'data' => ['round'=> $round["roundname"]], 'response_code' =>1], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Request Error', 'data' => null, 'response_code' => 0], 200);
         }
