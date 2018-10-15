@@ -71,9 +71,20 @@ class JackpotController extends Controller
             $lastbet = betlist::where('name', $user->name)->orderBy('receipts', 'desc')->get()->first();
             $roundInt = intval(str_replace("Round", "", $nround->roundname));
             $lastjack = jackhistory::where('agent', $user->name)->orderBy('receipts', 'desc')->get()->first();
+            if (!$lastjack) {
+                $newjhis->receiptNumber = 1;
+            } else {
+                $ctime = $lastjack->created_at;
+                $ntime = new DateTime();
+                if ( $ctime->format('d-m-Y') == $ntime->format('d-m-Y') ) {
+                    $newjhis->receiptNumber = $lastjack->receiptNumber + 1;
+                } else {
+                    $newjhis->receiptNumber = 1;
+                }
+            }
             if (!$lastbet && !$lastjack) {
                 $newjhis->receipts = 100000000;
-                $newjhis->receiptNumber = 1;
+                //$newjhis->receiptNumber = 1;
             } else {
                 if ( !$lastbet ) {
                     if ($request->receipt == null) {
@@ -81,14 +92,14 @@ class JackpotController extends Controller
                     } else {
                         $newjhis->receipts = $request->receipt;
                     }
-                    $newjhis->receiptNumber = $lastjack->receiptNumber + 1;
+                    //$newjhis->receiptNumber = $lastjack->receiptNumber + 1;
                 } else if (!$lastjack ) {
                     if ($request->receipt == null) {
                         $newjhis->receipts = $lastbet->receipts + 1;
                     } else {
                         $newjhis->receipts = $request->receipt;
                     }
-                    $newjhis->receiptNumber = $lastbet->receiptNumber + 1;
+                    //$newjhis->receiptNumber = $lastbet->receiptNumber + 1;
                 } else {
                     if ( $lastbet->receipts > $lastjack->receipts ) {
                         if ($request->receipt == null) {
@@ -96,14 +107,14 @@ class JackpotController extends Controller
                         } else {
                             $newjhis->receipts = $request->receipt;
                         }
-                        $newjhis->receiptNumber = $lastbet->receiptNumber + 1;
+                        //$newjhis->receiptNumber = $lastbet->receiptNumber + 1;
                     } else {
                         if ($request->receipt == null) {
                             $newjhis->receipts = $lastjack->receipts + 1;
                         } else {
                             $newjhis->receipts = $request->receipt;
                         }
-                        $newjhis->receiptNumber = $lastjack->receiptNumber + 1;
+                        //$newjhis->receiptNumber = $lastjack->receiptNumber + 1;
                     }
                 }
             }
@@ -148,9 +159,20 @@ class JackpotController extends Controller
             $lastbet = betlist::where('name', $user->name)->orderBy('receipts', 'desc')->get()->first();
             $roundInt = intval(str_replace("Round", "", $nround->roundname));
             $lastjack = jackhistory::where('agent', $user->name)->orderBy('receipts', 'desc')->get()->first();
+            if (!$lastjack) {
+                $newjhis->receiptNumber = 1;
+            } else {
+                $ctime = $lastjack->created_at;
+                $ntime = new DateTime();
+                if ( $ctime->format('d-m-Y') == $ntime->format('d-m-Y') ) {
+                    $newjhis->receiptNumber = $lastjack->receiptNumber + 1;
+                } else {
+                    $newjhis->receiptNumber = 1;
+                }
+            }
             if (!$lastbet && !$lastjack) {
                 $newjhis->receipts = 100000000;
-                $newjhis->receiptNumber = 1;
+                //$newjhis->receiptNumber = 1;
             } else {
                 if ( !$lastbet ) {
                     if ($request->receipt == null) {
@@ -158,14 +180,14 @@ class JackpotController extends Controller
                     } else {
                         $newjhis->receipts = $request->receipt;
                     }
-                    $newjhis->receiptNumber = $lastjack->receiptNumber + 1;
+                    //$newjhis->receiptNumber = $lastjack->receiptNumber + 1;
                 } else if (!$lastjack ) {
                     if ($request->receipt == null) {
                         $newjhis->receipts = $lastbet->receipts + 1;
                     } else {
                         $newjhis->receipts = $request->receipt;
                     }
-                    $newjhis->receiptNumber = $lastbet->receiptNumber + 1;
+                    //$newjhis->receiptNumber = $lastbet->receiptNumber + 1;
                 } else {
                     if ( $lastbet->receipts > $lastjack->receipts ) {
                         if ($request->receipt == null) {
@@ -173,14 +195,14 @@ class JackpotController extends Controller
                         } else {
                             $newjhis->receipts = $request->receipt;
                         }
-                        $newjhis->receiptNumber = $lastbet->receiptNumber + 1;
+                        //$newjhis->receiptNumber = $lastbet->receiptNumber + 1;
                     } else {
                         if ($request->receipt == null) {
                             $newjhis->receipts = $lastjack->receipts + 1;
                         } else {
                             $newjhis->receipts = $request->receipt;
                         }
-                        $newjhis->receiptNumber = $lastjack->receiptNumber + 1;
+                        //$newjhis->receiptNumber = $lastjack->receiptNumber + 1;
                     }
                 }
             }
