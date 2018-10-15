@@ -268,39 +268,45 @@
     function releaseSmall() {
         prename = $('#userOptionssmall').val();
         prereceipt = $('#userOptionsReceiptsmall').val();
-        $.post({
-            url:"/admin/jackpot/release",
-            data: {
-                _token: CSRF_TOKEN,
-                name: prename,
-                receipt: prereceipt
-            },
-            dataType: 'JSON',
-            success:
-                function(data) {
-                    if (data.status == "failed") {
-                        alert(data.status + " : " + data.errMsg);
-                    } else {
-                        alert(data.status);
-                        location.reload();
+        if ( !prereceipt) {
+            console.log("Please select receipt");
+        } else {
+            $.post({
+                url:"/admin/jackpot/release",
+                data: {
+                    _token: CSRF_TOKEN,
+                    name: prename,
+                    receipt: prereceipt
+                },
+                dataType: 'JSON',
+                success:
+                    function(data) {
+                        if (data.status == "failed") {
+                            alert(data.status + " : " + data.errMsg);
+                        } else {
+                            alert(data.status);
+                            location.reload();
+                        }
                     }
-                }
-        });
+            });
+        }
     }
 
     function releaseMajor() {
         prename = $('#userOptionsMajor').val();
         prereceipt = $('#userOptionsReceiptMajor').val();
-        $.post({
-            url:"/admin/jackpot/releaseMajor",
-            data: {
-                _token: CSRF_TOKEN,
-                name: prename,
-                receipt: prereceipt
-            },
-            dataType: 'JSON',
-            success:
-                function(data) {
+        if ( !prereceipt) {
+            console.log("Please select receipt");
+        } else {
+            $.post({
+                url: "/admin/jackpot/releaseMajor",
+                data: {
+                    _token: CSRF_TOKEN,
+                    name: prename,
+                    receipt: prereceipt
+                },
+                dataType: 'JSON',
+                success: function (data) {
                     if (data.status == "failed") {
                         alert(data.status + " : " + data.errMsg);
                     } else {
@@ -308,7 +314,8 @@
                         location.reload();
                     }
                 }
-        });
+            });
+        }
     }
 </script>
 @endsection
