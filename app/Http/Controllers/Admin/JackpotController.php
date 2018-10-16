@@ -71,17 +71,23 @@ class JackpotController extends Controller
             $lastbet = betlist::where('name', $user->name)->orderBy('receipts', 'desc')->get()->first();
             $roundInt = intval(str_replace("Round", "", $nround->roundname));
             $lastjack = jackhistory::where('agent', $user->name)->orderBy('receipts', 'desc')->get()->first();
-            if (!$lastjack) {
-                $newjhis->receiptNumber = 1;
+            $matchbet = betlist::where('receipts', $request->receipt)->where('name', $user->name)->get()->first();
+            if ( $matchbet ) {
+                $newjhis->receiptNumber = $matchbet->receiptNumber;
             } else {
-                $ctime = $lastjack->created_at;
-                $ntime = new DateTime();
-                if ( $ctime->format('d-m-Y') == $ntime->format('d-m-Y') ) {
-                    $newjhis->receiptNumber = $lastjack->receiptNumber + 1;
-                } else {
-                    $newjhis->receiptNumber = 1;
-                }
+                $newjhis->receiptNumber = 1;
             }
+//            if (!$lastjack) {
+//                $newjhis->receiptNumber = 1;
+//            } else {
+//                $ctime = $lastjack->created_at;
+//                $ntime = new DateTime();
+//                if ( $ctime->format('d-m-Y') == $ntime->format('d-m-Y') ) {
+//                    $newjhis->receiptNumber = $lastjack->receiptNumber + 1;
+//                } else {
+//                    $newjhis->receiptNumber = 1;
+//                }
+//            }
             if (!$lastbet && !$lastjack) {
                 $newjhis->receipts = 100000000;
                 //$newjhis->receiptNumber = 1;
@@ -159,17 +165,23 @@ class JackpotController extends Controller
             $lastbet = betlist::where('name', $user->name)->orderBy('receipts', 'desc')->get()->first();
             $roundInt = intval(str_replace("Round", "", $nround->roundname));
             $lastjack = jackhistory::where('agent', $user->name)->orderBy('receipts', 'desc')->get()->first();
-            if (!$lastjack) {
-                $newjhis->receiptNumber = 1;
+            $matchbet = betlist::where('receipts', $request->receipt)->where('name', $user->name)->get()->first();
+            if ( $matchbet ) {
+                $newjhis->receiptNumber = $matchbet->receiptNumber;
             } else {
-                $ctime = $lastjack->created_at;
-                $ntime = new DateTime();
-                if ( $ctime->format('d-m-Y') == $ntime->format('d-m-Y') ) {
-                    $newjhis->receiptNumber = $lastjack->receiptNumber + 1;
-                } else {
-                    $newjhis->receiptNumber = 1;
-                }
+                $newjhis->receiptNumber = 1;
             }
+//            if (!$lastjack) {
+//                $newjhis->receiptNumber = 1;
+//            } else {
+//                $ctime = $lastjack->created_at;
+//                $ntime = new DateTime();
+//                if ( $ctime->format('d-m-Y') == $ntime->format('d-m-Y') ) {
+//                    $newjhis->receiptNumber = $lastjack->receiptNumber + 1;
+//                } else {
+//                    $newjhis->receiptNumber = 1;
+//                }
+//            }
             if (!$lastbet && !$lastjack) {
                 $newjhis->receipts = 100000000;
                 //$newjhis->receiptNumber = 1;
